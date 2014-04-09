@@ -4,5 +4,5 @@ nvl-slim
 Personal/professional website
 
 
-# Changelog
+## Changelog
 - Testing Github configuration with PhpStorm
