@@ -1,0 +1,26 @@
+{
+    "name": "vanch3d/nvl-slim",
+    "description": "A Slim/Twig-based web application for research portfolio",
+    "license" : "GPL-2.0",
+    "homepage" : "https://github.com/vanch3d/nvl-slim",
+    "keywords" : [
+        "Research",
+        "Technology Enhanced Learning",
+        "Zotero",
+        "SlideShare"
+    ],
+    "authors" : [{
+        "name" : "Nicolas Van Labeke",
+        "homepage" : "https://github.com/vanch3d",
+        "role" : "author"
+        }],
+
+    "minimum-stability": "dev",
+    "require" : {
+        "monolog/monolog": "1.8.0",
+        "twig/twig": "v1.15.1",
+        "slim/slim": "2.4.3",
+        "slim/views": "0.1.2",
+        "rmccue/requests": "1.6.0"
+    }
+}
