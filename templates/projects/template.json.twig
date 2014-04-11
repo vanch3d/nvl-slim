@@ -1,0 +1,18 @@
+{
+	"id"	:	"{{ project.id }}",
+	"name" : 	"{{ project.name }}",
+	"title": 	"{{ block('project_title')|striptags|trim}}",
+	"institution": 	"{% block project_inst '' %}",
+	"location": 	"{% block project_loc '' %}",
+	"start":	"{% block project_start '' %}",
+	"end": 	"{% block project_end '' %}",
+	"description": 	"{{ block('project_overview')|striptags|
+				split("\n")|join("")|
+				split("\t")|join(" ")|
+				slice(0,500) }}",
+	"images": [
+	{% for image in images %}
+		"{{ image }}"{{ (loop.last)?'':',	' }}
+	{% endfor %}
+		]
+}

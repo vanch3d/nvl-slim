@@ -1,0 +1,158 @@
+{% extends 'site.twig' %}
+
+{% block pagetile %}Researcher in TEL{% endblock %}
+
+{% block content %}
+
+<section class="white-section">
+            <!-- container -->
+		    <div class="container">
+		        <!-- row -->
+		        <div class="row">
+
+
+                    <!-- col-md-4 -->
+                    <div class="col-md-4">
+
+                        <!-- text-widget -->
+                        <div class="text-widget">
+
+                            <!-- text-widget-title -->
+                            <div class="text-widget-title">
+                                <h3>Who We Are</h3>
+                            </div><!-- /text-widget-title -->
+
+                            <!-- text-widget-img -->
+                            <div class="text-widget-img">
+                                <img alt="About Us" src="images/about-us.jpg">
+                            </div><!-- /text-widget-img -->
+
+                            <p>{{  dump(test) }}
+                                Lorem Ipsum Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit duis set odio sit amet nibh vulputate cursus Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit.</p>
+
+                        </div><!-- /text-widget -->
+
+                    </div><!-- /col-md-4 -->
+
+                    <!-- col-md-4 -->
+                    <div class="col-md-4">
+
+                        <!-- text-widget -->
+                        <div class="text-widget">
+
+                            <!-- text-widget-title -->
+                            <div class="text-widget-title">
+                                <h3>Our Skills</h3>
+                            </div><!-- /text-widget-title -->
+
+                           
+
+                        </div><!-- /text-widget -->
+
+                    </div><!-- /col-md-4 -->
+
+                    <!-- col-md-4 -->
+                    <div class="col-md-4">
+
+                     <ul class="team-style1">
+
+                                    <!-- item 5 -->
+                                    <li>
+
+                                        <!-- img-cover -->
+                                        <div class="img-cover">
+                                            <!-- image -->
+                                            <img alt="member cover 5" src="/{{ cover }}" draggable="false">
+                                        </div><!-- /img-cover -->
+
+                                        <!-- member-img -->
+                                        <div class="member-img">
+                                            <div class="img-shine" style="top: -185px; left: -185px; background: none repeat scroll 0% 0% rgba(255, 255, 255, 0);"></div>
+                                            <!-- image -->
+                                            <a title="Preview Profile" href="{{ urlFor('about.me') }}">
+                                                <img alt="Nicolas Van Labeke headshot" src="/assets/images/nicolas.jpg" draggable="false">
+                                            </a>
+                                        </div><!-- /member-img -->
+
+                                        <!-- title-caption -->
+                                        <div class="title-caption">
+                                            <h3 class="name">Nicolas Van Labeke</h3>
+                                            <p class="title">Researcher</p>
+                                        </div><!-- /title-caption -->
+
+                                    </li><!-- /item 5 -->
+
+                                   	
+
+                                </ul>
+
+                    </div><!-- /col-md-4 -->
+
+
+		        </div><!-- /row -->
+		    </div><!-- /container -->
+        </section>
+
+    <section class="gray-section">
+    <!-- container -->
+    <div class="container-fluid">
+    <!-- row -->
+    <div class="row">
+
+    <!-- col-md-12 -->
+    <div class="col-md-12">
+        <!-- section-title -->
+        <div class="section-title">
+
+            <!-- main-title -->
+            <div class="main-title">
+                <h2>Projects</h2>
+            </div><!-- /main-title -->
+
+            <!-- description-title -->
+            <div class="description-title">
+                <h3>Our team is the brightest designers, data analysis, and software engineers.</h3>
+            </div><!-- /description-title -->
+
+        </div><!-- /section-title -->
+    </div><!-- /col-md-12 -->
+
+    <!-- col-md-12 -->
+    <div class="col-md-12 ">
+        <div class="row">
+
+        {% for projID in projects %}
+            {% include 'projects/'~projID~'.twig' with {
+                    'tmpl_base':'template.index.twig',
+                    'highlight' : loop.first
+            } %}
+        {% endfor %}
+
+        </div>
+    </div><!-- /col-md-12 -->
+
+    <!-- col-md-12 -->
+    <div class="col-md-12">
+
+        <!-- attention-box -->
+        <div class="attention-box-small">
+            <h3><span class="base-color">You</span> are just one step to join us, send your resume now</h3>
+            <a title="Join Us" class="btn btn-lg btn-main" href="javascript:void(0)">Join Us</a>
+        </div><!-- /attention-box -->
+
+    </div><!-- /col-md-12 -->
+
+    </div><!-- /row -->
+    </div><!-- /container -->
+    </section>
+
+{% endblock %}
+
+{% block injectJS %}
+<script>
+$(document).ready(function()
+{
+    var projects = jNVL.getProjectsJSON("{{ urlFor('api.projects') }}");
+});
+</script>
+{% endblock %}

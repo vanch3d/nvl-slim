@@ -1,0 +1,447 @@
+{% extends 'site.twig' %}
+
+
+{% block injectCSS %}
+<style>
+<!--
+/*.pub-tag .csl-bib-body:after {
+    color: #E10707;
+    content: "";
+    font-family: 'FontAwesome';
+    height: 24px;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+    width: 24px;
+}
+
+.pub-tag li{
+	text-align: justify;
+}
+
+.csl-entry {
+	text-align: justify;
+	padding-right: 30px;		
+}*/
+
+
+.expand.collapsing, .expand.collapse.in
+{
+	z-index: 99999;
+	
+}
+
+.item
+{
+ 	z-index: auto; 
+ 	position: relative;
+ 	width: 100%;
+}
+
+.item[data-group]
+{
+	z-index: 0;
+	width: auto; 
+}
+
+
+.expand
+{
+	background-color: #ffffff;
+    padding-left: 25px;
+    border-left: 5px solid #E10707;
+    
+}
+
+.expand .abstract
+{
+	padding: 10px 0;
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.panel
+{
+	padding: 10px;
+	text-align: justify;
+}
+
+.meta span {
+    padding-right: 4px;
+}
+
+.meta span:before
+{
+    color: #E10707;
+    font-family: 'FontAwesome';
+    line-height: 17px;
+    position: relative;
+    padding-right:4px;
+}
+
+.meta span + span {
+    border-left: 1px solid #747474;
+    padding-left: 8px;
+}
+
+.meta .project:before {
+    content: "";
+}
+
+.meta .doi:before {
+    content: "";
+}
+
+.meta .pdf:before {
+    content: "";
+}
+
+.meta .bib:before {
+    content: "";
+}
+-->
+</style>
+{% endblock %}
+
+{% block pagetile %}Publications{% endblock %} 
+
+{% block breadcrumb %}
+ <ol class="breadcrumb">
+	<li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+    <li class="active">Publications</li>
+</ol>
+{% endblock %}   
+
+{% block content %}
+<section class="gray-section">
+	<div class="container-fluid"><div class="row">
+	
+	
+		<div class="col-sm-9">
+
+			<div class="project-OverView">
+
+			<!-- short-section-title -->
+				<div class="short-section-title">
+					<h3>Publications</h3>
+				</div>
+				<!-- /short-section-title -->
+				<!-- skills-tag -->
+				<div class="panel-group" >
+					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+					<div class="pub-tag" id="publist">
+	
+					</div>
+				</div>
+
+				<!-- /skills-tag -->
+			</div>
+
+		</div>
+		<div class="col-sm-3"><aside class="sidebar">
+				
+			<!-- widget categories -->
+			<div class="widget categories">
+
+            	<!-- widget-title -->
+                <div class="widget-title">
+                	<h3>Filter</h3>
+				</div><!-- /widget-title -->
+
+				<!-- widget-containt -->
+				<div class="widget-containt">
+                	<button class="btn btn-black btn-clear active" data-filter-value="*">all</button>
+				</div><!-- /widget-containt -->
+
+			</div><!-- /widget categories -->
+		                    
+			<!-- widget categories -->
+			<div class="widget categories">
+				
+				<!-- widget-title -->
+				<div class="widget-title">
+					<h3>By Type</h3>
+				</div>
+				<!-- /widget-title -->
+				
+				<!-- widget-containt -->
+				<div class="widget-containt" id="pubtype">
+					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+				</div><!-- /widget-containt -->
+				
+			</div><!-- /widget categories -->
+			
+			<!-- widget tags -->
+			<div class="widget tags">
+			
+				<!-- widget-title -->
+				<div class="widget-title">
+					<h3>By Year</h3>
+				</div><!-- /widget-title -->
+				
+				<!-- widget-containt -->
+				<div class="widget-containt" id="pubyear">
+					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+				</div><!-- /widget-containt -->
+
+			</div><!-- /widget tags -->
+			
+		</aside></div>
+		
+	</div></div>
+</section>
+
+
+<div class="template item panel" data-type="" data-year="" style="display: none;">
+	<div class="title" data-parent="" data-toggle="collapse" data-target="">
+	</div>
+	<div id="" class="expand collapse">
+		<div class="abstract">
+			No absract available
+		</div>
+		<div class="meta">
+			<span class="project"><a href=""></a></span>
+            <span class="doi"><a href=""></a></span>
+            <span class="bib"><a href=""></a></span>
+            <span class="pdf"><a href=""></a></span>
+		</div>
+		<abbr class="unapi"></abbr>
+		<span class="coins"></span>	
+	</div>
+</div>
+
+{% include "publications/pubitem.tmpl.twig" %}
+	
+{% endblock %} 
+
+{% block injectJS %}
+    <script src="//cdn.jsdelivr.net/handlebarsjs/1.3.0/handlebars.js"></script>
+    <script type="text/javascript">
+
+
+//extend Isotope hide/show to update coins/unapi 
+var oldIsotopeReveal = Isotope.Item.prototype.reveal;
+Isotope.Item.prototype.reveal = function() {
+	oldIsotopeReveal.call(this);
+	
+	var t = $(this.element).find(".unapi");
+	if (t) $(t).addClass("unapi-id");
+	t = $(this.element).find(".coins");
+	if (t) $(t).addClass("Z3988");
+};
+
+var oldIsotopeHide = Isotope.Item.prototype.hide;
+Isotope.Item.prototype.hide = function() {
+	oldIsotopeHide.call(this);
+	if ( this.isHidden )
+	{
+		var t = $(this.element).find(".unapi");
+		if (t) $(t).removeClass("unapi-id");
+		t = $(this.element).find(".coins");
+		if (t) $(t).removeClass("Z3988");
+	}
+};
+
+
+$(document).ready(function()
+{
+	
+	function updateWidget(list,tag,type,sortasc,group)
+	{
+		sortasc = (typeof sortasc === "undefined") ? true : sortasc;
+		group = (typeof sortasc === "undefined") ? false : group;
+		
+		$.each( Object.keys(list).sort(
+				function(a,b) {return (sortasc)? a-b : b-a;}), 
+			function( index, value ){
+				var temp = $('<button/>',  
+						{	'class': "btn btn-black btn-filter",
+							/*'data-toggle' : 'button',*/
+							'data-filter-type': type,
+							'data-filter-value': value,
+							text: value
+						});
+				temp.appendTo(tag);
+				if (group)
+				{
+					var temp2 = $('<div/>', {
+						'class' : 'item panel',
+					    'data-year': value,
+					    'data-group': 'true'
+					}).html(value);
+					temp2.appendTo('#publist');
+					
+				}
+			});	
+	}
+
+	function updateZotero() 
+	{
+		// Force Zotero update when layout (content) changed 
+		var ev = document.createEvent('HTMLEvents');
+		ev.initEvent('ZoteroItemUpdated', true, true);
+		document.dispatchEvent(ev);
+	};
+
+	 $('.loading').animate({
+	        opacity: 1
+	    }, 200);
+	    
+	$.getJSON("{{ urlFor('api.pub.project',{name: 'all'})}}")
+		.done(function(data){
+			var dates={};
+			var types={};
+			var prevyear = null;
+			var ztotal = 100;
+			
+				var source   = $("#entry-template").html();
+	var template = Handlebars.compile(source);
+	var context = 
+		{	'items': $.map(data, function (value, key) 
+				{ 	value.index= ztotal--;
+					return value; 
+				})
+		};
+	var html    = template(context);
+	var gg =11;
+			$('#publist').replaceWith(html);
+			
+		/*	$.each( data, function( index, value){
+
+				var curyear = value.issued['date-parts'][0][0]; 
+				dates[curyear] = curyear;
+				types[value.type] = value.type;
+
+				if (prevyear==null || prevyear != curyear)
+				{
+					var temp2 = $('<div/>', {
+						'class' : 'item panel',
+					    'data-year': curyear + 'a',
+					    'data-group': 'true'
+					}).css('z-index',ztotal--).html(curyear);
+					temp2.appendTo('#publist');
+					prevyear = curyear;
+				}
+
+				var cnt = $(value.output.ref);
+
+				var template = $(".template.item").clone();
+				template
+					.css('z-index',ztotal--)
+					.attr("data-type",value.type)
+					.attr("data-year",curyear);
+				template.find(".title")
+					.attr("data-parent",'#publist')
+					.attr("data-target",'#item-'+index)
+					.html(cnt);
+				template.find(".expand")
+					.attr("id","item-"+index);
+				template.find(".abstract")
+					.text(value.abstract || "No abastact");
+				template.find(".unapi")
+					.addClass("unapi-id")
+					.attr("title",value.id);
+				template.find(".coins")
+					.replaceWith(value.output.coins);
+				if (value.project)
+					template.find(".meta .project a")
+						.attr("title","Go to the project " + value.project.name)
+						.attr("href",value.project.url)
+						.text(value.project.name);
+				else
+					template.find(".meta .project").remove();
+				if (value.DOI)
+					template.find(".meta .doi a")
+						.attr("title","doi")
+						.attr("href","http://dx.doi.org/" + value.DOI)
+						.text("DOI");
+				else
+					template.find(".meta .doi").remove();
+				if (value.output.bib)
+					template.find(".meta .bib a")
+						.attr("title","Export Bibtex record")
+						.attr("href","{{ urlFor('api.unapi')~'?id='}}" + value.id + "&format=bibtex")
+						.text("Bibtex");
+				else
+					template.find(".meta .bib").remove();
+				if (value.PDF)
+					template.find(".meta .pdf a")
+						.attr("title","Download this publication")
+						.attr("href",value.PDF)
+						.text("PDF");
+				else
+					template.find(".meta .pdf").remove();
+			
+				
+					
+					
+				template.removeClass("template").appendTo('#publist').show();
+			});*/
+
+			// add identifier to the coins markup.
+			$(".Z3988").toggleClass("coins");
+
+			// feed the filter widgets
+			updateWidget(dates,'#pubyear','year',false);
+			updateWidget(types,'#pubtype','type');
+
+			// start isotope layout
+			var $container = $('#publist').isotope({
+				itemSelector: '.item',
+				layoutMode: 'vertical',
+				transitionDuration: '0.8s',
+				getSortData: {
+				    year: function(elem){
+		                //return parseInt($(elem).attr('data-year'));
+		                return $(elem).attr('data-year');
+					}
+				},
+				//sortBy : 'year',
+				//sortAscending: false 
+			});
+			
+			$('.btn-filter').click(function( event ) {
+				$('.btn-filter,.btn-clear').removeClass("active");
+				$(this).addClass("active");
+			  	var filterValue = $(this).attr('data-filter-value');
+			  	var filterType = 'data-' + $(this).attr('data-filter-type');
+			  	$container.isotope({ filter: "["+filterType+"='"+filterValue+"'],[data-group='true']"});
+			  	//$container.isotope({ filter: "["+filterType+"='"+filterValue+"']"});
+			});
+			$('.btn-clear').click(function( event ) {
+				$('.btn-filter').removeClass("active");
+				$(this).addClass("active");
+			  	$container.isotope({ filter: "*"});
+			});			
+
+			// force update of Zotero plugin when layout completed
+			$container.isotope( 'on', 'layoutComplete', updateZotero);
+			// re-layout when collapsed info shown or hidden
+			$('.expand').on('hidden.bs.collapse', function () {
+				  $container.isotope('layout');
+				});
+			$('.expand').on('shown.bs.collapse', function () {
+				  $container.isotope('layout');
+				});
+			
+			
+			$("span.cite").each(function() {
+				var ref = $( this ).data( "pubidx" );
+				if (ref && data[ref])
+					$( this ).html(data[ref].output.cite);
+			});
+
+		})
+		.fail(function(){
+		})
+		.always(function() {
+			// force update of Zotero plugin (Firefox)
+			updateZotero();
+			$('.loading').animate({
+		        opacity: 0
+		    }, 200).hide(200);
+		});
+});
+</script>
+{% endblock %}

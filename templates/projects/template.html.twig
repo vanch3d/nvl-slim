@@ -1,0 +1,253 @@
+{% extends 'site.twig' %} 
+
+{% block pagetile %}{{ project.name}}{% endblock %} 
+
+{% block injectCSS %}
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/flexslider/2.2/flexslider.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.css">
+{% endblock %}
+
+{% block pagedescription %}
+	<h2>{% block project_title %}{% endblock %}</h2>
+	<div class="subtitle">
+		<span id="prj-inst">{% block project_inst %}{% endblock %}</span> - 
+		<span id="prj-loc">{% block project_loc %}{% endblock %}</span> (
+		<time id="prj-start" datetime="{{ block('project_start') }}"><span>{% block project_start %}{% endblock %}</span></time> - 
+		<time id="prj-end" datetime="{{ block('project_end') }}"><span>{% block project_end %}{% endblock %}</span></time>)
+	</div>
+{% endblock %}
+
+{% block breadcrumb %}
+ <ol class="breadcrumb">
+	<li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+    <li><a title="Projects" href="{{ urlFor('project.all') }}">Projects</a></li>
+    <li class="active">{{ project.name}}</li>
+</ol>
+{% endblock %}   
+
+{% block content %}
+<section class="white-section">
+	<div class="container-fluid">
+
+		<div class="row">
+
+			<div class="col-sm-8">
+
+				<div class="project-OverView">
+
+					<!-- short-section-title -->
+					<div class="short-section-title">
+						<h3>OverView</h3>
+					</div>
+					<!-- /short-section-title -->
+
+					{% block project_overview %}
+					{% endblock %}
+
+                    <!-- short-section-title -->
+                    <div class="short-section-title">
+                        <h3>More Details</h3>
+                    </div>
+                    <!-- /short-section-title -->
+                    <ul class="project-details">
+                        <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+                    </ul>
+					
+				</div>
+
+			</div>
+
+			<div class="col-sm-4">
+			
+ 					<!-- project-flexslider -->
+                        <div id="project-flexslider" class="flexslider project-flexslider">
+                            <!-- slides -->
+                            <ul class="slides">
+                            
+                            	{% for image in images %}
+                                 <li>
+                                    <img src="/{{ image }}" title="dffdggfdgdgdf"/>
+                                </li>
+                                {% else %}
+                            	 <li>
+                                    <img data-src="holder.js/100%x150/gray/text:no images" alt="dffdggfdgdgdf"/>
+                                </li>
+                            	{%  endfor %}
+
+                            </ul><!-- /slides -->
+                        </div><!-- /project-flexslider -->			
+							<!-- short-section-title -->
+					<div class="short-section-title">
+						<h3>Keywords</h3>
+					</div>
+					<!-- /short-section-title -->
+
+
+					<!-- skills-tag -->
+					<ul class="skills-tag">
+						<li><a title="adobe Photshop" href="javascript:void(0)">adobe
+								Photshop</a></li>
+						<li><a title="adobe illustrator" href="javascript:void(0)">adobe
+								illustrator</a></li>
+						<li><a title="adobe indesign" href="javascript:void(0)">adobe
+								indesign</a></li>
+					</ul>
+
+                <div class="short-section-title">
+                    <h3>People</h3>
+                </div>
+                {% block project_people %}
+                {% endblock %}
+
+
+                <!-- /skills-tag -->
+
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="project-OverView">
+
+					<!-- short-section-title -->
+					<div class="short-section-title">
+						<h3>Selected Publications</h3>
+					</div>
+					<!-- /short-section-title -->
+					<!-- skills-tag -->
+					<ul class="pub-tag" id="publist">
+
+					</ul>
+					<!-- /skills-tag -->
+				</div>
+
+			</div>
+		</div>
+
+	
+
+	</div>
+	</section>
+	
+{% block project_noslides %}	
+<section class="gray-section"><div class="container">
+
+<div class="row" id="slides">
+	{% block project_slides %}
+	{% endblock %}
+</div></div>
+</section>
+{% endblock %}
+
+{% endblock %} 
+
+{% block injectJS %}
+<script src="//cdn.jsdelivr.net/flexslider/2.2/jquery.flexslider-min.js"></script>
+<script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+<!--<script src="/plugins/FlexSlider/jquery.flexslider-min.js"></script>
+<script src="/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>-->
+<script type="text/javascript">
+$(document).ready(function()
+{
+    $('#project-flexslider').flexslider({
+        animation: "slide"
+       
+    });
+
+    $(".flex-viewport").click(function(){
+            var idx = $(".project-flexslider li.flex-active-slide").index();
+            idx = (idx==-1)?0:idx;
+            $.fancybox.open($(".project-flexslider li img"),{
+                index: idx,
+
+                afterClose: function(){
+                    console.log("close");
+                    $(".project-flexslider li img").css("display","block");
+                }
+            });
+
+
+
+    }  );
+
+    $(".fancybox").fancybox({
+        helpers : {
+            title : {
+                type : 'over'
+            },
+            overlay : {
+                speedOut : 0,
+                locked: false
+            }
+        }
+    });
+
+    $.getJSON("{{ urlFor('api.slide.project',{name: project.id})}}")
+            .done(function(data){
+                var dd = 0;
+                data.Slideshow = data.Slideshow || {};
+                $(".project-details").empty();
+                $.each( data.Slideshow, function( index, slide ){
+                    var holder = $('<div/>',{
+                        'class': 'embed',
+                        'data-href': slide.URL
+                            }).appendTo($(".project-details"));
+                    var temp = $('<img/>', {
+                        'src' : slide.ThumbnailURL
+                    }).appendTo(holder);
+                });
+
+
+                $(".embed").click(function()
+                {
+                    console.log("fdfdfgfg");
+                    $url = $(this).data("href");
+                    $(this).unbind( "click" );
+                    $(this).oembed($url,{
+                        afterEmbed: function(){
+                            $("#slides").fitVids({ customSelector: "iframe[src^='http://www.slideshare.net'], iframe[src^='http://myviiids.com']"});
+                        },
+                        embedMethod: 'fill'
+                    });
+                });
+            });
+    
+	$.getJSON("{{ urlFor('api.pub.project',{name: project.id})}}")
+		.done(function(data){
+			$.each( data, function( index, value ){
+				var temp = $('<li/>', {
+					    'data-type': value.type
+				}).html(value.output.ref)
+				
+				.append($('<abbr/>', {
+					    'class': 'unapi-id',
+					    'title': value.id
+				}))
+			
+				;//.append(value.output.coins);
+				temp.appendTo('#publist');
+			});
+
+			$(".cite").each(function() {
+				var ref = $( this ).data( "pubidx" );
+				if (ref && data[ref])
+					$( this ).html(data[ref].output.cite);
+			});
+		})
+		.fail(function(){
+				console.log( "error" );
+		})
+		.always(function() {
+			// force update of Zotero plugin (Firefox)
+			var ev = document.createEvent('HTMLEvents');
+			ev.initEvent('ZoteroItemUpdated', true, true);
+			document.dispatchEvent(ev);
+		});
+
+
+	
+});
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+<div class="col-sm-{{ highlight?12:4 }}">
+    <div class="feature-box-style3">
+        <div class="feature-box-title">
+            <h3>{% block project_title %}{% endblock %}</h3>
+        </div>
+        <div class="feature-box-containt">
+            <i class="fa fa-question"></i>
+            {{ block('project_overview')|striptags|split(" ")| slice(0,highlight?150:25) | join(" ") }}
+        </div>
+    </div>
+</div>

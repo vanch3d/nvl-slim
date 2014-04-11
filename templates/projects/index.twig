@@ -1,0 +1,127 @@
+{% extends 'site.twig' %} 
+
+{% block pagetile %}Research Projects{% endblock %} 
+
+{% block breadcrumb %}
+ <ol class="breadcrumb">
+	<li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+    <li class="active">Projects</li>
+</ol>
+{% endblock %}   
+
+
+{% block content %}
+<section class="white-section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+
+			<!-- col-md-12 -->
+			<div class="col-md-12">
+
+				<!-- section-title -->
+				<div class="section-title">
+
+					<!-- main-title -->
+					<div class="main-title">
+						<h2>Our Career History</h2>
+					</div>
+					<!-- /main-title -->
+
+					<!-- description-title -->
+					<div class="description-title">
+						<h3>
+							We are in the business from <span class="base-color" data-to="15"
+								data-speed="2000">15</span> Years ago, and we offer about <span
+								class="base-color" data-to="1000" data-speed="2000">1000</span>
+							template.
+						</h3>
+					</div>
+					<!-- /description-title -->
+
+				</div>
+				<!-- /section-title -->
+
+				<!-- timeline-graph -->
+				<ul class="timeline-graph">
+
+				{% for project in projects %}
+					<li id="{{ project.id }}" style="display: none;min-height: 150px">
+						<div class="tm-dt">
+						<!-- date --> 
+							<time class="prj-start"><span></span></time>
+							
+							<time class="prj-end"><span></span></time>
+						</div>
+						<!-- icon -->
+						<div class="tm-icon">
+							<i class="fa fa-briefcase"></i>
+						</div> <!-- content -->
+						<div class="tm-label" >
+							<!-- title -->
+							<h4>{{ project.title }}
+							</h4>
+							<!-- post -->
+							<div class="post-content" style="height: 150px">
+								<p> </p>
+							</div>
+							<div class="post-meta">
+								<span class="post-author"><a title="See more" href="{{ urlFor('project.named',{'name':project.id}) }}">See More ...</a></span>
+							</div>	
+						</div>
+						
+						<!-- /content -->
+					</li>
+					{% endfor %}
+
+				</ul>
+				<!-- /timeline-graph -->
+
+			</div>
+			<!-- /col-md-12 -->
+
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+</section>
+
+
+{% endblock %}
+
+
+{% block injectJS %}
+    <script src="//cdn.jsdelivr.net/jquery.dotdotdot/1.6.13/jquery.dotdotdot.min.js"></script>
+
+<script>
+$(document).ready(function()
+{
+	$(".timeline-graph li").each(function( index ) {
+		console.log( index + ": " + $(this).attr('id') );
+
+		var that = this;
+		$.getJSON( "/api/projects/"+$(this).attr('id')+".json", function( data,b,c )
+		{
+			$(that).find(".post-content").html(data.description);
+			$(that).find(".prj-start span").html(data.start);
+			$(that).find(".prj-end span").html(data.end);
+			$(that).find(".tm-label h4").html(data.title);
+		}).always(function() {
+			$(that).slideDown();
+			$(that).find(".post-content").dotdotdot({
+					ellipsis : ' [...] ',
+			        watch: "window"
+			    });
+			$("html").getNiceScroll().resize();
+		});
+		
+	});
+
+
+	
+
+
+});
+</script>
+{% endblock %}
