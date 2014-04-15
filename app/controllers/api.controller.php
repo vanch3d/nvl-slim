@@ -399,7 +399,68 @@ class APIController extends Controller
 
 		$this->outputJSON($pubs);
 	}
-	
+
+
+    public function getImagesJSON($name)
+    {
+        // set the cache for the request
+        //$this->app->etag($name.'gallery');
+        //$this->app->expires('+1 week');
+
+
+        $data = array(
+            'format'=>		'json',					// Zotero API key
+            'method'=>		'pwg.categories.getList',	// Zotero API key
+        );
+
+        // build the URL for Zotero API
+        $param = http_build_query($data);
+        $url2 = 'http://gallery.calques3d.org/ws.php?'.$param;
+
+        $request = Requests::get($url2);
+        $data = json_decode($request->body,true);
+        if ($data['err'])
+        {
+            throw new Exception($data['message'],$data['err']);
+        }
+
+        $cat = reset(array_filter($data['result']['categories'], function($var) use($name){
+            return ($name==$var['permalink']);
+        }));
+
+        if (!$cat)
+        {
+            throw new Exception('no images for this',501);
+        }
+
+
+        $data = array(
+            'format'=>		'json',					// Zotero API key
+            'method'=>		'pwg.categories.getImages',	// Zotero API key
+            'cat_id'=>      $cat['id']
+        );
+
+        // build the URL for Zotero API
+        $param = http_build_query($data);
+        $url2 = 'http://gallery.calques3d.org/ws.php?'.$param;
+
+        $request = Requests::get($url2);
+        $data = json_decode($request->body,true);
+        if ($data['err'])
+        {
+            throw new Exception($data['message'],$data['err']);
+        }
+
+        $imgs = array();
+        foreach ($data['result']['images'] as $img)
+        {
+            $tmp['url'] = $img['element_url'];
+            $tmp['comment'] = $img['comment'];
+            $imgs[]=$tmp;
+        }
+        $this->outputJSON($imgs);
+    }
+
 	/**
 	 * 
 	 * @return multitype:multitype:string
