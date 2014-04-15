@@ -110,7 +110,7 @@ class ProjectController extends Controller
 		if (!file_exists($filename))
 		{
 			 throw new Exception("file not there", 500);
-			 return;
+
 		}
 		
 		$response = $this->app->response();
