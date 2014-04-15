@@ -1,0 +1,10 @@
+{
+    "pub":
+    {
+        "paper-conference": "Conference",
+        "article-journal": "Journal",
+        "report": "Report",
+        "chapter": "Book Section",
+        "thesis": "Thesis"
+    }
+}
