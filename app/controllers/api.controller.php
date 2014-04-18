@@ -395,7 +395,7 @@ class APIController extends Controller
 		$this->app->etag($name.'BWPDQJUN');
 		$this->app->expires('+1 week');
 		
-		$pubs = $this->retrieveZotero($name, "umuai-NVL.csl");
+		$pubs = $this->retrieveZotero($name, "umuai-nvl.csl");
 
 		$this->outputJSON($pubs);
 	}
@@ -404,8 +404,8 @@ class APIController extends Controller
     public function getImagesJSON($name)
     {
         // set the cache for the request
-        //$this->app->etag($name.'gallery');
-        //$this->app->expires('+1 week');
+        $this->app->etag($name.'gallery');
+        $this->app->expires('+1 week');
 
 
         $data = array(
