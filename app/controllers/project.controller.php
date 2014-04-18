@@ -27,19 +27,12 @@ class ProjectController extends Controller
 	public function project($name)
 	{
 		$projIdx = APIController::getProjects();
-		
-		$img = array();
-		foreach (glob("assets/projects/".$name."/*.png") as $filename) {
-			$img[]=$filename;
-		}
-		
 		if (array_key_exists($name, $projIdx))
 		{
 			try {
 				$this->render('projects/'.$name,array(
-						'tmpl_base' => 'template.html.twig',
-						'project' => $projIdx[$name],
-						'images' => $img
+						'tmpl_base' => 'template2.html.twig',
+						'project' => $projIdx[$name]
 				));
 				
 			} catch (Twig_Error_Loader $e) {
