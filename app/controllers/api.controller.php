@@ -125,17 +125,18 @@ class APIController extends Controller
 			return;
 		}		
 		
-		/*$img = array();
+		$img = array();
 		foreach (glob("assets/projects/".$name."/*.png") as $filename) {
 			$img[]=$filename;
-		}*/
+		}
 
 		$response = $this->app->response();
 		$response['Content-Type'] = 'application/json;charset=UTF-8';
 		$response['X-Powered-By'] = APPLICATION . '/' . VERSION;
 		$this->render('projects/'.$name,array(
 			'tmpl_base' => 'template.json.twig',
-			'project' => $projIdx[$name]
+			'project' => $projIdx[$name],
+			'images' => $img
 		));
 	}
 
@@ -394,7 +395,7 @@ class APIController extends Controller
 		$this->app->etag($name.'BWPDQJUN');
 		$this->app->expires('+1 week');
 		
-		$pubs = $this->retrieveZotero($name, "umuai-nvl.csl");
+		$pubs = $this->retrieveZotero($name, "umuai-NVL.csl");
 
 		$this->outputJSON($pubs);
 	}
