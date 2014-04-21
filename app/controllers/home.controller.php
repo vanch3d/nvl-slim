@@ -14,16 +14,8 @@ class HomeController extends Controller
 	public function index()
 	{
         $projIdx = APIController::getProjects(true);
-
-        $img = array();
-        foreach (glob("assets/projects/*/*.png") as $filename) {
-            $img[]=$filename;
-        }
-
         $this->render('pages/home',array(
-            'projects' => $projIdx,
-            'test' =>$this->app->config("nvl-slim.slideshare"),
-            'cover' => $img[array_rand($img)]
+            'projects' => $projIdx
         ));
 	}
 	
