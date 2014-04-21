@@ -31,7 +31,7 @@ class ProjectController extends Controller
 		{
 			try {
 				$this->render('projects/'.$name,array(
-						'tmpl_base' => 'template2.html.twig',
+						'tmpl_base' => 'template.html.twig',
 						'project' => $projIdx[$name]
 				));
 				
@@ -57,15 +57,22 @@ class ProjectController extends Controller
 	public function getPublication($name)
 	{
 		global $apiCtrl;
-		$item = $apiCtrl->readZoteroCache($name);
-		if (!isset($item))
+		$idx = $apiCtrl->readZoteroFileIndex();
+        $cache = $idx[$name];
+        //
+		if (!isset($cache))
 		{
-			throw new Exception("fggffgfgfg", 500);
+			throw new Exception("Cannot find the index of this reference", 500);
 		}
-		$item = json_decode($item['csljson']);	
-		
-		
-		
+        $fullitem = $apiCtrl->readZoteroCache($cache);
+        if (!$fullitem)
+        {
+            throw new Exception("Cannot find this reference", 500);
+        }
+
+        $item = json_decode($fullitem['csljson']);
+
+
 		// build the Highwire Press tags
 		$meta = array();
 		$meta[] = array('citation_title',$item->title);
@@ -92,9 +99,12 @@ class ProjectController extends Controller
 			}
 			if ($item->DOI) $meta[] = array('citation_doi',$item->DOI);
 		}
-		var_dump($item,$meta);die();
+
 			
-		$this->render('publications/show');
+		$this->render('publications/show', array(
+            'meta' => $meta,
+            'publication' => $item
+        ));
 	}
 	
 	public function exportPublication($name)
