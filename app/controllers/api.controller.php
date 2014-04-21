@@ -83,8 +83,7 @@ class APIController extends Controller
             try {
                 $renderedTemplate = $this->app->view()->fetch('projects/' . $project['id'] . ".twig", array(
                     'tmpl_base' => 'template.json.twig',
-                    'project' => $project,
-                    'images' => array()
+                    'project' => $project
                 ));
                 $data = json_decode($renderedTemplate);
                 $json[] = $data;
@@ -124,19 +123,13 @@ class APIController extends Controller
 			$this->outputJSON($error,$error['code']);
 			return;
 		}		
-		
-		$img = array();
-		foreach (glob("assets/projects/".$name."/*.png") as $filename) {
-			$img[]=$filename;
-		}
 
 		$response = $this->app->response();
 		$response['Content-Type'] = 'application/json;charset=UTF-8';
 		$response['X-Powered-By'] = APPLICATION . '/' . VERSION;
 		$this->render('projects/'.$name,array(
 			'tmpl_base' => 'template.json.twig',
-			'project' => $projIdx[$name],
-			'images' => $img
+			'project' => $projIdx[$name]
 		));
 	}
 
@@ -213,17 +206,21 @@ class APIController extends Controller
 	 */
     private function retrieveZoteroItem($id,$format)
 	{
-		$libraryType = 'user'; //user or group
-		$libraryID = 6249;
-		$librarySlug = 'all_things_zotero';
-		$apiKey = 'XKAHGTAwUZXN1qJUH7fTSuFM';
-		$collectionKey = 'BWPDQJUN';
-		
-		//create a library object to interact with the zotero API
+        $cfg = $this->app->config("nvl-slim.zotero");
+        if (!isset($cfg))
+                throw new Exception("SlideShare API authentication not configured",500);
+
+        $libraryType = 'user'; //user or group
+        $libraryID = $cfg['userID'];
+        $librarySlug = 'all_things_zotero';
+        $apiKey = $cfg['api_key'];
+        $collectionKey = $cfg['collectID'];
+
+        //create a library object to interact with the zotero API
 		$library = new Zotero_Library($libraryType, $libraryID, $librarySlug, $apiKey);
 		
-		$user = 			$libraryID;					// Zotero user ID
-		$collection = 		$collectionKey; 			// Collection key (my own stuff)
+		//$user = 			$libraryID;					// Zotero user ID
+		//$collection = 		$collectionKey; 			// Collection key (my own stuff)
 		$data = array(
 				'key'=>		$apiKey,					// Zotero API key
 				'format'=>	'atom',						// output format
@@ -232,7 +229,7 @@ class APIController extends Controller
 		
 		// build the URL for Zotero API
 		$param = http_build_query($data);
-		$url2 = 'https://api.zotero.org/users/'.$user.'/items/'.$id.'?'.$param;
+		$url2 = 'https://api.zotero.org/users/'.$libraryID.'/items/'.$id.'?'.$param;
 		
 		// Send the request to the server (bypassing Zotero_Library)
 		$request = Requests::get($url2,array('Zotero-API-Version' => ZOTERO_API_VERSION));
@@ -264,7 +261,7 @@ class APIController extends Controller
 	 * @param stdClass 	$data
 	 * @throws RuntimeException
 	 */
-	private function writeZoteroCache($name,$data)
+	private function writeZoteroCache($name,$data,$loc)
 	{
 		$file = $this->getZoteroCacheFilename($name);
 		$dir = dirname($file);
@@ -277,6 +274,17 @@ class APIController extends Controller
 		}
 		
 		@file_put_contents($file, json_encode($data));
+
+        if (isset($loc))
+        {
+            $file = $this->getZoteroCacheFilename("fileindex");
+            $idx = @file_get_contents($file);
+            $data = array();
+            if ($idx)
+                $data = json_decode($idx,true);
+            $data[$loc] = $name;
+            @file_put_contents($file, json_encode($data));
+        }
 	}
 	
 	public function readZoteroCache($name)
@@ -284,7 +292,12 @@ class APIController extends Controller
 		$file = $this->getZoteroCacheFilename($name);
 		return json_decode(@file_get_contents($file),true);
 	}
-	
+
+    public function readZoteroFileIndex()
+    {
+        $file = $this->getZoteroCacheFilename('fileindex');
+        return json_decode(@file_get_contents($file),true);
+    }
 	/**
 	 * 
 	 * @param unknown $name
@@ -293,17 +306,19 @@ class APIController extends Controller
 	 */
 	private function retrieveZotero($name,$cslfile)
 	{
+        $cfg = $this->app->config("nvl-slim.zotero");
+        if (!isset($cfg))
+            throw new Exception("Zotero API authentication not configured",500);
+
 		$libraryType = 'user'; //user or group
-		$libraryID = 6249;
+		$libraryID = $cfg['userID'];
 		$librarySlug = 'all_things_zotero';
-		$apiKey = 'XKAHGTAwUZXN1qJUH7fTSuFM';
-		$collectionKey = 'BWPDQJUN';
+        $apiKey = $cfg['api_key'];
+        $collectionKey = $cfg['collectID'];
 		
 		//create a library object to interact with the zotero API
 		$library = new Zotero_Library($libraryType, $libraryID, $librarySlug, $apiKey);
 		
-		$user = 			$libraryID;					// Zotero user ID
-		$collection = 		$collectionKey; 			// Collection key (my own stuff)
 		$data = array(
 				'key'=>		$apiKey,					// Zotero API key
 				//'tag'=>		'nvl.'.$name,				// tags to look  for
@@ -318,7 +333,7 @@ class APIController extends Controller
 
 		// build the URL for Zotero API
 		$param = http_build_query($data);
-		$url2 = 'https://api.zotero.org/users/'.$user.'/collections/'.$collection.'/items/top?'.$param;
+		$url2 = 'https://api.zotero.org/users/'.$libraryID.'/collections/'.$collectionKey.'/items/top?'.$param;
 		
 		// Send the request to the server (bypassing Zotero_Library)	
 		$request = Requests::get($url2,array('Zotero-API-Version' => ZOTERO_API_VERSION));
@@ -331,6 +346,11 @@ class APIController extends Controller
 		$pubs = array();
 		if (count($fetchedItems))
 		{
+            // Initialise the CSL generator
+            $csl_data ='../app/utils/styles/'.$cslfile;
+            $csl_data = file_get_contents($csl_data);
+            $citeproc = new citeproc($csl_data);
+
 			// extract the CSLJSON object as the basis for the publications
 			// add the COINS object in the output
 			foreach ($fetchedItems as $item)
@@ -339,8 +359,10 @@ class APIController extends Controller
 				$tt['id']=$item->itemKey;
 				// fix the clsjson date
 				$tt['issued']['date-parts'] = array(array($item->year));
-				$tt['PDF'] = $this->app->urlFor('publications.named.pdf',array('name'=>$tt['archive_location']));
-				$item->subContents['csljson']=json_encode($tt);
+
+                $loc = $tt['archive_location'];
+				$tt['PDF'] = $this->app->urlFor('publications.named.pdf',array('name'=>$loc));
+
 				// extract the coins for outputs 
 				$tt['output']['coins'] = htmlspecialchars_decode($item->subContents['coins']);
 				$tt['output']['bib'] = htmlspecialchars_decode($item->subContents['bibtex']);
@@ -357,24 +379,24 @@ class APIController extends Controller
 						$tt['project']['url'] = $this->app->urlFor('project.named',array('name'=>$name2));
 					}
 				}
-					
-				$pubs[$item->itemKey] = $tt;
-				$this->writeZoteroCache($item->itemKey, $item->subContents);
+
+
+                $kk= json_decode(json_encode($tt));
+                $ref = $citeproc->render($kk);
+                $cite = $citeproc->render($kk,'citation');
+                $tt['output']['cite'] = $cite;
+                $tt['output']['ref'] = $ref;
+
+                $item->subContents['csljson']=json_encode($tt);
+                $pubs[$item->itemKey] = $tt;
+				$this->writeZoteroCache($item->itemKey, $item->subContents,$loc);
 			};
 
-			// Initialise the CSL generator
-			$csl_data ='../app/utils/styles/'.$cslfile;
-			$csl_data = file_get_contents($csl_data);
-			$citeproc = new citeproc($csl_data);
 
 			// Format each publication and citation
 			foreach($pubs as &$data) {
 				$kk= json_decode(json_encode($data));
-				$ref = $citeproc->render($kk);
-				$cite = $citeproc->render($kk,'citation');
-				$data['output']['cite'] = $cite;
-				$data['output']['ref'] = $ref;
-					
+
 			}
 		}
 		
@@ -394,10 +416,18 @@ class APIController extends Controller
 		// set the cache for the request 
 		$this->app->etag($name.'BWPDQJUN');
 		$this->app->expires('+1 week');
-		
-		$pubs = $this->retrieveZotero($name, "umuai-NVL.csl");
 
-		$this->outputJSON($pubs);
+        try {
+            $pubs = $this->retrieveZotero($name, "umuai-NVL.csl");
+            $this->outputJSON($pubs);
+        } catch (Exception $e) {
+            $error = array(
+                'code'      =>    $e->getCode(),
+                'message'   =>    $e->getMessage());
+
+            $this->outputJSON($error,500);
+
+        }
 	}
 
 
