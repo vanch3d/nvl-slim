@@ -1095,9 +1095,9 @@ class csl_text extends csl_format {
     }
   }
   function init_formatting() {
-//    if ($this->variable == 'title') {
-//      $this->span_class = 'title';
-//    }
+    if ($this->variable == 'title') {
+      $this->span_class = 'csl-title';
+    }
     parent::init_formatting();
 
   }
