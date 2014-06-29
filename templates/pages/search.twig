@@ -1,0 +1,59 @@
+{% extends 'site.twig' %}
+
+
+{% block pagedescription %}
+    <h2>Nicolas Van Labeke</h2>
+    <div class="subtitle">Researcher in Technology-Enhanced Learning
+    </div>
+{% endblock %}
+
+{% block content %}
+<section class="white-section">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9">
+                <div style="float: left;"><input type="text" id="tipue_search_input"></div>
+                <div style="float: left; margin-left: 13px;"><input type="button" id="tipue_search_button"></div>
+                <div id="tipue_search_content"><div id="tipue_search_loading"></div></div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block injectCSS %}
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+    <link href="/plugins/Tipue-Search/tipuesearch/tipuesearch.css" rel="stylesheet">
+
+{% endblock %}
+{% block injectJS %}
+    <script src="/plugins/Tipue-Search/tipuesearch/tipuesearch_set.js"></script>
+    <script src="/plugins/Tipue-Search/tipuesearch/tipuesearch.js"></script>
+    <script>
+        var tipuesearch_pages =
+                [
+                    "{{ urlFor('home') }}",
+                    {% for projID in projects[1:] %}
+                    "{{ urlFor('project.named',{'name':projID}) }}",
+                    {% endfor %}
+                    "{{ urlFor('publications.all') }}",
+                    "{{ urlFor('publications.named.pubreader',{'name':'2013.RANLP.Summarisation'}) }}",
+                    "{{ urlFor('publications.named.pubreader',{'name':'2013.FFILE.Reflection'}) }}",
+                    "{{ urlFor('publications.named.pubreader',{'name':'2013.DCLA.OpenEssayist'}) }}",
+                    "{{ urlFor('publications.named.pubreader',{'name':'2013.CAA.Experience'}) }}",
+                    "{{ urlFor('publications.named.pubreader',{'name':'2013.CAA.Characteristics'}) }}",
+                    "{{ urlFor('publications.named.pubreader',{'name':'2010.MatCom.Connecting'}) }}",
+                ];
+        $(document).ready(function () {
+
+            $('#tipue_search_input').tipuesearch({
+                'mode': 'live',
+                'descriptiveWords': 100,
+                'liveContent': '.scroller-inner,#jr-content',
+                'liveDescription': '.scroller-inner,#jr-content'
+            });
+        });
+    </script>
+{% endblock %}

@@ -44,5 +44,16 @@ class HomeController extends Controller
 	{
 		$this->render('pages/notfound');
 	}
+
+    /**
+     * route for home
+     */
+    public function search()
+    {
+        $projIdx = APIController::getProjects(true);
+        $this->render('pages/search',array(
+            'projects' => $projIdx
+        ));
+    }
 	
 }
