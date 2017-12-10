@@ -1,0 +1,109 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700,900);
+@import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic);
+
+
+/* ==========================================================================
+   0. Fix for sticky footer
+========================================================================== */
+* {	margin: 0; }
+
+html, body { height: 100%;}
+
+.main-wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -4em;
+
+}
+
+.footer, .push { height: 4em; }
+
+
+.cite, .csl-entry {
+    display: inline;
+}
+
+body {
+    margin: 0;
+    color: #747474;
+    font-weight: 400;
+    padding: 50px 0 0 0;
+    background-color: #ffffff;
+    -webkit-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+    -webkit-font-smoothing: antialiased;
+    font: 16px/24px "PT Sans", Helvetica, Arial, sans-serif;
+}
+
+a { color: #e10707; }
+a,
+a > * {
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+a:focus,
+a:hover {
+    outline: none;
+    color: #333333;
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+    color: #333333;
+    letter-spacing: 1px;
+    font-family: "Lato", Helvetica, Arial, sans-serif;
+
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+h1 { font-size: 36px; font-weight: 700; line-height: 46px; padding: 0 0 10px; }
+h2 { font-size: 30px; font-weight: 700; line-height: 39px; padding: 0 0 11px; }
+h3 { font-size: 20px; font-weight: 400; line-height: 27px; padding: 0 0 13px; }
+h4 { font-size: 18px; font-weight: 400; line-height: 24px; padding: 0 0 14px; }
+h5 { font-size: 16px; font-weight: 400; line-height: 22px; padding: 0 0 14px; }
+h6 { font-size: 14px; font-weight: 400; line-height: 19px; padding: 0 0 15px; }
+
+h4 strong { font-weight: 400; }
+
+::selection {
+    color: #ffffff;
+    text-shadow: none;
+    background-color: #e10707;
+}
+
+::-webkit-selection {
+    color: #ffffff;
+    text-shadow: none;
+    background-color: #e10707;
+}
+
+::-moz-selection {
+    color: #ffffff;
+    text-shadow: none;
+    background-color: #e10707;
+}
+
+/* 2.3 Colors
+---------------------------------------------------------------------------*/
+.base-color { color: #e10707; }
+.base-slider-bg-color { background-color: rgba(225, 7, 7, 0.6) !important; }
+
