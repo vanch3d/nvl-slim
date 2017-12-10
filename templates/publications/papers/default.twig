@@ -1,0 +1,39 @@
+{% extends 'publications/pubreader.twig' %}
+{% import _self as forms %}
+
+{% macro cite(ref,id) %}
+<a class="bibr tag_bib" rid="{{ id }}" href="#{{ id }}"
+       co-class="co-refbox" co-rid="{{ id }}"
+       >{{ ref }}</a>{% endmacro %}
+
+{% macro note(ref,id) %}
+    <a class="bibr tag_note" rid="{{ id }}" href="#{{ id }}"
+       co-class="co-refbox" co-rid="{{ id }}"
+    ><sup>{{ ref }}</sup></a>{% endmacro %}
+
+{% set jContainer,jLocation = "","" %}
+{% if item.type=="article-journal" %}
+    {% set jContainer = attribute(item, 'container-title') %}
+    {% set jLocation = "#{item.volume}(#{item.issue})" %}
+{% elseif item.type=="chapter" %}
+    {% set jContainer = attribute(item, 'container-title') %}
+{% elseif item.type=="thesis" %}
+    {% set jContainer = attribute(item, 'genre') %}
+    {% set jLocation = attribute(item, 'publisher') %}
+{% elseif item.type=="report" %}
+    {% set jContainer = attribute(item, 'genre') %}
+{% else %}
+    {% set jContainer = item.event %}
+    {% set jLocation = attribute(item, 'publisher-place') %}
+{% endif %}
+
+
+{% block links %}{% endblock %}
+{% block article %}
+    <div class="warning">
+        Paper to be added soon. Use the <a href="{{ urlFor('publications.named.pdf',{'name': item.archive_location} ) }}" class="">PDF version</a> in the meantime.
+        </div>
+
+
+{% endblock %}
+{% block figures %}{% endblock %}

@@ -1,0 +1,77 @@
+{#
+    id:     unique id of the figure
+    ref:    text of the anchor
+    leg:    text of the legend
+    ext:    text of extended legend
+#}
+{% if id is iterable %}
+    <div co-legend-rid="lgnd_{{ id[0] }}" id="{{ id[0] }}" class="fig iconblock ten_col whole_rhythm clearfix" co-class="co-fig">
+        <a rid-ob="ob-{{ id[0] }}" rid-figpopup="{{ id[0] }}" href="./assets/{{ id[0] }}.png" class="icnblk_img figpopup" target="_blank"
+           co-class="co-fig">
+            {% for img in id %}
+                <img src-large="./assets/{{ img }}.png" title="{{ ref }}" alt="{{ ref }}" class="small-thumb"
+                     src="./assets/{{ img }}.png">
+            {% endfor %}
+        </a>
+
+        <div id="lgnd_{{ id[0] }}" class="icnblk_cntnt">
+
+            <div>
+                <a rid-ob="ob-{{ id[0] }}" rid-figpopup="{{ id[0] }}" href="./assets/{{ id[0] }}.png" class="figpopup" target="_blank"
+                   co-class="co-fig">{{ ref }}</a>
+            </div>
+            <div>
+                <span><strong>{{ leg }}</strong> {{ ext }}</span>
+            </div>
+        </div>
+        {% if rid is empty %}
+            <article data-type="table-wrap" id="ob-{{ id[0] }}">
+                <div class="wrapper">
+                    <div class="figure">
+                        {% for img in id %}
+                            <img data-src="./assets/{{ img }}.png" />
+                        {% endfor %}
+                    </div>
+                    <div class="caption">
+                        <h3>{{ ref }}</h3>
+                        <p><span><strong>{{ leg }}</strong> {{ ext }}</span></p>
+                    </div>
+
+                </div>
+            </article>
+        {%  endif %}
+    </div>
+{% else %}
+<div co-legend-rid="lgnd_{{ id }}" id="{{ id }}" class="fig iconblock ten_col whole_rhythm clearfix" co-class="co-fig">
+    <a rid-ob="ob-{{ id }}" rid-figpopup="{{ id }}" href="./assets/{{ id }}.png" class="icnblk_img figpopup" target="_blank"
+       co-class="co-fig">
+        <img src-large="./assets/{{ id }}.png" title="{{ ref }}" alt="{{ ref }}" class="small-thumb"
+             src="./assets/{{ id }}.png" style="max-width: 200px;"></a>
+
+    <div id="lgnd_{{ id }}" class="icnblk_cntnt">
+
+        <div>
+            <a rid-ob="ob-{{ id }}" rid-figpopup="{{ id }}" href="./assets/{{ id }}.png" class="figpopup" target="_blank"
+               co-class="co-fig">{{ ref }}</a>
+        </div>
+        <div>
+            <span><strong>{{ leg }}</strong> {{ ext }}</span>
+        </div>
+    </div>
+    {% if rid is empty %}
+        <article data-type="table-wrap" id="ob-{{ id }}">
+            <div class="wrapper">
+                <div class="figure">
+                        <img data-src="./assets/{{ id }}.png" />
+                </div>
+                <div class="caption">
+                    <h3>{{ ref }}</h3>
+                    <p><span><strong>{{ leg }}</strong> {{ ext }}</span></p>
+                </div>
+
+            </div>
+        </article>
+        {%  endif %}
+</div>
+
+{% endif %}

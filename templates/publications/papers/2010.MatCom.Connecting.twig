@@ -1,0 +1,1534 @@
+{% extends 'publications/papers/default.twig' %}
+
+{% block links %}{% endblock %}
+
+{% block article %}
+
+    <section class="sec">
+        <h2 id="__sec1">1 Introduction: CASs and DGSs</h2>
+
+
+        <p>The first Computer Algebra Systems (CASs), Macsyma and Reduce, were designed in the sixties to cope with the
+            symbolic problems of Astronomy and High Energy Physics. CASs are distinguished for using exact arithmetic
+            (instead of the built-in floating point arithmetic) and for handling non-assigned variables (i.e., variables
+            in the mathematical sense, not in the usual sense in Computer Science). Many extensions like symbolic
+            differentiation and integration, linear and non-linear equation and polynomial system solving, 2D and 3D
+            plotting... are usually included too.
+        </p>
+
+        <p>Let us detail what “handling non-assigned variables” means.
+        </p>
+
+        <p>Example 1 Any computer language can compute <span class="math">\((x + y)2 + (x − y)^2\)</span> for any given
+            values of <span class="math">\(x\)</span> and <span class="math">\(y\)</span>. But when we
+            ask our students to try to obtain a simpler expression for that polynomial, we are expecting them to perform
+            symbolic computations involving “x” and “y”, without assigning values to these variables.
+        </p>
+
+        <p>After expanding and cancelling, <span class="math">\(4 · x · y\)</span> should be reached. CASs can also
+            handle such operations, whereas
+            the typical computer languages cannot.
+        </p>
+
+        <p>Example 2 An almost standard programming exercise is to write a program that, given $f(x)$ and $n \in
+            \mathbb{Z} (n > 0)$,
+            approximates $\int^a_b f(x) \ dx$ by dividing interval $(a,b)$ in $n$ intervals (there are different
+            well-known
+            methods). Meanwhile, a CASs can find (for most functions) $\int f(x) \ dx$, i.e., the antiderivative of
+            $f(x)$.
+        </p>
+
+        <p>This way CASs can treat problems of a higher degree of abstraction than usual computer languages.
+        </p>
+
+        <p>The best known CASs are probably Mathematica [{{ forms.cite("45","B45") }},{{ forms.cite("50","B50") }}],
+            Maple [{{ forms.cite("12","B12") }},{{ forms.cite("16","B16") }},{{ forms.cite("25","B25") }}
+            ,{{ forms.cite("37","B37") }},{{ forms.cite("51","B51") }}], Derive [{{ forms.cite("20","B20") }}
+            ,{{ forms.cite("22","B22") }},{{ forms.cite("30","B30") }}] (recently
+            discontinued) {{ forms.cite("[52]","B52") }}, Reduce [{{ forms.cite("24","B24") }}
+            ,{{ forms.cite("26","B26") }},{{ forms.cite("53","B53") }}], Axiom [{{ forms.cite("17","B17") }}
+            ,{{ forms.cite("54","B54") }}], MuPad {{ forms.cite("[55]","B55") }} and Maxima (a descendant of the
+            discontinued Macsyma) {{ forms.cite("[56]","B56") }}.
+        </p>
+
+        <p>There are some specific purpose ones, like CoCoA {{ forms.cite("[57]","B57") }} and
+            Singular {{ forms.cite("[58]","B58") }}.
+        </p>
+
+        <p>Dynamic Geometry Systems (DGSs) are interactive systems that allow to draw “ruler and compass” geometric
+            constructions using only the mouse, and to deform the construction by dragging and dropping the points that
+            do not depend on previously defined objects. The best-known 2D DGSs are probably Cabri
+            Geometry {{ forms.cite("[59]","B59") }}, The
+            Geometer’s Sketchpad {{ forms.cite("[60]","B60") }}, Cinderella [{{ forms.cite("19","B19") }}
+            ,{{ forms.cite("61","B61") }}] and GeoGebra [{{ forms.cite("14","B14") }},{{ forms.cite("62","B62") }}],
+            although many other exist. They are
+            great tools for exploring classic geometry.
+        </p>
+
+        <p>Both Computer Algebra Systems (CASs) and 2D DGSs have reached a high level of development. And even some 3D
+            DGSs like Cabri3D and the free Calques3D {{ forms.cite("[63]","B63") }}, have recently been
+            developed {{ forms.note("[3]","N3") }}.
+        </p>
+
+        <p>However, a gap between these two types of system still exists. On one hand, powerful packages devoted to
+            Euclidean geometry have been implemented in CASs like Maple or Derive [{{ forms.cite("20","B20") }}
+            ,{{ forms.cite("37","B37") }}]. But they have incorporated
+            neither mouse drawing capabilities, nor dynamic capabilities {{ forms.note("[4]","N4") }}. On the other
+            hand, well-known 2D DGSs (such
+            as Cabri Geometry, The Geometer’s Sketchpad, Cinderella, GeoGebra, . . . ) do not provide algebraic
+            facilities, i.e., they can handle numeric coordinates and equations with numeric coefficients but they
+            cannot handle symbolic coordinates and equations with symbolic coefficients, something that we can summarize
+            by saying that “they can’t handle parameters”.
+        </p>
+
+        <p>Let us try to illustrate the difference with some examples.
+        </p>
+
+        <p>Example 3 If point P lies by definition on line $y = x$, any DGS can return its coordinates at a certain
+            instant, e.g. $(3,3)$ or $(8,8)$, but the well-known DGSs cannot return its general coordinates (just
+            reflecting
+            the membership to the line), i.e., something like $(k, k)$ ($k$ is the “parameter” in this case).
+        </p>
+
+        <p>Example 4 If point P is a free point, any DGS can return the equation of the line through point $(0, 0)$ and
+            P
+            at a certain instant, e.g. $y = 2·x$ or $y = −3·x$, but the well-known DGSs cannot return the general
+            equation
+            of this “pencil of lines through point $(0, 0)$”, i.e., something like $y = a · x$ ($a$ is the “parameter”
+            in this
+            case).
+        </p>
+
+        <p>Example 5 If points $P = (p1, p2)$, $Q = (q1, q2)$ and $R = (r1, r2)$ are free points, any DGS can return the
+            (approximate) coordinates of the baricenter of triangle $PQR$ at any time, e.g. $(3.45730, 5.56112)$, but
+            the
+            well-known DGSs cannot return the coordinates of the baricenter of a general triangle as a function of the
+            coordinates of its vertices, i.e. $$(\frac{p1+q1+r1}{3},\frac{p2+q2+r2}{3})$$ with the notation of this
+            particular example
+            ($p1$, $q1$, $r1$, $p2$, $q2$, $r2$ are the “parameters” in this case).
+        </p>
+
+        <p>The fact that DGS should be able to handle parameters was underlined years ago by Tomás
+            Recio {{ forms.cite("[27]","B27") }}, on the
+            ground that it would allow DGS to treat problems of a higher degree of abstraction.
+        </p>
+
+        <p>The aim of this paper is to describe one such attempt to bridge the gap between DGS and CAS in the context of
+            3D geometry. In Section 2, we briefly review how similar works have been done for 2D geometry. In Section 3,
+            we describe preliminary works to support mechanical theorem proving in 3D geometry.
+        </p>
+
+        <p>Finally, Section 4 demonstrates the potentials of such an approach by describing several applications of a
+            connection between 3D DGS and CAS.
+        </p>
+
+    </section>
+
+    <section class="sec">
+    <h2 id="__sec2">2 State-of-the-art in 2D DGSs - CASs Connection</h2>
+
+
+    <p>In order to solve this lack of parameter handling in most DGSs and taking advantage of the symbolic
+        possibilities of CASs, different solutions for connecting both environments have been implemented The
+        possible strategies for collaboration followed by the different authors can be classified as follows
+        [{{ forms.cite("31","B31") }},{{ forms.cite("33","B33") }}]:
+    </p>
+
+    <ol style="list-style-type: lower-roman;">
+        <li>To develop a new system that integrates a new DGS and a new CAS. Examples:
+            <ul>
+                <li>Geometry Expert [{{ forms.cite("15","B15") }},{{ forms.cite("65","B65") }}],
+                <li>Java Geometry Expert [{{ forms.cite("10","B10") }},{{ forms.cite("66","B66") }}],
+                <li>Geometry Expressions [{{ forms.cite("43","B43") }},{{ forms.cite("67","B67") }}].
+            </ul>
+        <li>To develop a new DGS that can communicate with existing CASs. Examples:
+            <ul>
+                <li>GEOTHER & Epsilon [{{ forms.cite("44","B44") }},{{ forms.cite("68","B68") }}
+                    ,{{ forms.cite("69","B69") }}] &#x2192; Maple,
+                <li>Geometry Expressions &#x2194; Maple, Mathematica
+                <li>GDI [{{ forms.cite("3","B3") }}–{{ forms.cite("5","B5") }}] &#x2192; CoCoA, Mathematica.
+            </ul>
+        <li> To develop an external translator that allows an existing DGS to communicate with an existing CAS (this
+            approach has the advantage of reusing software). Example:
+            <ul>
+                <li>paramGeo {{ forms.cite("[34]","B34") }}, that connects The Geometer’s Sketchpad v.3, v.4 &#x2192;
+                    Maple, Derive and includes the
+                    corresponding Derive and Maple geometric packages (developed “ad hoc”).
+            </ul>
+    </ol>
+
+
+    <p>Note that Geometry Expressions appears both under i) and under ii) because it incorporates a small internal
+        CAS but can also communicate with the external CASs Maple and Mathematica.
+    </p>
+
+    <p>An impressive possibility of Geometry Expressions is to communicate bidirectionally with the external CASs
+        (that is, the results of the CAS can make the construction in the DGS change!). That is the reason for
+        typing a &#x2194; instead of a &#x2192; in ii) above. It is, as far as we know, the only DGS with this
+        surprising and
+        powerful capability.
+    </p>
+
+    <h3 id="__sec2.1">2.1 Some Examples of the 2D DGSs - CASs Connection</h3>
+    <h4 id="__sec2.1.1">2.1.1 Pythagoras Theorem at a Mouse Click with Geometry
+        Expressions</h4>
+
+
+    <p>We know that results related to Pythagoras theorem were known in ancient Egypt. For example, if a triangle
+        has sides of length 3, 4 and 5, then it is a right angle triangle (what is very convenient, for example, for
+        building corners). Babylonian mathematics, although had an impressive accuracy in fields like astronomy, also
+        presented a lack
+        of formalism.
+    </p>
+
+    <p>All the well known DGSs (such as GeoGebra) can be used to find that the diagonal of a right angle triangle of
+        sides 3 and 4 has length 5 (Figure 1).
+
+    </p>
+
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F1',
+    'ref': 'Fig. 1',
+    'leg': 'Pythagoras theorem with the “standard” DGS (GeoGebra).' }
+    only %}
+
+
+
+    <p>Ancient Greek mathematicians introduced formalism in mathematics and even an axiomatic construction of
+        geometry (Euclides’ Elements). It is well known that they knew and used Pythagoras theorem in a formal way.
+    </p>
+
+    <p>Let us observe how the DGS Geometry Expressions can deal with Pythagoras theorem in an abstract way (Figure
+        2). After drawing point A, the constraint that $A = (0, 0)$ is added. After drawing point $B$ and point $C$,
+        that
+        their coordinates are $(0, c)$ and $(b, 0)$ (respectively {{ forms.note("[5]","N5") }} ) are added constraints
+        (this way $B$ lies on the $y$
+        axis and $C$ lies on the $x$ axis). If we ask Geometry Expressions to measure the length of the diagonal of
+        triangle $ABC$, $\sqrt{b^2+c^2}$ is obtained (the diagonal of the triangle depends on parameters $b$ and $c$,
+        symbolic expressions that this DGS can directly manipulate).
+    </p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F2',
+    'ref': 'Fig. 2',
+    'leg': 'Pythagoras theorem with Geometry Expressions.' }
+    only %}
+
+
+    <p>Uniquely among DGSs, Geometry Expressions has been designed as a constraint-based system, a feature that
+        enables a direct access to the symbolic representations of geometry problems, as demonstrated in the
+        previous example, and therefore open the road for more general results.
+    </p>
+
+    <h4 id="__sec2.1.2">2.1.2 Proving the Existence of the Baricenter of a General
+        Triangle just Typing One Single Line of Code Using The Geometer’s Sketchpad v.3 and paramGeo Package</h4>
+
+
+    <p>In a standard DGS like The Geometer’s Sketchpad v.3 {{ forms.cite("[48]","B48") }} it is very easy to draw a
+        triangle and its
+        baricenter (Figure 3). The numerical coordinates of its baricenter can be obtained (at any time) just
+        clicking with the mouse on this point. This simple notification is all we can obtain from all the well-known
+        DGSs: obtaining a proof of the concept is not possible directly from such an output. However, this
+        limitation can be overcome with the help of an external Maple package (paramGeo), by processing a
+        description of the construction, as shown below.
+    </p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F3',
+    'ref': 'Fig. 3',
+    'leg': 'Baricenter of a triangle with the “standard” DGS The Geometer’s Sketchpad.' }
+    only %}
+
+
+    <p>The geometrical constructions produced with The Geometer’s Sketchpad are denoted “sketches”. In The
+        Geometer’s Sketchpad (GSP) v.3 it is possible to obtain beautiful, almost natural language text “scripts”,
+        that describe the geometric configuration and can be automatically created when building a “sketch” (see
+        Figure 4).
+    </p>
+
+    <p>These “scripts” can be automatically translated into Maple or Derive code by paramGeo’s translator. Note that
+        these “scripts” were unfortunately abandoned in GSP v.4 {{ forms.cite("[49]","B49") }}, so when working with GSP
+        v.4, paramGeo relies
+        on the output produced by JavaSketchPad, a feature used to export geometric constructions on a web page.
+    </p>
+
+    <p>Parameters are automatically associated by paramGeo’s translator to the coordinates of the points under
+        “Given:” (Figure 4), unlike the derived points defined under “Steps:”, which coordinates are expressed using
+        algebraic expressions in the coordinates of the given points.
+
+    </p>
+
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F4',
+    'ref': 'Fig. 4',
+    'leg': 'A The Geometer’s Sketchpad v.3 “script” corresponding to the construction of the circumcenter of a
+            triangle.' }
+    only %}
+
+    <p>For instance, the “script” corresponding to the construction of the baricenter of a triangle is:
+    </p>
+        <pre class="brush: html">
+        baric.gss
+        Given:
+            Point A
+            Point B
+            Point C
+        ---------------
+        Steps:
+            1. Let [j] = Segment between Point A and Point B.
+            2. Let [k] = Segment between Point B and Point C.
+            3. Let [l] = Segment between Point C and Point A.
+            4. Let [D] = Midpoint of Segment [l].
+            5. Let [E] = Midpoint of Segment [k].
+            6. Let [F] = Midpoint of Segment [j].
+            7. Let [m] = Segment between Point A and Midpoint [E].
+            8. Let [n] = Segment between Midpoint [D] and Point B.
+            9. Let [I] = Intersection of Segment [n] and Segment [m].
+            10. Let [o] = Segment between Midpoint [F] and Point C.
+
+        </pre>
+
+    <p>that is automatically translated by paramGeo into a set of Maple’s instructions {{ forms.note("[6]","N6") }} :
+    </p>
+
+        <pre class="brush: html">
+            # Sketchpad to Maple automatic translation
+            # BARIC3.txt -> BARIC3.mpl
+            #BARIC3.gss
+            #
+            #Given:
+                A:=point(A_x, A_y);
+                B:=point(B_x, B_y);
+                C:=point(C_x, C_y);
+            #---------------
+            #Steps:
+                j:=segment(A, B);
+                k:=segment(B, C);
+                l:=segment(C, A);
+                D_:=midpoint(l);
+                E:=midpoint(k);
+                F:=midpoint(j);
+                m:=segment(A, E);
+                n:=segment(D_, B);
+                I_:=intersection(n, m);
+                o:=segment(F, C);
+        </pre>
+
+    <p>These geometric expressions can be used directly in Maple after loading a geometric package included with
+        paramGeo. Then, to prove (not only to check) that the baricenter exists, only that the coordinates of $I$
+        (algebraic expressions in $Ax$, $Ay$, $Bx$, $By$, $Cx$, $Cy$) satisfy the equation of the line containing
+        segment $o$ has to be checked with Maple (so it only requires the user to type one single line of code!).
+    </p>
+
+    <h3 id="__sec2.2">2.2 Toward Standardization of the Connection of DGSs and CASs</h3>
+
+
+    <p>The authors of GDI and webDiscovery {{ forms.cite("[6]","B6") }} are working at connecting 2D DGSs and CASs using
+        (and expanding) the
+        standard OpenMath. In the future, any 2D DGS with the possibility to export the constructions in OpenMath
+        format will be able to access any system that admits OpenMath as input, e.g. the package specialized in
+        geometric discovery [{{ forms.cite("18","B18") }},{{ forms.cite("29","B29") }}] webDiscovery (Figure 5).
+
+    </p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F5',
+    'ref': 'Fig. 5',
+    'leg': 'Performing geometric discovery with webDiscovery.' }
+    only %}
+
+    </section>
+
+    <section class="sec">
+    <h2 id="__sec3">3 3D DGSs – CASs Connection</h2>
+
+    <h3 id="__sec3.1">3.1 3D DGSs – CASs Connection Preliminaries</h3>
+
+
+    <p>Roughly speaking, there are two kinds of methods in mechanical theorem proving and discovery in geometry:
+    </p>
+
+    <ul>
+        <li>methods based on the use of Gröbner bases [{{ forms.cite("7","B7") }},{{ forms.cite("23","B23") }}],
+        <li>Wu’s method [{{ forms.cite("9","B9") }},{{ forms.cite("46","B46") }},{{ forms.cite("47","B47") }}].
+    </ul>
+
+    <p>
+        We have been working on these topics for several years (using both kinds of methods)
+        [{{ forms.cite("32","B32") }},{{ forms.cite("36","B36") }}].
+    </p>
+
+    <p>We have implemented in the CAS Maple a package for 3D geometry, param-Geo3D, that we have successfully used
+        to find (and prove) some new (!) 3D geometric theorems, such as:
+    </p>
+
+    <ul>
+        <li>a version of Desargues theorem with tetrahedrons [{{ forms.cite("38","B38") }},{{ forms.cite("39","B39") }}
+            ],
+        <li>a weak version of Pappus theorem [{{ forms.cite("39","B39") }},{{ forms.cite("41","B41") }}] (see Figure 6),
+        <li>a 3D-extension of Steiner chains problem {{ forms.cite("[40]","B40") }},
+        <li>a 3D extension of Pascal theorem {{ forms.cite("[42]","B42") }}.
+
+    </ul>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F6',
+    'ref': 'Fig. 6',
+    'leg': 'Configuration of a weak version of Pappus theorem in 3D.' }
+    only %}
+
+    <p>It has to be noted that, in all these works, the details of the geometric configurations had to be manually
+        introduced into Maple. This was due to the small number of suitable 3D-DGS systems available and to the fact
+        that none of them would support any form of connection with CAS.
+
+    </p>
+
+    <p>But a joint effort by the authors of this paper led to extending the features of Calques3D so that
+        Mathematica-style and Maple-style versions of the history of a construction (Figure 8) could be exported.
+    </p>
+
+    <p>Calques3D is a 3D DGS that shares most of the features of traditional DGSs; It supports the drawing of:
+    </p>
+
+    <ul>
+        <li>points (see Figure 7), segments, lines, planes, spheres, . . .
+        <li>a point on a line, on a plane, on a sphere, . . .
+    </ul>
+
+    <p>and the construction of:
+    </p>
+
+    <ul>
+        <li>the midpoint of a segment, the parallel line to a line through a point, the normal line to a line through a
+            point, the perpendicular plane to a line through a point, . . .
+        <li>the intersection of two lines, of a line and a plane, of two spheres, . . .
+
+
+    </ul>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F7',
+    'ref': 'Fig. 7',
+    'leg': 'Drawing a point in Calques3D.' }
+    only %}
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F8',
+    'ref': 'Fig. 8',
+    'leg': 'Obtaining the “history” of a Calques 3D construction: perpendicular line to a plane, the latter
+            defined by three non-collinear points.' }
+    only %}
+
+
+    <p>Let us analyze what Calques3D history files really provide. For instance, if we draw three free points, the
+        plane through them and a point lying on this plane, and we export the history file to Maple, we obtain
+        something like:
+    </p>
+
+       <pre class="brush: html">
+            > Range(-0.5,4.9,-0.9,4.9,-0.5,0.5);
+            > FreePointD(Pt1,3,0,0);
+            > FreePointD(Pt2,2,3,0);
+            > FreePointD(Pt3,4,4,0);
+            > PlaneD(Pl4,Pt1,Pt2,Pt3);
+            > PointOnPlane(Pt5,Pl4);
+        </pre>
+
+    <p>
+        Its first line is related to the visible part of the 3D space. The following three lines declare the first
+        three objects to be points (as their names begin with a Pt) and include their numeric coordinates. The
+        following line includes the description of the fourth object: the plane (as its name begins with a Pl)
+        passing through points Pt1, Pt2 and Pt3. The last line describes the fifth object as a point lying on plane
+        Pl4.
+    </p>
+
+    <p>Therefore, a Calques3D history file is comparable to a The Geometer’s Sketchpad v.3 script: although it is in
+        CAS syntax, it cannot include symbolic coordinates and equations with symbolic coefficients (i.e.,
+        parameters), so it is not useful for symbolic tasks.
+    </p>
+
+    <p>This possibility of Calques3D to export constructions in CAS syntax was also used by Botana et al. in their
+        system 3D-LD {{ forms.cite("[2]","B2") }}. It adopts our philosophy of software reuse
+        [{{ forms.cite("31","B31") }},{{ forms.cite("34","B34") }}] and also processes Calques3D output and
+        use the resulting data as input to 3D-LD, that calls the CASs CoCoA and Mathematica for performing algebraic
+        computations externally. Nevertheless this system was a prototype exclusively oriented to determining
+        algebraic surfaces as geometric loci.
+    </p>
+
+    <h3 id="__sec3.2">3.2 Connecting Calques3D with Maple</h3>
+
+    <p>The key ideas behind this approach are:
+    </p>
+
+    <ul>
+        <li>to use the preexisting capability of Calques3D to export the history of a construction in Maple-style
+            syntax,
+
+
+        <li>to transform these history files, with a new “translator” designed ad hoc and written in Maple, so that
+            symbolic coordinates and equations with symbolic coefficients can be inferred from the construction steps,
+
+
+        <li>to make the “translator” act as a mediator between the Maple-style orders exported by Calques 3D and those
+            understood by Maple after loading paramGeo3D package,
+
+
+        <li>to adapt and reuse the existing Maple paramGeo3D package mentioned above
+
+    </ul>
+
+
+    <p>in order to develop a connection between Calques3D and Maple that can handle symbolic coordinates and
+        equations with symbolic coefficients. This way many of Calques 3D’s “commands” (those related with the “3D
+        ruler and compass geometry”) are now accessible for symbolic computation.
+    </p>
+
+    <p>Our purpose in not only mechanical theorem proving and discovery in geometry, but a wider one:
+    </p>
+
+    <ul>
+        <li>to explore 3D geometric problems that can be drawn in a 3D extension of “ruler and compass geometry”, and
+
+        <li>to automatically obtain their equations (for any required purpose, not only for mechanical theorem
+            proving).
+
+
+    </ul>
+
+
+    <h3 id="__sec3.3">3.3 Implementation</h3>
+
+    <p>In a nutshell, the connection process currently implemented is as follows: the geometric configurations are
+        drawn with Calques3D, exported as a “history” file in Maple format, transformed by our specific package (so
+        that symbolic coordinates and equations with symbolic coefficients can be processed) and finally used by
+        Maple to perform any appropriate computations.</p>
+
+    <h4 id="__sec3.3.1">3.3.1 The Translator File</h4>
+
+
+    <p>The translator file translator.mpl contains procedures that convert the Calques3D
+        history (in Maple format) into a specific paramGeo3D syntax.
+    </p>
+
+    <p>Most of them are very simple. For instance, Calques3D’s command SegmentD
+        calls paramGeo3D’s segment command and only has to consider that param-
+        Geo3D works in projective coordinates and that n (the name of the object) is
+        a global variable in paramGeo3D:</p>
+
+        <pre class="brush: html">
+        > SegmentD:=proc(n,P,Q)
+        >   n:=subs(x0=1,segment(P,Q));
+        > end:
+        </pre>
+
+    <p>The reason for considering x0 = 1 is that P and Q cannot be points at infinity,
+        as they have been input as free points using Calques3D.
+    </p>
+
+    <p>The reason for paramGeo3D to work with projective coordinates is that it is
+        often convenient in mechanical theorem proving in geometry to work with projective
+        coordinates (for instance, degenerate cases related to an intersection
+        point that vanishes when the two intersection lines become parallel, disappear
+        {{ forms.note("[7]","N7") }}). However, a command in the paramGeo3D package allows to obtain
+        the affine coordinates of a point, so that the use of projective coordinates can
+        be kept hidden to the user.
+    </p>
+
+    <p>For some constructions, like perpendicular lines, the translation is not so
+        straightforward. In this case, Calques3D’s command PerpendicularLine includes
+        only the name of the new line (n) and references to the base objects
+        of the construction, a point (P1) and a line (L1). The translator calculates
+        the pedal point of the perpendicular to L1 through P1 (using paramGeo3D
+        commands) and assigns to variable n the line through P1 and the pedal point:
+    </p>
+
+        <pre class="brush: html">
+        > PerpendicularLine:=proc(n,P1,L1)
+        >   local Pperp,PenRec;
+        >   Pperp:=perpendicular(L1,P1);
+        >   PenRec:=intersection(L1,Pperp);
+        >   n:=subs(x0=1,line(P1,PenRec));
+        > end:
+        </pre>
+
+    <p>Finally, the family of intersection commands has been carefully analyzed.
+        For instance, when intersecting planes, one algebraic object is returned by
+        Calques3D history file:
+    </p>
+
+        <pre class="brush: html">
+        > IntersectionPlanes:=proc(n,PL1,PL2)
+        >   n:=subs(x0=1,intersection(PL1,PL2));
+        > end:
+        </pre>
+
+    <p>meanwhile when intersecting a line and a sphere, two algebraic objects (which
+        would coincide when the line is tangent to the sphere) are returned by Calques3D
+        history file, and they have to be distinguished:
+    </p>
+
+        <pre class="brush: html">
+        > Intersection1LineSphere:=proc(n,S1,L1)
+        >   local PtInt;
+        >   PtInt:=intersection(S1,L1);
+        >   n:=map(rhs,solve(PtInt,[x1,x2,x3])[1]);
+        > end:
+
+        > Intersection2LineSphere:=proc(n,S1,L1)
+        >   local PtInt;
+        >   PtInt:=intersection(S1,L1);
+        >   n:=map(rhs,solve(PtInt,[x1,x2,x3])[2]);
+        > end:
+        </pre>
+
+
+    <h4 id="__sec3.3.2">3.3.2 The paramGeo3D Package</h4>
+
+    <p>As said above, paramGeo3D package {{ forms.cite("[39]","B39") }} had already been used by the authors
+        in automatic theorem proving and discovery [{{ forms.cite("38","B38") }}–{{ forms.cite("42","B42") }}]. In those
+        works we had
+        to directly type in Maple the details of the geometric configurations, instead
+        of drawing the construction with the 3D DGS (as proposed in this article).
+    </p>
+
+    <p>Let us include the code corresponding to plane procedure (that is called when
+        translating Calques3D history command PlaneD), in order to get the flavor of
+        paramgeo3D implementation:
+    </p>
+
+        <pre class="brush: html">
+        > plane:=proc(P::list,Q::list,R::list)
+        >   local d:
+        >   d:=plane_(P,Q,R):
+        >   if d=0 then
+        >       ERROR(‘the three points must be non-collinear‘)
+        >   fi:
+        >   constLess(d)=0
+        > end:
+
+        > plane_:=proc(P::list,Q::list,R::list)
+        >   det(matrix([[x0,x1,x2,x3],
+        >               [P[1],P[2],P[3],P[4]],
+        >               [Q[1],Q[2],Q[3],Q[4]],
+        >               [R[1],R[2],R[3],R[4]]]))
+        >   end:
+        </pre>
+
+    <p> Procedure plane stores in variable d the equation of the plane through three
+        points, P, Q, R (this polynomial is computed as a determinant by subprocedure
+        plane_). If d is equal to zero, it returns an error message. Finally, using
+        procedure constLess, the constants that are a common factor to all terms of
+        polynomial d are suppressed.
+    </p>
+
+
+    <h4 id="__sec3.3.3">3.3.3 Calques 3D History Files Commands</h4>
+
+
+    <p>The commands, currently available for translating the actions in Calques3D,
+        are:
+    </p>
+
+    <ul>
+        <li>FreePointD: draw a free point,
+        <li>SegmentD: draw a segment defined by its two endpoints,
+        <li>LineD: draw a line through two given distinct points,
+        <li>PlaneD: draw a plane through three given points,
+        <li>SphereD: draw a sphere (spherical surface), given its center and a point on
+            the sphere,
+        <li>SphereRadiusD: draw a sphere (spherical surface), given its center and its
+            radius (a segment),
+        <li>MidPoint: draw the midpoint of a given segment,
+        <li>ParallelLine: draw the parallel line to a given line or segment through a
+            given point,
+        <li>NormalLine: draw the normal line to a given plane through a given point,
+        <li>NormalPlane: draw the normal plane to a given line through a given point,
+        <li>PerpendicularLine: draw the perpendicular line to a given line through a
+            point not belonging to the given line,
+        <li>ParallelLine: draw the parallel line to a given line through a given point,
+        <li>IntersectionLinePlane: draw the intersection point of a given line and a
+            given plane that are not parallel,
+        <li>IntersectionLines: draw the intersection point of two given lines that are
+            coplanar but not parallel (i.e., that intersect exactly in a point),
+        <li>Intersection1LineSphere, Intersection2LineSphere: two points are obtained
+            in the general case when an intersection line-sphere is computed by
+            the 3D-DGS, and each of these two commands refer to one of them (in case
+            of tangency, the two commands would refer to the same point),
+        <li>IntersectionPlanes: draw the intersection line of two given planes that
+            are not parallel,
+        <li>IntersectionSphereSphere: draw the intersection of two given spheres
+            (spherical surface); it can be a circle (circumference), a point or the empty
+            set,
+        <li>PointOnSegment: draw a point lying on the given segment {{ forms.note("[8]","N8") }},
+        <li>PointOnLine: draw a point lying on the given line,
+        <li>PointOnPlane: draw a point lying on the given plane,
+        <li>PointOnSphere: draw a point lying on the given sphere (spherical surface)
+            (the names of these commands have been taken from Calques3D symbolic
+            output for Maple).
+    </ul>
+
+    <p>Obviously, the commands above, as well as those commands in Maple’s param-
+        Geo3D package, can be “manually” called from within a Maple session.
+    </p>
+
+    <p>
+        An overview of some possible applications of the 3D DGS-CAS connection
+        developed is given in the next sections.
+    </p>
+
+    </section>
+
+    <section class="sec">
+    <h2 id="__sec4">4 Applications of the Calques3D – Maple Connection provided by
+        paramgeo3D</h2>
+
+    <p> We first give two examples of a straightforward application of the process,
+        obtaining the equations of geometrical objects that are known by Calques3D
+        (Section 4.1) or even that cannot be handled by it (such as loci, Section 4.2).
+    </p>
+
+    <p>
+        Three examples of mechanical theorem proving will then be shown in Sections
+        4.3 to 4.5:
+    </p>
+
+    <ul>
+        <li>the diagonals of a parallelepiped are concurrent,
+        <li>a 3D version of Desargues theorem (for triangles),
+        <li>a 3D version of Ceva and Menelaus theorems.
+    </ul>
+
+    <p>
+        This latter example illustrates a case of Calques3D – Maple connection that
+        cannot be performed by just using the standard output provided by Calques3D
+        but needs some editing by the user.
+    </p>
+
+    <p>
+        Note that, in all the following examples, the Maple session should begin by
+        loading:
+    </p>
+
+    <ul>
+        <li>paramGeo3D Maple package, and
+        <li>the translator Maple package
+    </ul>
+
+    <p> before loading the relevant “history” file exported by Calques3D.
+
+    </p>
+
+    <h3 id="__sec4.1">4.1 Application I: Obtaining the Equations of a 3D Geometric Object
+        known
+        by Calques3D
+    </h3>
+
+    <p>A first straightforward application would be to obtain the generic equations
+        of a geometric object directly constructed with Calques3D that is known by
+        this 3D DGS, as shown in the next example.
+
+    </p>
+
+    <p>Example 6 Obtaining the general equation of the tangent plane to a given
+        sphere.
+    </p>
+
+    <p>We want to calculate the general equation of the tangent plane to the sphere
+        of center (0, 0, 0) and radius r through any point on it. We first draw the
+        geometric configuration using Calques3D (Figure 9), by following these steps:
+
+    </p>
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F9',
+    'ref': 'Fig. 9',
+    'leg': 'The tangent plane to a sphere constructed with Calques3D.' }
+    only %}
+
+
+    <ul>
+        <li>select magnetism {{ forms.note("[9]","N9") }} and draw point Pt1 = (0, 0, 0),
+        <li>deselect magnetism (so that the next point is really a free one, without restrictions),
+        <li>draw point Pt2 on the x axis,
+        <li>draw the sphere Sph3 of center Pt1 through Pt2,
+        <li>draw a point Pt4 on sphere Sph3,
+        <li>draw the line Ln5 through Pt1 and Pt4,
+        <li>draw the perpendicular plane (Pl6) to Ln5 through Pt4.
+    </ul>
+
+    <p>
+        Then we can automatically obtain the corresponding “history” file:
+    </p>
+
+        <pre class="brush: html">
+        > Range(-2.0,2.0,-2.0,2.0,-2.0,2.0);
+        > FreePointD(Pt1,0,0,0);
+        > FreePointD(Pt2,23/15,0,0);
+        > SphereD(Sph3,Pt1,Pt2);
+        > PointOnSphere(Pt4,Sph3);
+        > LineD(Ln5,Pt1,Pt4);
+        > NormalPlane(Pl6,Pt4,Ln5);
+        </pre>
+
+    <p>Now we can start Maple and load the files. For the sake of simplicity, we
+        rename the radius as r. Then we can directly ask Maple to return the equation
+        of plane Pl6, the (general) tangent plane to the given sphere (# is used in
+        Maple to add comments, that is, lines preceded by # are not executed):
+    </p>
+
+        <pre class="brush: html">
+        > # rename radius (i.e., Pt2x) as r
+        > Pt2x:=r:
+        > # get the equation of plane Pl6
+        > Pl6;
+        </pre>
+
+    \begin{align}\begin{split}
+    Pt4z \ Pt4x \ x1 + Pt4z \ Pt4y \ x2 + Pt4z^2 \ x3 \\
+    - \ Pt4x^2 \ Pt4z- Pt4z \ Pt4y^2 - Pt4z^3 = 0
+    \end{split}\end{align}
+
+    <p>that is the general equation of the tangent plane to the given sphere through a
+        generic point $Pt4 = (Pt4x, Pt4y, Pt4z)$ on it. Such a general expression would
+        not be obtainable from a standard 3D DGS, like plain Calques3D.
+
+    </p>
+
+    <p>It must be taken into account that point Pt4 was defined as lying on sphere
+        Sph3. Consequently, the coordinates of $Pt4 = (Pt4x, Pt4y, Pt4z)$, must satisfy
+        the equation of Sph3. The corresponding polynomial is automatically calculated
+        and stored in list LREL by paramGeo3D package:
+    </p>
+
+         <pre class="brush: html">
+        > LREL;
+        </pre>
+
+    $$[Pt4x2 + Pt4y2 + Pt4z2 − r2]$$
+
+    <p>(as Sph3 is the sphere of center (0, 0, 0) and radius r, its equation is $x1^2+x2^2+x3^3-r^2=0$).</p>
+
+    <p>
+        Let us check this general equation of the tangent plane in a simple example. The points on the sphere satisfying
+        $x=0$ and
+        $y=z$ are
+        $(0,\frac{\sqrt{2}r}{2},\frac{\sqrt{2}r}{2})$ and
+        $(0,-\frac{\sqrt{2}r}{2},-\frac{\sqrt{2}r}{2})$.
+        They can be easily obtained with Maple:
+    </p>
+
+         <pre class="brush: html">
+        > # substitute Pt4x=0 and Pt4z=Pt4y in the first element of LREL
+        > subs(Pt4x=0,Pt4z=Pt4y,op(1,LREL)):
+        >
+        > # now solve the previous expression for Pt4y
+        > solve(%,Pt4y);
+        </pre>
+
+    $$\frac{\sqrt{2}r}{2},-\frac{\sqrt{2}r}{2}$$
+
+    <p>Let us consider, for instance, the first value, i.e, point $(0,\frac{\sqrt{2}r}{2},\frac{\sqrt{2}r}{2})$,
+        and let us
+        substitute these coordinates in the general equation of the tangent plane P16
+        obtained above, and solve it for x3:
+    </p>
+
+        <pre class="brush: html">
+        > subs(Pt4x=0,Pt4y=1/2*2^(1/2)*r,Pt4z=1/2*2^(1/2)*r,Pl6);
+        </pre>
+
+    $$ \frac{1}{2} r^2 x_2 + \frac{1}{2} x_3 r^2 - \frac{1}{2} \sqrt{2} r^3 = 0$$
+
+        <pre class="brush: html">
+        > x3=solve(%,x3);
+        </pre>
+
+    $$ x_3 = -x_2 + \sqrt{2} r$$
+
+    <p>The result is trivially correct: the angle between this plane and a horizontal
+        plane is 450 and it passes through $(0,\frac{\sqrt{2}r}{2},\frac{\sqrt{2}r}{2})$.
+    </p>
+
+    <h3 id="__sec4.2">4.2 Application II: Obtaining the Equations of a Geometric Locus
+        that is not
+        a 3D Geometric Object known by Calques3D</h3>
+
+    <p>It is also possible to obtain the equations of geometric loci constructed using
+        Calques3D, as shown in the next example. </p>
+
+    <p>Example 7 Obtaining the equation of an ellipsoid.
+    </p>
+
+    <p> We shall calculate now the equation of the ellipsoid of foci (0, 0, 0) and (1, 0, 0)
+        and sum of distances to the foci equal to 2 (Figure 10). A modification for 3D
+        of the common gardener’s method for drawing ellipses will be used.
+
+    </p>
+
+    <p>The process followed to draw the ellipsoid is:
+    </p>
+
+    <ul>
+        <li>choose magnetism and draw points Pt1 = (0, 0, 0) and Pt2 = (1, 0, 0) as
+            foci and Pt3 = (0, 2, 0),
+        <li>draw segment Sg4 = Pt1Pt3,
+        <li>draw a point, Pt5, lying on this segment,
+        <li>draw the two segments that the previous point defines in segment Sg4,
+        <li>draw the two spheres defined by one of the foci and one of these two segments.
+    </ul>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F10',
+    'ref': 'Fig. 10',
+    'leg': ' Constructing an ellipsoid with Calques3D. ' }
+    only %}
+
+    <p>
+        The corresponding “history” file is:</p>
+
+    <pre class="brush: html">
+        > Range(-1.9,2.1,-1.9,2.5,-1.9,1.9);
+        > FreePointD(Pt1,0,0,0);
+        > FreePointD(Pt2,1,0,0);
+        > FreePointD(Pt3,0,2,0);
+        > SegmentD(Sg4,Pt1,Pt3);
+        > PointOnSegment(Pt5,Sg4);
+        > SegmentD(Sg6,Pt1,Pt5);
+        > SegmentD(Sg7,Pt5,Pt3);
+        > SphereRadiusD(Sph8,Pt1,Sg6);
+        > SphereRadiusD(Sph9,Pt2,Sg7);
+        > IntersectionSphereSphere(Cr10,Sph8,Sph9);
+    </pre>
+
+    <p> As point Pt5 is defined as lying on segment Sg4 (itself contained in the y
+        axis), it has one degree of freedom. Therefore, its coordinates could be written,
+        for instance, as $Pt5:=(0,k1)$ ($0 \leq k1 \leq 2$). Let us observe that, when a
+        Calques3D PointOnSegment command is detected by the translator, param-
+        Geo3D’s pointOnSegment command is automatically called with $kn$ ($n \in \mathbb{N}$)
+        as first input (n is initialized as 1 the first time pointOnSegment is used, and
+        is increased by one each time pointOnSegment is called). Therefore, a k1 will
+        appear as parameter in all computations involving the coordinates of Pt5.</p>
+
+    <p>So, paramGeo3D has automatically obtained as locus (without the user having
+        to type anything):
+    </p>
+
+    <pre class="brush: html">
+        > Cr10;</pre>
+
+    <p>
+        $$[4 x2^2 + 4 x3^2 + 48 k1^2 + 9 - 48 k1, 2 x1 + 3 - 8 k1]$$
+    </p>
+
+    <p>(that is, the intersection circle of the two spheres is expressed by paramGeo3D
+        as the intersection of a cylinder and a plane, i.e., two algebraic varieties, both
+        depending on a parameter, k1). Again, such an expression, that is key for
+        obtaining the equation of the locus, would not be obtainable from a standard
+        3D DGS, like plain Calques3D.
+    </p>
+
+    <p>We can now ask Maple to rewrite this parameter-depending description, by
+        eliminating the parameter from the two equations, in order to obtain the equation
+        of the locus (in the next line, Cr10 is converted from list to set using op,
+        before applying eliminate):
+    </p>
+
+    <pre class="brush: html">> eliminate({op(Cr10)},k1);
+    </pre>
+
+    <p>$$ [\{k1 = \frac{x_1}{4} + \frac{3}{8}\}, \{16 x_2^2 + 16 x_3^2 + 12 x_1^2 - 12 x_1
+        - 9\}]$$
+    </p>
+
+    <p>Let us focus on the equation of the ellipsoid (the second element). It can be
+        written:
+    </p>
+
+    <pre class="brush: html">
+        > # order the element of the second element of the previous
+        > # output w.r.t. the pure lexicographic order, being x1>x2>x3
+        > sort(op(op(2,%)),[x1,x2,x3],plex);
+    </pre>
+
+    <p>$$ 12 x_1^2 - 12 x_1 + 16 x_2^2 + 16 x_3^2 - 9$$
+    </p>
+
+    <p>so the equation of the ellipsoid can be written:
+    </p>
+
+    <pre class="brush: html">> %/12=0;
+    </pre>
+
+    <p>$$ x_1^2 - x_1 + \frac{4}{3} x_2^2 + \frac{4}{3} x_3^2 - \frac{3}{4} = 0$$
+    </p>
+
+    <p>We can now plot the ellipsoid with Maple using command implicitplot3d
+        (Figure 11).
+    </p>
+
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F11',
+    'ref': 'Fig. 11',
+    'leg': 'Drawing with Maple an ellipsoid constructed with Calques3D.' }
+    only %}
+
+    <h3 id="__sec4.3">4.3 Application III: Mechanical Theorem Proving in 3D Geometry
+    </h3>
+
+    <p>Let us begin with a very simple case.
+    </p>
+
+    <p>Example 8 The diagonals of a parallelepiped are concurrent.
+    </p>
+
+    <p>We first draw the geometric configuration (Figure 12) and can afterwards automatically
+        obtain the corresponding “history” file (that is not included for the
+        sake of brevity).
+    </p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F12',
+    'ref': 'Fig. 12',
+    'leg': 'Drawing a parallelepiped and its diagonals with Calques3D (some lines have be hidden to make the figure easier to visualize).' }
+    only %}
+
+    <p>The process followed to draw the parallelepiped is:
+    </p>
+
+    <ul>
+        <li>draw three different points on plane z = 0 and a fourth point outside this
+            plane (they are four vertices of the parallelepiped, and, if chosen this way,
+            the pallelepiped, when completed, is completely general and cannot be a degenerated
+            one),
+        <li>complete a parallelogram from the three points on plane z = 0 (drawing
+            parallel lines and intersecting them),
+        <li>complete a parallelepiped from the parallelogram on plane z = 0 and the
+            point outside this plane (drawing parallel lines and intersecting them),
+        <li>draw the four diagonals of the pallelepiped.
+    </ul>
+
+    <p>Now we can check with Maple that the intersection point of two of the four
+        diagonals (Pt23), which coordinates have been automatically provided by the
+        “history” file, belongs to the other two diagonals, (Ln24 and Ln25) –all these
+        objects are defined in the “history” file.
+    </p>
+
+    <p>
+        We shall use paramGeo3D’s command isPlaced to check it. This command
+        receives as input a point and an object. The latter is:
+    </p>
+
+    <ol style="list-style-type: lower-alpha">
+        <li>either directly defined by its equation, as is the case for a plane (from the
+            algebraic point of view, the object is a surface),
+        <li>or given as the intersection of two objects directly defined by their equations,
+            as is the case for a line –given as the intersection of two planes (from the
+            algebraic point of view, the object is a curve, defined as the intersection of
+            two surfaces)
+    </ol>
+
+    <p>
+        and returns as output the result of substituting the coordinates of the point in
+        the equation(s) of the object. Therefore, the given point lies on the given object
+        if and only if (respectively):</p>
+
+    <ol style="list-style-type: lower-alpha">
+        <li>0 is obtained
+        <li>[0, 0] is obtained
+    </ol>
+
+
+    <p>Let us check our present example:</p>
+
+
+    <pre class="brush: html">
+        > isPlaced(Pt23,Ln24);
+            [0, 0]
+        > isPlaced(Pt23,Ln25);
+            [0, 0]
+        </pre>
+
+
+    <p>As [0, 0] is obtained in both cases, the point lies on the other two diagonals
+        too.
+    </p>
+
+    <p>We would like to stress that, after loading paramGeo3D and the translator
+        Maple packages and the “history” file in Maple format, all what the user had
+        to type in the Maple session to obtain the formal proof were the two lines
+        above!</p>
+
+    <h3 id="__sec4.4">
+        4.4 Application IV: Checking that Certain Coordinates or Equations do Correspond
+        to a Locus</h3>
+
+    <p>Determining geometric loci can be linked to mechanical theorem proving in
+        geometry. For instance, we have proven in Example 8 that the diagonals of a
+        parallelepiped are concurrent. Now we can use the Calques3D – Maple connection
+        provided by paramgeo3D to check that the coordinates of such intersection
+        point are the average of the coordinates of the vertices of the parallelepiped.</p>
+
+    <p>
+        Example 9 The coordinates of the common point to the diagonals of a parallelepiped
+        are the average of the coordinates of its vertices.
+    </p>
+
+    <p>With the notation of Example 8 (this is a continuation of it), we have to check
+        that the coordinates of Pt23 are the average of the coordinates of Pt1, Pt2,
+        Pt3, Pt4, Pt10, Pt15, Pt18, Pt19.
+
+    </p>
+
+    <p>The coordinates of Pt23 are {{ forms.note("[10]","N10") }} :
+    </p>
+
+    <pre class="brush: html">
+    > Pt23;
+    </pre>
+
+    $$ Pt23 := [1, -\frac{Pt1x}{2} + \frac{Pt2x}{2} + \frac{Pt4x}{2} + \frac{Pt3x}{2} ,\\
+    \frac{Pt1y}{2} + \frac{Pt4y}{2} + \frac{Pt2y}{2} - \frac{Pt3y}{2} ,\\
+    \frac{Pt4z}{2} ]$$
+
+
+    <p>Observe that not all Pt1, Pt2, Pt3, Pt4, Pt10, Pt15, Pt18, Pt19 appear in
+        the expression of Pt23 above. That happens because there are dependencies
+        between the coordinates of these points (i.e., they are not all free points –due
+        to the parallelism declarations). This is why the result is not trivial, and some
+        computations have to be made.
+    </p>
+
+    <p>So let us compare the (affine) coordinates of Pt23 with the average of the
+        (affine) coordinates of the vertices {{ forms.note("[11]","N11") }} :
+    </p>
+
+
+    <pre class="brush: html">
+    > # x coordinate
+    > op(2,Pt23);
+    </pre>
+
+    $$ -\frac{Pt1x}{2} + \frac{Pt2x}{2} + \frac{Pt4x}{2} +
+    \frac{Pt3x}{2}$$
+
+    <pre class="brush: html">
+    > (Pt1[2]+Pt2[2]+Pt3[2]+Pt4[2]+Pt10[2]+Pt15[2]+Pt18[2]+Pt19[2])
+    /8;
+    </pre>
+
+    $$ -\frac{Pt1x}{2} + \frac{Pt2x}{2} + \frac{Pt4x}{2} +
+    \frac{Pt3x}{2}$$
+
+    <p>So the result holds for the first (affine) coordinate. The same happens for the
+        other two coordinates, and therefore the result is true.
+    </p>
+
+    <h3 id="__sec4.5">4.5 Application III: Mechanical Theorem Proving in 3D Geometry
+        (Continued)</h3>
+
+    <p>In Example 8 a very simple example of mechanical theorem proving in geometry
+        was presented. As will be shown in Examples 10 and 11, the symbolic
+        connection between Calques3D and Maple provided by paramGeo3D allows
+        to prove, with just some mouse clicks and typing one or two lines of Maple
+        code, non-trivial 3D geometric theorems.
+    </p>
+
+    <p>
+        Example 10 A 3D version of Desargues theorem (for triangles).
+    </p>
+
+    <p>
+        The steps followed in the construction of the configuration are the following
+        (see Figure 13):
+    </p>
+
+    <ul>
+        <li>draw a non-degenerated triangle, which three vertices are outside plane z =
+            0, first (directly with side-lines),
+        <li>choose a point that is neither on the plane containing the triangle nor on
+            plane z = 0,
+        <li>project the vertices of the triangle on plane z = 0 (as the vertices of the triangle
+            of the first step are outside this particular plane, there is no possibility
+            of encountering a degenerate case; moreover, there is no loss of generality
+            by projecting on that plane –this plane is only chosen in order to simplify
+            the equations obtained),
+        <li>construct the side-lines through the projections of the vertices,
+        <li>intersect each pair of corresponding side-lines (3 points are obtained),
+        <li>construct the line through 2 of these points,
+    </ul>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F13',
+    'ref': 'Fig. 13',
+    'leg': 'A 3D version of Desargues theorem with triangles.' }
+    only %}
+
+    <p>and the thesis is that this line passes through the third point.
+    </p>
+
+    <p>The history file provided by Calques3D is not included for the sake of brevity.
+    </p>
+
+    <p>The three points obtained in the penultimate step of the construction are Pt23,
+        Pt26 and Pt29 and the line through Pt26 and point Pt23 is denoted Ln30.
+        Now we only have to check with Maple that point Pt29 lies on line Ln30:</p>
+
+
+
+    <pre class="brush: html">
+    > isPlaced(Pt29,Ln30);
+   </pre>
+
+    <p>As [0, 0] has been returned, Pt23 lies on Ln30 (because it lies on the two
+        surfaces defining line Ln30), so the result is true in general.
+    </p>
+
+    <p>We shall finally include an example of mechanical theorem proving of a different
+        kind, where a rate between segments is involved. This makes it necessary
+        to exchange by hand PointOnLine by PointOnLineRate in some lines of
+        the Calques3D history file, in order to make use of paramGeo3D’s command
+        pointOnLineRate.
+    </p>
+
+    <p>Example 11 A 3D version of Ceva and Menelaus theorems.
+    </p>
+
+    <p>The steps followed in the construction of the configuration (see Figure 14) are
+        the following:
+    <ul>
+        <li>draw Pt1 = (0, 0, 0), Pt2 = (1, 0, 0) and Pt3 on plane z = 0, and Pt4
+            outside plane z = 0,
+        <li>draw consecutive side-lines of the tetrahedron, for instance, $\overline{Pt1Pt2}$, $\overline{Pt2Pt3}$,
+            $\overline{Pt3Pt4}$ and
+            $\overline{Pt4Pt1}$ (important: select the points in the order specified, e.g.,
+            first Pt4 and then Pt1),
+        <li>draw a point on each of these side-lines: Pt9, Pt10, Pt11, Pt12 (respectively),
+        <li>draw the plane Pl13 through the points Pt9, Pt10, Pt11.
+    </ul>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F14',
+    'ref': 'Fig. 14',
+    'leg': 'A 3D version of Ceva and Menelaus theorems.' }
+    only %}
+
+    <p>Then, if the ratios (m, n, p, q) of the two segments in which the points Pt9,
+        Pt10, Pt11 and Pt12 divide the corresponding segment verify m· n · p · q = 1,
+        the four points are coplanar. </p>
+
+    <p>The history file provided by Calques3D is:
+    </p>
+
+    <pre class="brush: html">
+    > Range(-0.5,3.7,-1.2,4.4,-0.8,6.1);
+    > FreePointD(Pt1,0,0,0);
+    > FreePointD(Pt2,1,0,0);
+    > FreePointD(Pt3,79/45,129/67,0);
+    > FreePointD(Pt4,69/68,177/95,143/54);
+    > LineD(Ln5,Pt1,Pt2);
+    > LineD(Ln6,Pt2,Pt3);
+    > LineD(Ln7,Pt3,Pt4);
+    > LineD(Ln8,Pt4,Pt1);
+    > PointOnLineRate(m,Pt9,Sg5); #PointOnLine(Pt9,Ln5); #by hand
+    > PointOnLineRate(n,Pt10,Sg6); #PointOnLine(Pt10,Ln6); #by hand
+    > PointOnLineRate(p,Pt11,Sg7); #PointOnLine(Pt11,Ln7); #by hand
+    > PointOnLineRate(q,Pt12,Sg8); #PointOnLine(Pt12,Ln8); #by hand
+    > PlaneD(Pl13,Pt9,Pt10,Pt11);
+    </pre>
+
+    <p>where we have manually substituted the PointOnLine command by Point-
+        OnLineRate command, in order to specify the ratios (m, n, p, q) of the two
+        segments in which the point divides the corresponding segment.
+    </p>
+
+    <p>Plane Pl13 is defined as the plane passing through points Pt9, Pt10, Pt11.
+        Let us check with Maple that the theorem holds, i.e., that if
+    </p>
+
+    $$m \cdot n \cdot p \cdot q=1 \Leftrightarrow m = \frac{1}{n \cdot p \cdot q}$$
+
+    <p>then Pt12 lies on plane Pl13:
+    </p>
+
+    <pre class="brush: html">
+        > isPlaced(Pt12,Pl13);
+    </pre>
+
+    $$ Pt3y \ Pt4z - m \ n \ q \ Pt4z \ p \ Pt3y $$
+
+    <pre class="brush: html">
+        > subs(m=1/(n*p*q),%);
+    </pre>
+
+    $$ 0$$
+
+    <p>Therefore the theorem has been proven just adding four lines of code to the
+        history file and typing two lines of code.</p>
+
+    </section>
+
+    <section class="sec">
+        <h2 id="__sec5">5 Conclusions</h2>
+
+        <p>This work has a didactic application in geometric problems exploration. Nevertheless,
+            its main interest is to provide a convenient way to explore and automatically
+            obtain the corresponding algebraic or numerical data when dealing
+            with a 3D extension of “ruler and compass geometry”, which has a wider scope
+            than only educational purposes (e.g., mechanical theorem proving in geometry,
+            geometric discovery, geometric loci finding...). As far as we know, apart
+            from the restricted prototype 3D-LD, there is no comparable software for 3D!
+        </p>
+
+        <p>We would like to underline that, as shown in Example 11, manually editing
+            the output of the DGS is sometimes needed. Further developments have to be
+            carried out in the DGS side to completely characterize these cases. But both
+            options are not mutually exclusive: both may need to be done in some cases.
+            To summarize, the export, translation and treatment of the construction history,
+            in order to obtain a format usable by Maple, and involving symbolic
+            coordinates and equations with symbolic coefficients, has now been completed
+            and expanded to cover all the “ruler and compass geometry”.
+        </p>
+
+        <p>As future work, Calques 3D’s author is now working on improving the user
+            interface with ParamGeo3D, using the openMaple API [{{ forms.cite("70","B70") }}
+            ,{{ forms.cite("25","B25") }}], which allows
+            direct calls to the Maple kernel from external programs. This will remove the
+            need, as described in this paper, of working alternately with the two systems
+            and saving/loading an intermediary file. But, in the long-term, it will also
+            open the possibility for supporting the other part of the DGS-CAS communication:
+            being able to immediately use the output of the CAS for modifying
+            or constructing new elements in a configuration (as Geometry Expressions is
+            already able to do in the 2D case).
+        </p>
+
+
+    </section>
+
+    <section class="sec">
+        <h2 id="__sec6"> 6 Acknowledgments</h2>
+
+        <p>This work was partially supported by the research projects MTM2004-03175
+            (Ministerio de Educación y Ciencia, Spain), UCM2005-910563 and UCM2006-
+            910563 (Comunidad de Madrid - Universidad Complutense de Madrid, research
+            group ACEIA) and UCM2008-910563 (UCM - BSCH Gr. 58/08, research
+            group ACEIA).
+        </p>
+
+        <p>We would also like to thank the anonymous referees for their most valuable
+            comments, that have really improved the article.</p>
+    </section>
+
+    <section class="sec">
+        <h2 id="__sec7">References</h2>
+
+        <div id="reference-list" class="ref-list-sec sec">
+
+            <ol class="ref-numbered">
+
+                <li id="B1">L. Bazzotti, G. Dalzotto , L. Robbiano, Remarks on Geometric Theorem
+                    Proving, in: J. Richter-Gebert, D. Wang (editors), Proceedings of ADG 2000,
+                    Springer-Verlag, LNAI 2061, Berlin-Heidelberg, 2001, pp. 104–128.
+                <li id="B2">F. Botana, 3D-LD: automatic discovery of 3D loci via the web (Technical
+                    Report), Department of Applied Mathematics, University of Vigo, 2002.
+                <li id="B3">F. Botana, J.L. Valcarce, A dynamic-symbolic interface for geometric theorem
+                    discovery, Computers and Education 38/1-3 (2002) 21-35.
+                <li id="B4">F. Botana, J.L. Valcarce, A software tool for the investigation of plane loci,
+                    Mathematics and Computers in Simulation 61/2 (2003) 141-154.
+                <li id="B5">F. Botana, J.L. Valcarce, Automatic determination of envelopes and other
+                    derived curves within a graphic environment, Mathematics and Computers in
+                    Simulation 67/1-2 (2004) 3-13.
+                <li id="B6">F. Botana, A web-based resource for automatic discovery in plane geometry,
+                    International Journal of Computers for Mathematical Learning 8/1 (2003) 109-
+                    121.
+                <li id="B7">B. Buchberger, Applications of Gröbner Bases in non-linear Computational
+                    Geometry, in: J.R. Rice (editor), Mathematical Aspects of Scientific Software,
+                    Springer-Verlag, 1988, pp. 59-87.
+                <li id="B8">M. Bulmer, D. Fearnley-Sander, T. Stokes, The Kinds of Truth of Geometry
+                    Theorems, in: J. Richter-Gebert, D. Wang (editors), Proceedings of ADG 2000
+                    Springer-Verlag, LNAI 2061, Berlin-Heidelberg, 2001, pp. 129–142.
+                <li id="B9">C. Chou, Mechanical Geometry Theorem Proving, Reidel, 1988.
+                <li id="B10">S.C. Chou, X.S. Gao, Z. Ye, Java Geometry Expert, in: Proceedings of the 10th
+                    Asian Technology Conference in Mathematics, 2005, pp. 78-84.
+                <li id="B11">P. Conti, C. Traverso, Algebraic and Semialgebriac Proofs: Methods and
+                    Paradoxes, in: J. Richter-Gebert, D. Wang (editors), Proceedings of ADG 2000.
+                    Springer-Verlag, LNAI 2061, Berlin-Heidelberg, 2001, pp. 83–103.
+                <li id="B12">R.M. Corless, Essential Maple, Springer-Verlag, New York Berlin Heidelberg,
+                    1995.
+                <li id="B13">A. Dolzmann, T. Sturm, V.Weispfenning, A New Approach for Automatic
+                    Theorem Proving in Real Geometry, J. of Automated Reasoning 21 (1998)
+                    357–380.
+                <li id="B14">K. Fuchs, M. Hohenwarter, Combination of Dynamic Geometry, Algebra and
+                    Calculus in the Software System GeoGebra, in: Computer Algebra Systems and
+                    Dynamic Geometry Systems in Mathematics Teaching Conference 2004, Pecs,
+                    Hungary, 2005.
+                <li id="B15">X.S. Gao, J.Z. Zhang, S.C. Chou, Geometry Expert, Nine Chapters Publishers,
+                    1998.
+                <li id="B16">A. Heck, Introduction to Maple, Springer-Verlag, New York Berlin Heidelberg,
+                    1996.
+                <li id="B17">R.D. Jenks, R.S. Sutor, Axiom. The Scientific Computation System, Springer-
+                    Verlag, New York Berlin Heidelberg, 1992.
+                <li id="B18">D. Kapur, J.L. Mundy, Wu’s method and its application to perspective
+                    viewing, in: D. Kapur, J.L. Mundy (editors), Geometric Reasoning, MIT Press,
+                    Cambridge, MA, 1989, pp. 15-36.
+                <li id="B19">U. Kortenkamp, Foundations of Dynamic Geometry (PhD. Thesis), Swiss Fed.
+                    Inst. Tech. Zurich, 1999.
+                <li id="B20">B. Kutzler, Introduction to DERIVE for Windows, BK-Teachware, Hagenberg,
+                    Austria, 1996.
+                <li id="B21">B. Kutzler, Careful algebraic translations of geometry theorems, in: G.H.
+                    Gonnet (editor), Proceedings of ISSAC 89, ACM Press, Portland, Oregon, 1989,
+                    pp. 254-263.
+                <li id="B22">B. Kutzler, V. Kokol-Voljc, DERIVE 5. The Mathematical Assistant for your
+                    PC, BK-Teachware, Hagenberg, Austria, 2000.
+                <li id="B23">B. Kutzler, S. Stifter, On the application of Buchberger’s algorithm to
+                    automated geometry theorem proving, Journal of Symbolic Computation 2/4
+                    (1986) 389–397.
+                <li id="B24">M. MacCallum, F.Wright, Algebraic Computing with Reduce, Clarendon Press,
+                    Oxford, 1991.
+                <li id="B25">Maplesoft: Maple User Manual. Maplesoft, 2005.
+                <li id="B26">G. Rayna, REDUCE. Software for Algebraic Computation, Springer-Verlag,
+                    New York Berlin Heidelberg, 1987.
+                <li id="B27">T. Recio, Cálculo Simbólico y Geométrico, Ed . Síntesis, 1998.
+                <li id="B28">T. Recio, F. Botana, Where the Truth Lies (in Automatic Theorem Proving in
+                    Elementary Geometry), in: A. Laganá et al. (editors), Proceedings of ICCSA
+                    2004 Springer-Verlag, LNCS 3044, Berlin-Heidelberg, 2004, pp. 761–770.
+                <li id="B29">T. Recio, M.P. Vélez, Automatic Discovery of Theorems in Elementary
+                    Geometry, Journal of Automated Reasoning 23 (1999) 63-82.
+                <li id="B30">A. Rich et al., DERIVE User Manual, Soft Warehouse, Honolulu, 1994.
+                <li id="B31">E. Roanes-Lozano, Boosting the Geometrical Possibilities of Dynamic Geometry
+                    Systems and Computer Algebra Systems Through Cooperation, in: M.
+                    Borovcnik, H. Kautschitsch (editors), Technology in Mathematics Teaching.
+                    Proceedings of ICTMT-5, ¨obv & hpt, Schrifrenreihe Didaktik der Mathematik
+                    25, Viena, 2002, pp. 335-348.
+                <li id="B32">E. Roanes-Lozano, E. Roanes-Macías, Automatic Theorem Proving in
+                    Elementary Geometry with Derive 3, The International Derive Journal 3/2
+                    (1996) 67-82.
+                <li id="B33">E. Roanes-Lozano, E. Roanes-Macías, How Dynamic Geometry could
+                    Complement Computer Algebra Systems (Linking Investigations in Geometry
+                    to Automated Theorem Proving), in: Proceedings of the Fourth International
+                    Derive/TI-89/TI-92 Conference (CD-ROM), BK-Teachware, Hagenberg,
+                    Austria, 2000.
+                <li id="B34">E. Roanes-Lozano, E. Roanes-Macías, M. Villar Mena, A Bridge Between
+                    Dynamic Geometry and Computer Algebra. Mathematical and Computer
+                    Modelling 37/9-10 (2003) 1005-1028.
+                <li id="B35">E. Roanes-Lozano, E. Roanes-Macías, A Simple Geometric Theorem with
+                    a Constructive Configuration Whose Truthfulness Depends on the Base
+                    Field Considered, International J. of Computer Information Systems and
+                    IndustrialManagement Applications (IJCISIM) Spec.Vol. 1 (2008) 22–29 (URL:
+                    www.softcomputing.net/~ijcisim/)
+                <li id="B36">E. Roanes-Macías, E. Roanes-Lozano, Nuevas Tecnologías en Geometría,
+                    Editorial Complutense, Madrid, 1994.
+                <li id="B37">E. Roanes-Macías, E. Roanes-Lozano, Cálculos Matemáticos con Maple V.5,
+                    Ed. Rubi˜nos, Madrid (1999) (In Spanish).
+                <li id="B38">E. Roanes-Macías, E. Roanes-Lozano, A method for outlining 3D problems
+                    in order to study them mechanically. Application to prove the 3D-version of
+                    Desargues, in: L. González-Vega, T. Recio (editors): Actas de los Encuentros
+                    de Algebra Computacional y Aplicaciones (EACA’2004). Universidad de
+                    Cantabria, 2004, pp. 237–242.
+                <li id="B39">E. Roanes-Macías, E. Roanes-Lozano, A Maple Package for Automatic Theorem
+                    Proving and Discovery in 3D-Geometry, in: F. Botana, T. Recio (editors):
+                    Automated Deduction in Geometry, 6th International Workshop, ADG 2006.
+                    Lozano, 3D-extension of Steiner chains problem,
+                    Mathematical and Computer Modelling 45 (2007) 137–148.
+                <li id="B41">E. Roanes-Macías, E. Roanes-Lozano, J. Fernández-Biarge, Extensión natural a
+                    3D del teorema de Pappus y su configuración completa, Bol. Soc. “Puig Adam”
+                    80 (2008) 38–56.
+                <li id="B42">E. Roanes-Macías, E. Roanes-Lozano, J. Fernández-Biarge, Obtaining a 3D
+                    extension of Pascal theorem for non-degenerated quadrics and its complete
+                    configuration with the aid of a computer algebra system. RACSAM (Revista
+                    de la Real Academia de Ciencias Exactas, Físicas y Naturales, Serie A,
+                    Matemáticas) 103/1 (2009) 93-109.
+                <li id="B43">P. Todd, Geometry Expressions: A Constraint Based Interactive Symbolic
+                    Geometry System, in: F. Botana, T. Recio (editors): Automated Deduction
+                    in Geometry, 6th International Workshop, ADG 2006. Springer-Verlag Lecture
+                    Notes in Artificial Intelligence 4689, Berlin Heidelberg New York, 2007, pp.
+                    189–202
+                <li id="B44">D. Wang, GEOTHER 1.1: Handling and Proving Geometric Theorems
+                    Automatically, in: F. Winkler (editor), Automated Deduction in Geometry,
+                    Lecture Notes in Artificial Intelligence 2930, Springer-Verlag, Berlin Heidelberg
+                    New York, 2004, pp. 194-215.
+                <li id="B45">S. Wolfram, Mathematica. A System for Doing Mathematics by Computer,
+                    Addison-Wesley, Redwood City, CA (1991).
+                <li id="B46">W. Wen-Tsun, On the decision problem and the mechanization of theorem proving
+                    in elementary Geometry, A.M.S. Contemporary Mathematics 29 (1984)
+                    213-234.
+                <li id="B47">W. Wen-Tsun, Some recent advances in Mechanical Theorem-Proving of
+                    Geometries, A.M.S. Contemporary Mathematics 29 (1984) 235–242.
+                <li id="B48">–, The Geometer’s Sketchpad User Guide and Reference Manual v.3, Key
+                    Curriculum Press, Berkeley, CA, 1995.
+                <li id="B49">–, The Geometer’s Sketchpad Reference Manual v.4, Key Curriculum Press,
+                    Emeryville, CA, 2001.
+                <li id="B50">URL: http://www.wolfram.com
+                <li id="B51">URL: http://www.maplesoft.com
+                <li id="B52">URL: http://education.ti.com/educationportal/sites/US/productDetail/us derive6.html
+                <li id="B53">URL: http://www.reduce-algebra.com/
+                <li id="B54">URL: http://www.axiom-developer.org/
+                <li id="B55">URL: http://www.mupad.de
+                <li id="B56">URL: http://maxima.sourceforge.net/
+                <li id="B57">URL: http://cocoa.dima.unige.it
+                <li id="B58">URL: http://www.singular.uni-kl.de/
+                <li id="B59">URL: http://education.ti.com/educationportal/sites/US/productDetail/us cabri geometry.html
+                <li id="B60">URL: http://www.keypress.com/x5521.xml
+                <li id="B61">URL: http://cinderella.de/tiki-index.php
+                <li id="B62">URL: http://www.geogebra.org/cms/
+                <li id="B63">URL: http://www.calques3d.org
+                <li id="B64">URL: http://pygeo.sourceforge.net
+                <li id="B65">URL: http://www.mmrc.iss.ac.cn/gex/
+                <li id="B66">URL: http://www.cs.wichita.edu/~ye/
+                <li id="B67">URL: http://www.geometryexpressions.com/
+                <li id="B68">URL: http://www-calfor.lip6.fr/~wang/epsilon
+                <li id="B69">URL: http://www-calfor.lip6.fr/~wang/GEOTHER/
+                <li id="B70">URL: http://www.adeptscience.co.uk/products/mathsim/maple/html/OpenMaple.html
+            </ol>
+
+
+
+    </div>  </section>
+    <section class="sec">
+        <h2 id="__sec9">Notes</h2>
+
+        <div id="note-list" class="ref-list-sec sec">
+        <ol start="3">
+            <li id="N3">There are 3D geometry systems with other philosophies like PyGeo {{ forms.cite("[64]","B64") }}
+                (similar
+                to a DGS but requiring the construction to be “programmed” in a classic style –i.e.,
+                typing the corresponding commands), Geomview (3D curves and surfaces), Euler
+                3D (polyhedra), Archimedes 3D (3D design), . . .
+            <li id="N4">Although there are external packages for dealing with CAS-created 3D plots, like
+                JavaView and Sing Surf for Mathematica and Maple. Note that this is somehow
+                the opposite of what we intend to do. We would like to draw with the mouse, and
+                to obtain from the mouse-drawn geometric configuration (without typing at the
+                keyboard) an algebraic output that could be used as input to the CAS.
+            <li id="N5">We choose the coordinates this way so that the length of the side opposite to B
+                is b and the length of the side opposite to C is c.
+            <li id="N6">Note that D and I are reserved words in Maple, and therefore need to be escaped
+                by the translator package (using D_ and I_ instead). Such issue is tricky to remember
+                when doing this sort of process “by hand”.
+            <li id="N7">The treatment of degenerated cases is an important problem in automated theorem
+                proving {{ forms.cite("[21]","B21") }}. Another important fact is that we sometimes draw and think in
+                $\mathbb{R}^n$ and carry out the computations in $\mathbb{C}^n$ {{ forms.cite("[35]","B35") }}.
+                Moreover, there are discussions and
+                different opinions about what is a “true” theorem [{{ forms.cite("1","B1") }},{{ forms.cite("8","B8") }}
+                ,{{ forms.cite("11","B11") }},{{ forms.cite("13","B13") }},{{ forms.cite("28","B28") }}].
+            <li id="N8">Let us stress that the points drawn by the commands of the PointOn... family
+                are not free points, but have one or two degrees of freedom.
+            <li id="N9">In Calques3D, the coordinates of a point are not editable by the user. The only
+                way to obtain integer coordinates is to activate the magnetism that will bind the
+                points drawn by the user (i.e., the free points) to the underlying grid. Choosing
+                carefully the initial points is very useful for simplifying the computations.
+            <li id="N10">Let us remember that, as said in Section 3.3.1, the package works with projective
+                coordinates. The points are determined by lists of four coordinates, and when the
+                first one is zero, it corresponds to a point at infinity.
+            <li id="N11">Let us remark that we are working in this example with affine coordinates, although
+                paramGeo3D internally works with projective coordinates. As the eight vertices
+                of the parallelepiped (Pt1, Pt2, Pt3, Pt4, Pt10, Pt15, Pt18, Pt19) were introduced
+                directly as points drawn with Calques3D, their coordinates are all of the form
+                (1, ..., ..., ...), as can be easily checked (in other examples, where this was not the
+                case, we could also use paramGeo3D command afinCoor to express the projective
+                coordinates this way). Therefore averaging coordinates makes sense here.
+        </ol>
+
+
+</div></section>
+{% endblock %}
