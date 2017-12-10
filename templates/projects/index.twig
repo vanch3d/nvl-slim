@@ -1,5 +1,5 @@
 {% extends 'site.twig' %} 
-
+{% block urltile %}Research Projects{% endblock %}
 {% block pagetile %}Research Projects{% endblock %} 
 
 {% block breadcrumb %}
@@ -25,20 +25,11 @@
 
 					<!-- main-title -->
 					<div class="main-title">
-						<h2>Our Career History</h2>
+						<h2>Research Project History</h2>
 					</div>
 					<!-- /main-title -->
 
-					<!-- description-title -->
-					<div class="description-title">
-						<h3>
-							We are in the business from <span class="base-color" data-to="15"
-								data-speed="2000">15</span> Years ago, and we offer about <span
-								class="base-color" data-to="1000" data-speed="2000">1000</span>
-							template.
-						</h3>
-					</div>
-					<!-- /description-title -->
+
 
 				</div>
 				<!-- /section-title -->
@@ -97,12 +88,13 @@
 <script>
 $(document).ready(function()
 {
+    "use strict";
 	$(".timeline-graph li").each(function( index ) {
 		console.log( index + ": " + $(this).attr('id') );
 
 		var that = this;
 		$.getJSON( "/api/projects/"+$(this).attr('id')+".json", function( data,b,c )
-		{
+		{   console.log(data.description );
 			$(that).find(".post-content").html(data.description);
 			$(that).find(".prj-start span").html(data.start);
 			$(that).find(".prj-end span").html(data.end);

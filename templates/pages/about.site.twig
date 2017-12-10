@@ -1,100 +1,133 @@
-{% extends 'site.twig' %} {% block pagetile %}{% endblock %} {% block
-breadcrumb %}About This Site{% endblock %} {% block content %}
-<section class="white-section">
-	<!-- container -->
-	<div class="container">
-		<!-- row -->
-		<div class="row">
+{% extends 'site.twig' %}
 
-			<!-- col-md-12 -->
-			<div class="col-md-12">
-				<!-- section-title -->
-				<div class="section-title">
+{% macro link(name,url) %}<a href="{{ url }}" title="{{ name }}">{{ name }}</a>{% endmacro %}
+{% import _self as forms %}
 
-					<!-- main-title -->
-					<div class="main-title">
-						<h2>MELON Core Features</h2>
-					</div>
-					<!-- /main-title -->
+{% block urltile %}About this site{% endblock %}
+{% block pagedescription %}
+    <h2>About this site</h2>
+{% endblock %}
 
-					<!-- description-title -->
-					<div class="description-title">
-						<h3>Validated HTML5, Validated CSS3 and Well Documented.</h3>
-					</div>
-					<!-- /description-title -->
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+        <li class="active">About this site</li>
+    </ol>
+{% endblock %}
 
-				</div>
-				<!-- /section-title -->
-			</div>
-			<!-- /col-md-12 -->
+{% block injectCSS %}
+    <style>
+        .fa-ul li {
+            margin: 0 0 10px 1px;
+            line-height: 1.42857;
+        }
 
-			<!-- presentaion -->
-			<div class="presentaion">
+        .fa-ul li i {
+            color: #E10707;
+        }
+    </style>
+{% endblock %}
 
-				<!-- col-md-6 -->
-				<div class="col-md-6">
-					<!-- presentation-details -->
-					<ul class="presentation-details">
+{% block content %}
+    <section class="white-section">
+        <div class="container-fluid">
+            <div class="row">
 
-						<!-- items -->
-						
-						
-						<li><i class="fa fa-arrow-circle-right"></i>Slim -
-							http://www.slimframework.com/</li>
-						<li><i class="fa fa-arrow-circle-right"></i>Paris/Idiorm -
-							http://j4mie.github.io/idiormandparis/</li>
-						<li><i class="fa fa-arrow-circle-right"></i>Zotero API -
-							https://www.zotero.org/support/dev/server_api/v2/start
-							<ul><li><i class="fa fa-arrow-circle-right"></i>libZotero -
-							https://github.com/fcheslack/libZotero</li></ul>
-							</li>
-							
-						
-						<li><i class="fa fa-arrow-circle-right"></i>SlideShare API -
-							http://www.slideshare.net/developers</li>
-						<!-- /items -->
+                <div class="col-md-6">
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>Back-end</h3>
+                        </div>
+                        <ul class="fa-ul">
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i>
+                                Application backend created with the
+                                {{ forms.link('Slim','http://www.slimframework.com/') }} PHP framework.
+                            </li>
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i>
+                                Presentation layer created with the
+                                {{ forms.link('Twig','http://twig.sensiolabs.org/') }} template engine
+                            </li>
 
-					</ul>
-					<!-- /presentation-details -->
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i>
+                                Publications managed remotely on
+                                {{ forms.link('Zotero','https://www.zotero.org/') }}.
+                                <br>
+                                Integration handled through
+                                the {{ forms.link('Zotero API','https://www.zotero.org/support/dev/server_api/v2/start') }}
+                                and some PHP libraries such as
+                                {{ forms.link('libZotero','https://github.com/fcheslack/libZotero') }}
 
-				</div>
-				<!-- /col-md-6 -->
+                            </li>
 
-				<!-- col-md-6 -->
-				<div class="col-md-6">
-					<!-- presentation-details -->
-					<ul class="presentation-details">
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i> Slides are stored on SlideShare and
+                                integrated with the
+                                {{ forms.link('SlideShare API','http://www.slideshare.net/developers') }}.
+                            </li>
 
-						<!-- items -->
-						<li><i class="fa fa-arrow-circle-right"></i>Boostrap v3.1.1 -
-							http://getbootstrap.com/</li>
-						<li><i class="fa fa-arrow-circle-right"></i>Design inspired by the
-							MELON theme -
-							https://wrapbootstrap.com/theme/melon-responsive-website-template-WB0T44866</li>
-						<li><i class="fa fa-arrow-circle-right"></i>citeproc-js - http://gsl-nagoya-u.net/http/pub/citeproc-doc.html</li>
-						<li><i class="fa fa-arrow-circle-right"></i>Twitter &amp; Flickr
-							Feeds</li>
-						<li><i class="fa fa-arrow-circle-right"></i>Working f.b. Fan
-							Counter</li>
-						<!-- /items -->
+                        </ul>
 
-					</ul>
-					<!-- /presentation-details -->
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>Front-end</h3>
+                        </div>
+                        <ul class="fa-ul">
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i>
+                                Core frontend created with
+                                {{ forms.link('Boostrap (3.1.1)','http://getbootstrap.com/') }} and
+                                {{ forms.link('jQuery (1.11)','http://jquery.com/') }}
+                            </li>
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i>
+                                Theme and typography inspired by the
+                                {{ forms.link('MELON','http://www.nestolab.innovatorcoders.com/melon/index.html') }} theme
+                                and by widgets and blueprints from {{ forms.link('Codrops','http://tympanus.net/codrops/')}}.
+                                This is a temporary solution, while a proper, {{ forms.link('LESS','http://lesscss.org/')}}-based, theme is being developed.
+                            </li>
+                            <li><i class="fa-li fa fa-arrow-circle-right"></i>
+                                Various plugins are being used throughout the application:
+                                {{ forms.link('i18next','http://i18next.com/') }},
+                                {{ forms.link('FitVids.js','http://fitvidsjs.com/') }},
+                                {{ forms.link('jQuery Easing','http://gsgd.co.uk/sandbox/jquery/easing/') }},
+                                {{ forms.link('Nicescroll 3','http://areaaperta.com/nicescroll/') }},
+                                {{ forms.link('Snap.svg','http://snapsvg.io/') }},
+                                {{ forms.link('Jquery-Oembed-All','https://github.com/starfishmod/jquery-oembed-all') }},
+                                {{ forms.link('Holder.js','https://github.com/imsky/holder') }},
+                                {{ forms.link('IsotopeJS','http://isotope.metafizzy.co/') }},
+                                {{ forms.link('GMaps.js','http://hpneo.github.io/gmaps/') }},
+                                {{ forms.link('Handlebars','http://handlebarsjs.com/') }},
+                                {{ forms.link('FlexSlider','https://github.com/woothemes/FlexSlider/') }},
+                            </li>
 
 
-					<!-- More Features Button -->
-					and much <a title="More Features" href="javascript:void(0)">more...</a>
+                        </ul>
 
-				</div>
-				<!-- /col-md-6 -->
 
-			</div>
-			<!-- presentaion -->
+                    </div>
 
-		</div>
-		<!-- /row -->
-	</div>
-	<!-- /container -->
-</section>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="col-md-6">
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>APIs</h3>
+                        </div>
+                        <ul class="fa-ul">
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
 {% endblock %}
 

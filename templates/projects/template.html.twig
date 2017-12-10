@@ -1,253 +1,318 @@
 {% extends 'site.twig' %} 
 
+
+{% import _self as forms %}
+{% macro linkedin(name,last,width) %}
+    <script type="IN/MemberProfile" data-width="{{ width|default(250) }}" data-id="{{ name }}" data-related="false" data-format="inline"></script>
+{% endmacro %}
+
+{% block urltile %}{{ project.name}}{% endblock %}
 {% block pagetile %}{{ project.name}}{% endblock %} 
 
 {% block injectCSS %}
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/flexslider/2.2/flexslider.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.css">
+    <link rel="stylesheet" href="/plugins/jquery-github/assets/base.css">
+    <style>
+        .galleria-thumbnails-container {
+            background: none repeat scroll 0 0 #0b0b0b;
+            opacity: 0.85;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .galleria-stage
+        {
+            background: none repeat scroll 0 0 #FFF;
+            border: 1px solid #e4e4e4;
+        }
+        .github-box .github-box-download {
+            height: auto;
+        }
+
+        .cite .csl-entry {
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .csl-bib-body a, .cite .csl-entry
+        {
+            color: #b70606;
+        }
+        #publist > li
+        {
+            margin-bottom: 12px;
+            margin-left: -16px;
+        }
+        .popover
+        {
+            background: none repeat scroll 0 0 #fffef1;
+        }
+    </style>
 {% endblock %}
 
 {% block pagedescription %}
-	<h2>{% block project_title %}{% endblock %}</h2>
-	<div class="subtitle">
-		<span id="prj-inst">{% block project_inst %}{% endblock %}</span> - 
-		<span id="prj-loc">{% block project_loc %}{% endblock %}</span> (
-		<time id="prj-start" datetime="{{ block('project_start') }}"><span>{% block project_start %}{% endblock %}</span></time> - 
-		<time id="prj-end" datetime="{{ block('project_end') }}"><span>{% block project_end %}{% endblock %}</span></time>)
-	</div>
+    <h2>{% block project_title %}{% endblock %}</h2>
+    <div class="subtitle">
+        <span id="prj-inst">{% block project_inst %}{% endblock %}</span> -
+        <span id="prj-loc">{% block project_loc %}{% endblock %}</span> (
+        <time id="prj-start" datetime="{{ block('project_start') }}"><span>{% block project_start %}{% endblock %}</span></time> -
+        <time id="prj-end" datetime="{{ block('project_end') }}"><span>{% block project_end %}{% endblock %}</span></time>)
+    </div>
 {% endblock %}
 
 {% block breadcrumb %}
- <ol class="breadcrumb">
-	<li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
-    <li><a title="Projects" href="{{ urlFor('project.all') }}">Projects</a></li>
-    <li class="active">{{ project.name}}</li>
-</ol>
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+        <li><a title="Projects" href="{{ urlFor('project.all') }}">Projects</a></li>
+        <li class="active">{{ project.name}}</li>
+    </ol>
 {% endblock %}   
 
 {% block content %}
-<section class="white-section">
-	<div class="container-fluid">
+    <section class="white-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-7 col-md-8">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="text-widget">
+                                <div class="text-widget-title">
+                                    <h3>Project Overview</h3>
+                                </div>
 
-		<div class="row">
+                                {% block project_overview %}
+                                {% endblock %}
 
-			<div class="col-sm-8">
+                            </div>
+                        </div>
 
-				<div class="project-OverView">
+                        <div class="col-sm-12">
+                            <div class="text-widget">
+                                <div class="text-widget-title">
+                                    <h3>Selected Publications</h3>
+                                </div>
+                                <ul class="pub-tag" id="publist">
 
-					<!-- short-section-title -->
-					<div class="short-section-title">
-						<h3>OverView</h3>
-					</div>
-					<!-- /short-section-title -->
+                                </ul>
 
-					{% block project_overview %}
-					{% endblock %}
+                            </div>
+                        </div>
 
-                    <!-- short-section-title -->
-                    <div class="short-section-title">
-                        <h3>More Details</h3>
+
+
+
+                        <div class="col-sm-6 col-lg-5">
+                            <div class="text-widget">
+                                <div class="text-widget-title">
+                                    <h3>Links</h3>
+                                </div>
+                                <div class="widget-containt categories">
+                                    {% block project_links %}
+                                    {% endblock %}
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
-                    <!-- /short-section-title -->
-                    <ul class="project-details">
-                        <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
-                    </ul>
-					
-				</div>
-
-			</div>
-
-			<div class="col-sm-4">
-			
- 					<!-- project-flexslider -->
-                        <div id="project-flexslider" class="flexslider project-flexslider">
-                            <!-- slides -->
-                            <ul class="slides">
-                            
-                            	{% for image in images %}
-                                 <li>
-                                    <img src="/{{ image }}" title="dffdggfdgdgdf"/>
-                                </li>
-                                {% else %}
-                            	 <li>
-                                    <img data-src="holder.js/100%x150/gray/text:no images" alt="dffdggfdgdgdf"/>
-                                </li>
-                            	{%  endfor %}
-
-                            </ul><!-- /slides -->
-                        </div><!-- /project-flexslider -->			
-							<!-- short-section-title -->
-					<div class="short-section-title">
-						<h3>Keywords</h3>
-					</div>
-					<!-- /short-section-title -->
-
-
-					<!-- skills-tag -->
-					<ul class="skills-tag">
-						<li><a title="adobe Photshop" href="javascript:void(0)">adobe
-								Photshop</a></li>
-						<li><a title="adobe illustrator" href="javascript:void(0)">adobe
-								illustrator</a></li>
-						<li><a title="adobe indesign" href="javascript:void(0)">adobe
-								indesign</a></li>
-					</ul>
-
-                <div class="short-section-title">
-                    <h3>People</h3>
                 </div>
-                {% block project_people %}
-                {% endblock %}
 
 
-                <!-- /skills-tag -->
+
+                <div class="col-sm-5 col-md-4">
+
+                    <div class="text-widget">
+                        <div class="galleria" style="min-height: 400px; ">
+
+                        </div>
+                    </div>
+
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>Slides</h3>
+                        </div>
+                        <div class="widget-containt">
+                            <ul class="project-details">
+                                <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>People</h3>
+                        </div>
+                        {% block project_people %}
+                        {% endblock %}
+
+                    </div>
+
+                </div>
+            </div>
 
 
-			</div>
-		</div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div class="project-OverView">
 
-					<!-- short-section-title -->
-					<div class="short-section-title">
-						<h3>Selected Publications</h3>
-					</div>
-					<!-- /short-section-title -->
-					<!-- skills-tag -->
-					<ul class="pub-tag" id="publist">
+        </div>
 
-					</ul>
-					<!-- /skills-tag -->
-				</div>
+    </section>
 
-			</div>
-		</div>
 
-	
 
-	</div>
-	</section>
-	
-{% block project_noslides %}	
-<section class="gray-section"><div class="container">
-
-<div class="row" id="slides">
-	{% block project_slides %}
-	{% endblock %}
-</div></div>
-</section>
-{% endblock %}
 
 {% endblock %} 
 
 {% block injectJS %}
-<script src="//cdn.jsdelivr.net/flexslider/2.2/jquery.flexslider-min.js"></script>
-<script src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
-<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-<!--<script src="/plugins/FlexSlider/jquery.flexslider-min.js"></script>
-<script src="/plugins/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>-->
-<script type="text/javascript">
-$(document).ready(function()
-{
-    $('#project-flexslider').flexslider({
-        animation: "slide"
-       
-    });
-
-    $(".flex-viewport").click(function(){
-            var idx = $(".project-flexslider li.flex-active-slide").index();
-            idx = (idx==-1)?0:idx;
-            $.fancybox.open($(".project-flexslider li img"),{
-                index: idx,
-
-                afterClose: function(){
-                    console.log("close");
-                    $(".project-flexslider li img").css("display","block");
+    <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+    <script src="/plugins/jquery-github/jquery.github.js"></script>
+    <script src="/plugins/galleria/galleria.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            /** Configure Citations Popups
+            $('html').on('click', function(e) {
+                if (typeof $(e.target).data('original-title') == 'undefined' && !$(e.target).parents().is('.popover.in')) {
+                    $('[data-original-title]').popover('hide');
                 }
             });
+            */
 
-
-
-    }  );
-
-    $(".fancybox").fancybox({
-        helpers : {
-            title : {
-                type : 'over'
-            },
-            overlay : {
-                speedOut : 0,
-                locked: false
-            }
-        }
-    });
-
-    $.getJSON("{{ urlFor('api.slide.project',{name: project.id})}}")
-            .done(function(data){
-                var dd = 0;
-                data.Slideshow = data.Slideshow || {};
-                $(".project-details").empty();
-                $.each( data.Slideshow, function( index, slide ){
-                    var holder = $('<div/>',{
-                        'class': 'embed',
-                        'data-href': slide.URL
-                            }).appendTo($(".project-details"));
-                    var temp = $('<img/>', {
-                        'src' : slide.ThumbnailURL
-                    }).appendTo(holder);
-                });
-
-
-                $(".embed").click(function()
-                {
-                    console.log("fdfdfgfg");
-                    $url = $(this).data("href");
-                    $(this).unbind( "click" );
-                    $(this).oembed($url,{
-                        afterEmbed: function(){
-                            $("#slides").fitVids({ customSelector: "iframe[src^='http://www.slideshare.net'], iframe[src^='http://myviiids.com']"});
-                        },
-                        embedMethod: 'fill'
-                    });
-                });
+            /** Configure Galleria Plugin **/
+            Galleria.loadTheme('/plugins/galleria/themes/twelve/galleria.twelve.js');
+            Galleria.configure({
+                showInfo: true,
+                transition: "pulse",
+                transitionSpeed: 500,
+                imageCrop: false,
+                thumbCrop: false,
+                carousel: false,
+                autoplay: 4000
             });
-    
-	$.getJSON("{{ urlFor('api.pub.project',{name: project.id})}}")
-		.done(function(data){
-			$.each( data, function( index, value ){
-				var temp = $('<li/>', {
-					    'data-type': value.type
-				}).html(value.output.ref)
-				
-				.append($('<abbr/>', {
-					    'class': 'unapi-id',
-					    'title': value.id
-				}))
-			
-				;//.append(value.output.coins);
-				temp.appendTo('#publist');
-			});
 
-			$(".cite").each(function() {
-				var ref = $( this ).data( "pubidx" );
-				if (ref && data[ref])
-					$( this ).html(data[ref].output.cite);
-			});
-		})
-		.fail(function(){
-				console.log( "error" );
-		})
-		.always(function() {
-			// force update of Zotero plugin (Firefox)
-			var ev = document.createEvent('HTMLEvents');
-			ev.initEvent('ZoteroItemUpdated', true, true);
-			document.dispatchEvent(ev);
-		});
+            /** Configure GitHub Plugin **/
+            $("[data-repo]").github();
+
+            /** Load Publications **/
+            $.getJSON("{{ urlFor('api.pub.project',{name: project.id})}}")
+                    .done(function(data){
+                        $.each( data, function( index, value ){
+                            var ref = $(value.output.ref);
+                            if (value.PubReader)
+                            {
+                                $(ref).find("span.csl-title").wrap($("<a/>",
+                                        {
+                                            'href': value.PubReader,
+                                            'title': "Go to full text"
+                                        }
+                                ));
+                            }
+                            $(ref).append("&nbsp;[").append($(" <a/>",
+                                    {
+                                        'class': "refpdf",
+                                        'text': "PDF",
+                                        'href': value.PDF,
+                                        'title': "Download the PDF"
+                                    }
+                            )).append("]");
+                            var temp = $('<li/>', {
+                                        'id': index,
+                                        'data-type': value.type,
+                                    }).html(ref)
+                                    .append($('<abbr/>', {
+                                        'class': 'unapi-id',
+                                        'title': value.id
+                                    }))
+
+                                    ;//.append(value.output.coins);
+                            temp.appendTo('#publist');
+                        });
+
+                        /* Format in-text citations */
+                        $(".cite").each(function() {
+                            var ref = $( this ).data( "pubidx" );
+                            if (ref && data[ref])
+                            {
+                                $( this).attr('tabindex',0);
+                                $( this ).html(data[ref].output.cite);
+                                $( this ).popover(
+                                        {
+                                            trigger: 'focus',
+                                            container: '.scroller',
+                                            html: true,
+                                            content : $("li#"+ref).html()
+                                        });
 
 
-	
-});
-</script>
+                            }
+                        });
+
+                    })
+                    .fail(function(){
+                        console.log( "error" );
+                    })
+                    .always(function() {
+                        // force update of Zotero plugin (Firefox)
+                        var ev = document.createEvent('HTMLEvents');
+                        ev.initEvent('ZoteroItemUpdated', true, true);
+                        document.dispatchEvent(ev);
+                    });
+
+
+
+            /** Load Project Images **/
+            $.getJSON("{{ urlFor('api.images.project',{name: project.id})}}")
+                    .done(function(data){
+                        var _dataSource = [];
+                        $.each( data, function( index, slide ){
+                            _dataSource.push(
+                                    {
+                                        image:slide.url,
+                                        thumb:slide.thumb,
+                                        title: slide.title,
+                                        description: slide.comment
+                                        //link: 'http://my.destination.com',
+                                        //layer: '<div><h2>This image is gr8</h2><p>And this text will be on top of the image</p>'
+
+                                    }
+                            );
+                        });
+                        Galleria.run('.galleria', {
+                            dataSource: _dataSource
+                        });
+
+                    }).fail(function(){
+                        Holder.add_image("holder.js/100%x150/gray/text:no images", "#container-flexslider").run()
+                        console.log( "error" );
+                    });
+
+
+            /** Load Project Slides  **/
+            $.getJSON("{{ urlFor('api.slide.project',{name: project.id})}}")
+                    .done(function(data){
+                        data.Slideshow = data.Slideshow || {};
+                        $(".project-details").empty();
+                        $.each( data.Slideshow, function( index, slide ){
+                            var holder = $('<div/>',{
+                                'class': 'embed',
+                                'data-href': slide.URL
+                            }).appendTo($(".project-details"));
+                            var temp = $('<img/>', {
+                                'src' : slide.ThumbnailURL
+                            }).appendTo(holder);
+                        });
+
+
+                        $(".embed").click(function()
+                        {
+                            console.log("Slideshare Loading ...");
+                            $url = $(this).data("href");
+                            $(this).unbind( "click" );
+                            $(this).oembed($url,{
+                                afterEmbed: function(){
+                                    $("#slides").fitVids({ customSelector: "iframe[src^='http://www.slideshare.net'], iframe[src^='http://myviiids.com']"});
+                                },
+                                embedMethod: 'fill'
+                            });
+                        });
+                    });
+        });
+    </script>
 {% endblock %}

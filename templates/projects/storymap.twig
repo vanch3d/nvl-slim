@@ -1,0 +1,248 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}Research Projects (Map){% endblock %}
+{% block pagetile %}Research Projects{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+        <li class="active">Projects</li>
+    </ol>
+{% endblock %}
+
+
+{% block content %}
+    <section class="section">
+        <!-- container -->
+        <div class="container-fluid">
+            <!-- row -->
+            <div class="row">
+
+                <!-- col-md-12 -->
+                <div class="col-md-12">
+
+
+                    <div id="mapdiv" style="width: 100%; height: 680px;"></div>
+                </div>
+                <!-- /col-md-12 -->
+
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </section>
+
+
+{% endblock %}
+
+{% block injectCSS %}
+    <link rel="stylesheet" href="//cdn.knightlab.com/libs/storymapjs/0.2.6/css/storymap.css">
+    <style>
+        .vco-slide-content
+        {
+            width: 100% !important;
+        }
+
+        section .container-fluid
+        {
+            padding-left: 0px;
+        }
+
+        .vco-storymap a:hover {
+            text-decoration: none;
+        }
+
+        .vco-menubar {
+            border-bottom: 1px solid #e6e6e6;
+            bottom: -1px;
+            left: 0;
+            right: auto;
+            position: absolute;
+        }
+
+    </style>
+{% endblock %}
+
+{% block injectJS %}
+<script type="text/javascript" src="//cdn.knightlab.com/libs/storymapjs/0.2.6/js/storymap.js"></script>
+    <script>
+        VCO.Media.NVLJSON = VCO.Media.extend({
+
+            includes: [VCO.Events],
+
+            /* Load the media
+             ================================================== */
+            _loadMedia: function() {
+                var api_url,
+                    self = this;
+                // Loading Message
+                this.message.updateMessage(VCO.Language.messages.loading + " " + this.options.media_name);
+
+                // Create Dom element
+                this._el.content_item	= VCO.Dom.create("img", "vco-media-item vco-media-image vco-media-flickr vco-media-shadow", this._el.content);
+
+                // Get Media ID
+                //this.establishMediaID();
+
+                // API URL
+                //api_url = "http://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=" + this.options.api_key_flickr + "&photo_id=" + this.media_id + "&format=json&jsoncallback=?";
+                api_url = this.data.url; //"{{ urlFor('api.images.project',{'name': 'calques3d'}) }}";
+
+                // API Call
+                VCO.getJSON(api_url, function(d) {
+                    if (d) {
+                        self.createMedia(d);
+                    } else {
+                        self.loadErrorDisplay("Photo not found or private.");
+                    }
+                });
+
+            },
+
+            establishMediaID: function() {
+                var marker = 'flickr.com/photos/';
+                var idx = this.data.url.indexOf(marker);
+                if (idx == -1) { throw "Invalid Flickr URL"; }
+                var pos = idx + marker.length;
+                this.media_id = this.data.url.substr(pos).split("/")[1];
+            },
+
+            createMedia: function(d) {
+                /*var best_size = this.sizes(this.options.height),
+                        size = d.sizes.size[d.sizes.size.length - 2].source;
+
+                for(var i = 0; i < d.sizes.size.length; i++) {
+                    if (d.sizes.size[i].label == best_size) {
+                        size = d.sizes.size[i].source;
+                    }
+                }*/
+
+                // Set Image Source
+                this._el.content_item.src	= d[0].url;
+
+                // After Loaded
+                this.onLoaded();
+            },
+
+            sizes: function(s) {
+                var _size = "";
+
+                if (s <= 75) {
+                    if (s <= 0) {
+                        _size = "Large";
+                    } else {
+                        _size = "Thumbnail";
+                    }
+                } else if (s <= 180) {
+                    _size = "Small";
+                } else if (s <= 240) {
+                    _size = "Small 320";
+                } else if (s <= 375) {
+                    _size = "Medium";
+                } else if (s <= 480) {
+                    _size = "Medium 640";
+                } else if (s <= 600) {
+                    _size = "Large";
+                } else {
+                    _size = "Large";
+                }
+
+                return _size;
+            }
+
+
+
+        });
+
+        var original = VCO.MediaType;
+
+        ;(function () {
+
+            VCO.MediaType = function(m) {
+                if (m.url.match(/json/i))
+                {
+                    var media = 	{
+                        type: "json",
+                        name: "Gallery",
+                        match_str: "/json/i",
+                        cls: VCO.Media.NVLJSON
+                    };
+                    media.url 	= m.url;
+                    return media;
+                }
+                return original(m);
+            }
+
+
+
+        })();
+
+
+            $.getJSON("{{ urlFor('api.projects') }}")
+                    .done(function(data){
+                        var mapdata= {
+                            storymap: {
+
+                                slides: [
+                                    {
+                                        "type": "overview",
+                                        "date": "1995-2014",
+                                        "text": {
+                                            "headline": "Research Projects " +
+                                                        "<small>Technology-Enhanced Learning</small>",
+                                            "text": "<p>My research interests lies in the design and the evaluation of Technology-Enhanced Learning (TEL) environments. Over the last couple of years, I have conducted several research projects in various areas: Participatory Design, 3D Dynamic Geometry, (Open) Learner Modelling, Multi-Representations Learning Environments, Life-long Learning, and Auditory Perceptual Learning. I have been working in inter-disciplinary contexts, tackling some of the key questions and problems of learning technologies from a predominantly computer science perspective. Two threads characterise my research agenda: 1) the role, usage and impact of external representations in learning and, 2) transforming learning experiences into transferable knowledge. Until recently, I was a Research Associate at the Institute of Educational Technology (IET) at the Open University, working on the SafeSea project. I have a PhD in Computer Science from the University of Nancy (France, 1999).</p> " +
+                                                    "<span class='vco-note'>This is an overview or title slide to show all the points in your story routed on your map.</span>"
+                                        }
+                                    }]
+                            }
+                        };
+                        $.each(data.projects.reverse(), function(i, item) {
+                            console.log(item.name);
+                            mapdata.storymap.slides.push(
+                                    {
+                                        date: item.start,
+                                        text: {
+                                            headline: item.start + ": " + "<a href='" +  item.url + "'>" + item.title + "</a>",
+                                            text: item.description
+                                        },
+                                        "location": {
+                                            "name": item.location,
+                                            "lat": item.lat,
+                                            "lon": item.lon,
+                                            "zoom": 8,
+                                            "line": true
+                                        },
+                                        media:
+                                        {   credit: item.name,
+                                            caption: item.institution + "(" + item.location + ")",
+                                            type: "json",
+                                            url: item.images
+                                        }
+                                    }
+                            )
+                        });
+
+                        // storymap_data can be an URL or a Javascript object
+                        var storymap_data = '/plugins/demo.json';
+
+                        // certain settings must be passed within a separate options parameter
+                        var storymap_options = {
+                            /*map_type: "stamen:watercolor",*/
+                            calculate_zoom: false,
+                            start_at_slide: 0,
+                            show_lines: true,
+                            map_mini: true
+                        };
+
+                        var storymap = new VCO.StoryMap('mapdiv', mapdata,storymap_options);
+                        var t= $(".vco-menubar");
+                        t.appendTo($(".breadcrumb-wrapper"));
+                        window.onresize = function(event) {
+                            storymap.updateDisplay(); // this isn't automatic
+                        }
+                    });
+
+
+
+    </script>
+{% endblock %}

@@ -67,6 +67,35 @@
 	text-align: justify;
 }
 
+.title:after {
+    color: #333333;
+    content: "";
+    font-family: 'FontAwesome';
+    height: 0;
+    padding-top: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 24px;
+
+}
+
+.title
+{
+    cursor: pointer;
+}
+
+.title.collapsed:after {
+    color: #E10707;
+    content: "";
+}
+
+.panel {
+    padding-right: 30px;
+}
+
+
+
 .meta span {
     padding-right: 4px;
 }
@@ -89,6 +118,10 @@
     content: "";
 }
 
+.meta .pubreader:before {
+    content: "";
+}
+
 .meta .doi:before {
     content: "";
 }
@@ -100,11 +133,55 @@
 .meta .bib:before {
     content: "";
 }
+
+@media only screen and (max-width: 1199px) {
+.gray-section {
+
+}
+}
+
+@media only screen and (max-width: 990px) and (min-width: 768px) {
+    .gray-section {
+
+    }
+}
+
+@media only screen and (max-width: 767px)  {
+    .gray-section {
+
+    }
+    .widget-title {
+        display: inline-block;
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    .widget-containt {
+        display: inline;
+    }
+
+    .widget-title h3 {
+        padding-bottom: 0;
+    }
+    .widget {
+        margin-bottom: 0px;
+        padding-bottom: 2px;
+    }
+
+}
+
+@media only screen and (max-width: 479px) {
+    .gray-section {
+
+    }
+}
+
 -->
 </style>
 {% endblock %}
 
-{% block pagetile %}Publications{% endblock %} 
+{% block urltile %}Publications{% endblock %}
+{% block pagetile %}Publications{% endblock %}
 
 {% block breadcrumb %}
  <ol class="breadcrumb">
@@ -116,18 +193,75 @@
 {% block content %}
 <section class="gray-section">
 	<div class="container-fluid"><div class="row">
-	
-	
-		<div class="col-sm-9">
+
+            <!-- section-title -->
+            <div class="section-title">
+
+                <!-- main-title -->
+                <div class="main-title">
+                    <h2>Publications</h2>
+                </div>
+                <!-- /main-title -->
+
+
+
+            </div>
+
+            <div class="col-sm-3 col-sm-push-9 "><aside class="sidebar" >
+
+                    <!-- widget categories -->
+                    <div class="widget categories">
+
+                        <!-- widget-title -->
+                        <div class="widget-title">
+                            <h3>Filter</h3>
+                        </div><!-- /widget-title -->
+
+                        <!-- widget-containt -->
+                        <div class="widget-containt">
+                            <button class="btn btn-black btn-clear active" data-filter-value="*">all</button>
+                        </div><!-- /widget-containt -->
+
+                    </div><!-- /widget categories -->
+
+                    <!-- widget categories -->
+                    <div class="widget categories">
+
+                        <!-- widget-title -->
+                        <div class="widget-title">
+                            <h3>By Type</h3>
+                        </div>
+                        <!-- /widget-title -->
+
+                        <!-- widget-containt -->
+                        <div class="widget-containt" id="pubtype">
+                            <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+                        </div><!-- /widget-containt -->
+
+                    </div><!-- /widget categories -->
+
+                    <!-- widget tags -->
+                    <div class="widget tags">
+
+                        <!-- widget-title -->
+                        <div class="widget-title">
+                            <h3>By Year</h3>
+                        </div><!-- /widget-title -->
+
+                        <!-- widget-containt -->
+                        <div class="widget-containt" id="pubyear">
+                            <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+                        </div><!-- /widget-containt -->
+
+                    </div><!-- /widget tags -->
+
+                </aside></div>
+
+		<div class="col-sm-9 col-sm-pull-3">
 
 			<div class="project-OverView">
 
-			<!-- short-section-title -->
-				<div class="short-section-title">
-					<h3>Publications</h3>
-				</div>
-				<!-- /short-section-title -->
-				<!-- skills-tag -->
+
 				<div class="panel-group" >
 					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
 					<div class="pub-tag" id="publist">
@@ -139,81 +273,14 @@
 			</div>
 
 		</div>
-		<div class="col-sm-3"><aside class="sidebar">
-				
-			<!-- widget categories -->
-			<div class="widget categories">
 
-            	<!-- widget-title -->
-                <div class="widget-title">
-                	<h3>Filter</h3>
-				</div><!-- /widget-title -->
-
-				<!-- widget-containt -->
-				<div class="widget-containt">
-                	<button class="btn btn-black btn-clear active" data-filter-value="*">all</button>
-				</div><!-- /widget-containt -->
-
-			</div><!-- /widget categories -->
-		                    
-			<!-- widget categories -->
-			<div class="widget categories">
-				
-				<!-- widget-title -->
-				<div class="widget-title">
-					<h3>By Type</h3>
-				</div>
-				<!-- /widget-title -->
-				
-				<!-- widget-containt -->
-				<div class="widget-containt" id="pubtype">
-					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
-				</div><!-- /widget-containt -->
-				
-			</div><!-- /widget categories -->
-			
-			<!-- widget tags -->
-			<div class="widget tags">
-			
-				<!-- widget-title -->
-				<div class="widget-title">
-					<h3>By Year</h3>
-				</div><!-- /widget-title -->
-				
-				<!-- widget-containt -->
-				<div class="widget-containt" id="pubyear">
-					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
-				</div><!-- /widget-containt -->
-
-			</div><!-- /widget tags -->
-			
-		</aside></div>
-		
 	</div></div>
 </section>
 
 
-<div class="template item panel" data-type="" data-year="" style="display: none;">
-	<div class="title" data-parent="" data-toggle="collapse" data-target="">
-	</div>
-	<div id="" class="expand collapse">
-		<div class="abstract">
-			No absract available
-		</div>
-		<div class="meta">
-			<span class="project"><a href=""></a></span>
-            <span class="doi"><a href=""></a></span>
-            <span class="bib"><a href=""></a></span>
-            <span class="pdf"><a href=""></a></span>
-		</div>
-		<abbr class="unapi"></abbr>
-		<span class="coins"></span>	
-	</div>
-</div>
+    {{ source("handlebars/pubitem.hbs") }}
 
-{% include "publications/pubitem.tmpl.twig" %}
-	
-{% endblock %} 
+{% endblock %}
 
 {% block injectJS %}
     <script src="//cdn.jsdelivr.net/handlebarsjs/1.3.0/handlebars.js"></script>
@@ -252,11 +319,12 @@ $(document).ready(function()
 		sortasc = (typeof sortasc === "undefined") ? true : sortasc;
 		group = (typeof sortasc === "undefined") ? false : group;
 		
-		$.each( Object.keys(list).sort(
+		$.each( list.sort(
 				function(a,b) {return (sortasc)? a-b : b-a;}), 
 			function( index, value ){
 				var temp = $('<button/>',  
 						{	'class': "btn btn-black btn-filter",
+                            'data-i18n': 'pub.'+value,
 							/*'data-toggle' : 'button',*/
 							'data-filter-type': type,
 							'data-filter-value': value,
@@ -287,6 +355,20 @@ $(document).ready(function()
 	 $('.loading').animate({
 	        opacity: 1
 	    }, 200);
+
+    function uniques(arr,attr) {
+        var a = [];
+        //for (var i=0, l=arr.length; i<l; i++)
+        //    if (a.indexOf(arr[i][attr]) === -1 && arr[i][attr] !== '')
+        //        a.push(arr[i][attr]);
+
+        $.each(arr, function(key, val) {
+            if (a.indexOf(val[attr]) === -1 && val[attr] !== '')
+                a.push(val[attr]);
+        });
+
+        return a;
+    }
 	    
 	$.getJSON("{{ urlFor('api.pub.project',{name: 'all'})}}")
 		.done(function(data){
@@ -297,12 +379,17 @@ $(document).ready(function()
 			
 				var source   = $("#entry-template").html();
 	var template = Handlebars.compile(source);
+    var items = $.map(data, function (value, key)
+    { 	value.index= ztotal--;
+        value.year = value['issued']['date-parts'].toString();
+        return value;
+    });
 	var context = 
-		{	'items': $.map(data, function (value, key) 
-				{ 	value.index= ztotal--;
-					return value; 
-				})
+		{	'items': items,
+            'years': uniques(items,'year')
 		};
+                dates =      uniques(items,'year');
+                types = uniques(items,'type');
 	var html    = template(context);
 	var gg =11;
 			$('#publist').replaceWith(html);
@@ -385,6 +472,7 @@ $(document).ready(function()
 			// feed the filter widgets
 			updateWidget(dates,'#pubyear','year',false);
 			updateWidget(types,'#pubtype','type');
+                $("button").i18n();
 
 			// start isotope layout
 			var $container = $('#publist').isotope({

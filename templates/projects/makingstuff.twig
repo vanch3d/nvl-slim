@@ -3,33 +3,42 @@
 {% block project_title "Making Stuff" %} 
 
 {% block project_inst "London Knowledge Lab" %}
-{% block project_loc "London, UK"%}
-{% block project_start "2008"%}
-{% block project_end "2010"%}
+{% block project_loc "London, UK" %}
+{% block project_lat "51.52162" %}
+{% block project_lon "-0.117714" %}
+{% block project_start "2008" %}
+{% block project_end "2010" %}
+
+
+{% block project_people %}
+    {{ forms.linkedin("//uk.linkedin.com/pub/brock-craft/1/255/783",true) }}
+{% endblock %}
+
  
 {% block project_overview %}
-<div class="p">
-As part of the "Making Things" workshop at LKL, which aimed at promoting dialogue about technology 
-and design through engaging with the processes and practices of making, I have been working with 
-Dr Brock Craft on a couple of small projects exploring the (collaborative) use of tangibles in 
-educational context. 
-</div><div class="p">
-One of these collaborations, the Spot-On project, was the result of a successful short grant on 
-exploring the use of wireless sensor motes (Sun SPOT API), as well the combination of physical 
-and digital representations for discovering spherical triangle (WiiMote IR camera & IR pens, 
-Processing). 
-</div><div class="p">
-This approach was pursued at Nottingham with the Making Stuff collective, a group of LSRI 
-researchers and PhD students playing at making creative pieces out of interactive digital 
-technologies. In an exploratory and informal way, we brainstormed and designed - to various 
-degree of finalisation - several pilots, prototypes or fully functional displays: 
-the Magic Cushion (Phidgets & RFID tags, Processing and Powerpoint visualisation, support 
-for story-telling), Pong (Phidgets & pressure sensors, physical user interface for 
-the Pong game, promoting engagement in atypical scenarios), Chalk n' Talk 
-(Phidgets & touch sensor, physical activation of audio streams hidden on a blackboard), 
-Weatherman (Processing visualisation of environmental data, web mashup), Falling Apple 
-(WiiMote IR camera & cap-mounted IR emitters, floor projection, interactive physical-digital 
-game, specified but not implemented).
-</div>	
+    <div class="p">
+        <p>As part of the "Making Things" workshop at LKL, which aimed at promoting dialogue about technology
+            and design through engaging with the processes and practices of making, I have been working with
+            Dr Brock Craft on a couple of small projects exploring the (collaborative) use of tangibles in
+            educational context. </p>
+
+        <p>One of these collaborations, the Spot-On project <span class="cite" data-pubidx="2RC2WFBV"></span>,
+            was the result of a successful short grant on
+            exploring the use of wireless sensor motes (Sun SPOT API), as well the combination of physical
+            and digital representations for discovering spherical triangle (WiiMote IR camera & IR pens,
+            Processing). </p>
+
+        <p>This approach was pursued at Nottingham with the Making Stuff collective, a group of LSRI
+            researchers and PhD students playing at making creative pieces out of interactive digital
+            technologies. In an exploratory and informal way, we brainstormed and designed - to various
+            degree of finalisation - several pilots, prototypes or fully functional displays:
+            the Magic Cushion (Phidgets & RFID tags, Processing and Powerpoint visualisation, support
+            for story-telling), Pong (Phidgets & pressure sensors, physical user interface for
+            the Pong game, promoting engagement in atypical scenarios), Chalk n' Talk
+            (Phidgets & touch sensor, physical activation of audio streams hidden on a blackboard),
+            Weatherman (Processing visualisation of environmental data, web mashup), Falling Apple
+            (WiiMote IR camera & cap-mounted IR emitters, floor projection, interactive physical-digital
+            game, specified but not implemented).</p>
+    </div>
 {% endblock %}
 

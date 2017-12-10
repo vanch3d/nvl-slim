@@ -43,7 +43,8 @@
                                     <ul>
                                         {% for projID in projects[0:1] %}
                                             {% include 'projects/'~projID~'.twig' with {
-                                            'tmpl_base':'template.list.twig','highlight' : loop.first
+                                            'tmpl_base':'template.list.twig',
+                                            'highlight' : loop.first
                                             } %}
                                         {% endfor %}
                                     </ul>

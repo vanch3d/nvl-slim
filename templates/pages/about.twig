@@ -1,7 +1,20 @@
 {% extends 'site.twig' %}
 
+{% block urltile %}About me{% endblock %}
 {% block pagetile %}Researcher in TEL{% endblock %}
-{% block breadcrumb %}About me{% endblock %}
+
+{% block pagedescription %}
+    <h2>Nicolas Van Labeke</h2>
+    <div class="subtitle">Researcher in Technology-Enhanced Learning
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+        <li class="active">About me</li>
+    </ol>
+{% endblock %}
 
 {% block content %}
 <section class="white-section"><div class="container-fluid">
@@ -10,9 +23,8 @@
 
 <div class="row col-md-12">
 
-<h3>sdsdsds</h3>
-	<div class="bib-div" data-csl="lncs.csl">
-	</div>
+<h3>to do</h3>
+
 
 </div>
 
@@ -20,68 +32,10 @@
 {% endblock %}
 
 {% block injectJS %}
-<script type="text/javascript" src="/plugins/citeproc-js/xmldom.js"></script>
-<script type="text/javascript" src="/plugins/citeproc-js/citeproc.js"></script>
-
 <script type="text/javascript" >
+    $(document).ready(function()
+    {
 
-$(document).ready(function()
-{ 	var citeproc = null;
-	$.when( 
-		$.getJSON( "https://api.zotero.org/users/6249/collections/BWPDQJUN/items?key=XKAHGTAwUZXN1qJUH7fTSuFM&limit=50&order=date&sort=desc&format=csljson" ), 
-		//$.getJSON( "/plugins/citeproc-js/citations.json" ), 
-		$.get( '/plugins/citeproc-js/locales-en-US.xml' ),
-		$.get( '/plugins/citeproc-js/user-modeling-and-useradapted-interaction NVL.csl' )
-	).then(function( a1, a2, a3) {
-
-		var citations = {};
-		var locale = a2[2].responseText;
-		var styleAsText = a3[2].responseText;
-
-
-		$.each(a1[0].items,function(index, item)
-		{
-			citations[item.id] = item;
-		});
-		
-		// Initialize a system object, which contains two methods needed by the
-		// engine.
-		citeprocSys = {
-		    // Given a language tag in RFC-4646 form, this method retrieves the
-		    // locale definition file.  This method must return a valid *serialized*
-		    // CSL locale. (In other words, an blob of XML as an unparsed string.  The
-		    // processor will fail on a native XML object or buffer).
-		    retrieveLocale: function (lang){
-			    return locale;
-			},
-		    // Given an identifier, this retrieves one citation item.  This method
-		    // must return a valid CSL-JSON object.
-		    retrieveItem: function(id){
-		        return citations[id];
-		    }
-		};
-
-		 citeproc = new CSL.Engine(citeprocSys, styleAsText);
-		 var bibDivs = document.getElementsByClassName('bib-div');
-		    for (var i = 0, ilen = bibDivs.length; i < ilen; ++i) {
-		        var bibDiv = bibDivs[i];
-		        
-		        var itemIDs = [];
-		        for (var key in citations) {
-		            itemIDs.push(key);
-		        }
-		        citeproc.updateItems(itemIDs);
-		        var bibResult = citeproc.makeBibliography();
-		        bibDiv.innerHTML = bibResult[1].join('\n');
-		    }
-		
-	},function(a,b,c){
-		console.log(a);
-		});
-	
-		
-		
-
-});
+    });
 </script>
 {% endblock %}

@@ -1,0 +1,366 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}Publication Map{% endblock %}
+{% block pagetile %}Publications{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+        <li><a title="Publications" href="{{ urlFor('publications.all') }}">Publications</a></li>
+        <li class="active">Map</li>
+    </ol>
+{% endblock %}
+
+{% block injectCSS %}
+    <style>
+
+        .white-section
+        {
+            padding: 0;
+        }
+        .nav-button {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        #docs-list {
+            margin: 50px 8px 8px 8px;
+        }
+
+        #docs-list .docs {
+            border-bottom: 1px solid #ccc;
+            margin: 12px 0;
+        }
+
+        html.lt-ie9 #graph-container {
+            display: none;
+        }
+
+        #split-container {
+            height: 100%;
+            width: 100%;
+        }
+
+        #graph-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: hidden;
+            visibility: hidden;
+        }
+
+        #docs-container {
+            width: 100%;
+            height: 300px;
+            position: fixed;
+            border-top: 3px solid #ccc;
+            display: none;
+            overflow-y: scroll;
+            left: 0;
+            bottom: 0;
+            background-color: white;
+            z-index: 9000;
+        }
+        #docs-close {
+            display: block;
+            position: fixed;
+            font-size: 1.4em;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            right: 8px;
+            background: white;
+            color: #333;
+            text-align: center;
+            text-decoration: none;
+        }
+        #docs-close:hover {
+            background: #ccc;
+        }
+        #docs-scroll {
+            overflow-y: scroll;
+        }
+        #docs {
+            padding: 8px;
+        }
+
+        .docs h2 {
+            font-size: 24px; /* h3 */
+            margin-top: 0;
+        }
+        .docs h3 {
+            font-size: 18px; /* h4 */
+        }
+        .docs h2 em, .docs h3 em {
+            font-size: 14px;
+            color: #999;
+            padding-left: 4px;
+            font-style: normal;
+        }
+        .docs pre {
+            margin: 8px;
+            padding: 4px;
+        }
+        .docs .select-object.missing {
+            color: #c7254e;
+        }
+
+        .link {
+            fill: none;
+            stroke: #666;
+            stroke-width: 1.5px;
+            opacity: .7;
+            marker-end: url(#end);
+
+            transition: opacity 250ms;
+            -webkit-transition: opacity 250ms;
+            -moz-transition: opacity 250ms;
+        }
+
+        marker#end {
+            fill: #666;
+            stroke: #666;
+            stroke-width: 1.5px;
+        }
+
+        .node rect {
+            stroke-width: 1.5px;
+
+            transition: opacity 250ms;
+            -webkit-transition: opacity 250ms;
+            -moz-transition: opacity 250ms;
+        }
+
+        .node text {
+            fill: #000;
+            font: 10px sans-serif;
+            pointer-events: none;
+        }
+
+        .node.selected rect {
+            filter: url(#blue-glow);
+        }
+
+        .link.inactive,
+        .node.inactive rect,
+        .node.inactive text {
+            opacity: .2;
+        }
+
+        .node.inactive.selected rect,
+        .node.inactive.selected text {
+            opacity: .6;
+        }
+
+        .legend {
+            position: fixed;
+        }
+
+        .legend .category rect {
+            stroke-width: 1px;
+        }
+
+        .legend .category text {
+            fill: #000;
+            font: 10px sans-serif;
+            pointer-events: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <section class="white-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div id="split-container">
+
+                        <div id="graph-container">
+                            <div id="graph"></div>
+                        </div>
+                        <div id="docs-container">
+                            <a id="docs-close" class="btn btn-default" href="#">&times;</a>
+                            <div id="docs" class="docs"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block injectJS %}
+    <script src="//cdn.jsdelivr.net/d3js/3.4.3/d3.js"></script>
+    <script src="/plugins/d3js/colorbrewer.js"></script>
+    <script src="/plugins/d3js/process-map/geometry.js"></script>
+    <script type="text/javascript">
+
+        var defaults = {
+            "title" : "Default Title",
+            "graph" : {
+                "linkDistance" : 150,
+                "charge"       : -400,
+                "height"       : 800,
+                "numColors"    : 12,
+                "labelPadding" : {
+                    "left"   : 3,
+                    "right"  : 3,
+                    "top"    : 2,
+                    "bottom" : 2
+                },
+                "labelMargin" : {
+                    "left"   : 3,
+                    "right"  : 3,
+                    "top"    : 2,
+                    "bottom" : 2
+                },
+                "ticksWithoutCollisions" : 50,
+                "boundingBox": false
+            },
+            "types" : {},
+            "constraints" : []
+        };
+        var config = {
+            "title" : "Publications",
+            "graph" : {
+                "boundingBox": true
+            },
+            "types" : {
+                "publication" : {
+                    "short" : "Publications",
+                    "long"  : "Group 0 long name for docs"
+                },
+                "author" : {
+                    "short" : "Co-Authors",
+                    "long"  : "Group 1 long name for docs"
+                },
+                "me" : {
+                    "short" : "Me",
+                    "long"  : "Group 2 long name for docs"
+                }
+            },
+            "constraints" : [
+                {
+                    "has"    : { "type" : "me" },
+                    "type"   : "position",
+                    "x"      : 0.5,
+                    "y"      : 0.5,
+                    "weight" : 10.0
+                },
+                {
+                    "has"    : { "type" : "author" },
+                    "type"   : "radialConstraints",
+                    "radius" : 0.9,
+                    "startAngle": -90,
+                    "index" : 1
+                },
+                {
+                    "has"    : { "type" : "author" },
+                    "type"   : "linkStrength",
+                    "strength" : 4
+                },
+                {
+                    "has"    : { "type" : "publication" },
+                    "type"   : "radialConstraints",
+                    "radius" : 0.5,
+                    "startAngle": -90,
+                    "index" : 1
+                }
+            ]
+        };
+        config = $.extend(true,{},defaults, config );
+        config.data={};
+
+        authName = [],
+        authObj = [];
+        d3.json("{{ urlFor('api.pub.project',{name: 'all'} ) }}", function(data) {
+            $.each( data, function( key, value ) {
+
+                var object = {
+                    "name": value.archive_location,
+                    "type": "publication",
+                    "group": value.project.id,
+                    "depends": [],
+                    "dependedOnBy": [],
+                    "docs": "",
+                    "data": value
+                };
+
+                $.each( value.author, function( idx, author ) {
+                    var idx = $.inArray(author.family, authName);
+                    if (idx==-1)
+                    {
+                        idx = authName.push(author.family);
+                        idx--;
+                        config.data[author.family] = {
+                            "name": author.family,
+                            "type": (author.family=="Van Labeke")? "me" : "author",
+                            "depends": [],
+                            "dependedOnBy": [],
+                            "docs": "",
+                            "data": author
+                        };
+                    }
+                    var tt = config.data[author.family];
+                    object['depends'].push(author.family);
+                    tt['dependedOnBy'].push(value.archive_location);
+
+
+                });
+
+                config.data[value.archive_location] = object;
+            });
+            $.each( config.data, function( key, value ) {
+                formatDoc(value);
+            });
+            $.getScript("/plugins/d3js/process-map/script.js");
+
+            function formatDoc(item)
+            {
+                var _html = $("<div/>");
+                if (item.type=="publication")
+                {
+                    $("<h2/>").text(item.data.title).appendTo(_html);
+                    $("<h3/>").text(item.data.archive_location).appendTo(_html);
+                    var itemA = $("<div/>");
+                    $.each( item.data.author, function( idx, author ) {
+                        $("<a/>",{
+                            "href": "#" + author.family,
+                            "class": "select-object",
+                            "data-name": author.family
+                        }).text(author.given+ " " + author.family).appendTo(itemA).append(" / ");
+                    })
+                    itemA.appendTo(_html);
+                    var itemP = $("<div/>");
+                    $("<span/>").text("Project: ").appendTo(itemP);
+                    $("<span/>").text(item.data.project.name).appendTo(itemP);
+                    itemP.appendTo(_html);
+                    $("<div/>").text(item.data.abstract).appendTo(_html);
+                }
+                else if (item.type=="author")
+                {
+
+                    $("<h2/>").text(item.data.given+ " " + item.data.family).appendTo(_html);
+                    var itemA = $("<ul/>");
+                    $.each( item.dependedOnBy, function( idx, pub ) {
+                         var li = $("<li/>").appendTo(itemA);
+                         var pubObj = config.data[pub];
+                            $("<a/>",{
+                            "href": "#" + pubObj.name,
+                            "class": "select-object",
+                            "data-name": pubObj.name
+                        }).text(pub).appendTo(li);
+
+                    });
+                    itemA.appendTo(_html);
+                }
+                item.docs = _html.html();
+            }
+        });
+
+
+   </script>
+{% endblock %}
