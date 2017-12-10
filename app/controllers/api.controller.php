@@ -469,14 +469,16 @@ class APIController extends Controller
             'method'=>		'pwg.categories.getList',	// Zotero API key
         );
 
-        // build the URL for Zotero API
+        // build the URL for galery API
         $param = http_build_query($data);
         $url2 = 'http://gallery.calques3d.org/ws.php?'.$param;
 
         try {
+
             $request = Requests::get($url2);
             $data = json_decode($request->body, true);
-            if ($data['err']) {
+
+            if (isset($data['err'])) {
                 throw new Exception($data['message'], $data['err']);
             }
 
@@ -503,9 +505,10 @@ class APIController extends Controller
             $request = Requests::get($url2);
             $data = json_decode($request->body, true);
 
-            if ($data['err']) {
+            if (isset($data['err'])) {
                 throw new Exception($data['message'], $data['err']);
             }
+
 
             $imgs = array();
             foreach ($data['result']['images'] as $img) {
@@ -523,7 +526,7 @@ class APIController extends Controller
                 'code'      =>    $e->getCode(),
                 'message'   =>    $e->getMessage());
 
-            $this->outputJSON($error,500);
+            $this->outputJSON($error,$e->getCode());
         }
     }
 
