@@ -1112,7 +1112,7 @@ input.gn-search:focus {
 ---------------------------------------------------------------------------*/
 /* 4.3.1 Wrapper
 ---------------------------------------------------------------------------*/
-#menu-social-icons {
+#gn-menu #menu-social-icons {
     float: right;
 
     -webkit-border-right: none;
@@ -1123,7 +1123,7 @@ input.gn-search:focus {
 
 /* 4.3.2 list
 ---------------------------------------------------------------------------*/
-.menu-social-icons li {
+#gn-menu .menu-social-icons li {
     float: left;
     width: 50px;
     display: inline-block;
@@ -1131,7 +1131,7 @@ input.gn-search:focus {
 
 /* 4.3.3 Anchor
 ---------------------------------------------------------------------------*/
-.menu-social-icons li a {
+#gn-menu .menu-social-icons li a {
     font-size: 20px;
     line-height: 50px;
 
@@ -1140,7 +1140,7 @@ input.gn-search:focus {
          -o-box-shadow: inset 1px 0 #e4e4e4;
             box-shadow: inset 1px 0 #e4e4e4;
 }
-.menu-social-icons li a:hover { color: #e10707 !important; }
+#gn-menu .menu-social-icons li a:hover { color: #e10707 !important; }
 
 
 
@@ -5888,7 +5888,7 @@ a:hover figcaption p {
 
 /* 41.2 Socila icons
 ---------------------------------------------------------------------------*/
-.footer .copyright .social-icons {
+.footer .copyright .menu-social-icons{
     margin: 0;
     padding: 0;
     width: 100%;
@@ -5896,15 +5896,15 @@ a:hover figcaption p {
     list-style: none;
     text-align: center;
 }
-.footer .copyright .social-icons li {
+.footer .copyright .menu-social-icons li {
     padding: 0;
     width: 30px;
     height: 30px;
     margin-left: 3px;
     display: inline-block;
 }
-.footer .copyright .social-icons li:first-child { margin-left: 0; }
-.footer .copyright .social-icons li a {
+.footer .copyright .menu-social-icons li:first-child { margin-left: 0; }
+.footer .copyright .menu-social-icons li a {
     display: block;
     font-size: 16px;
     line-height: 30px;
@@ -6703,7 +6703,7 @@ h3.modal-title { padding-bottom: 0; }
 
     /* 4.3.1 Wrapper
     ---------------------------------------------------------------------------*/
-    #menu-social-icons { display: none; }
+    #gn-menu #menu-social-icons { display: none; }
 
     /* 4.6 Anchor
     ---------------------------------------------------------------------------*/
@@ -7077,7 +7077,7 @@ h3.modal-title { padding-bottom: 0; }
 
     /* 4.3.1 Wrapper
     ---------------------------------------------------------------------------*/
-    #menu-social-icons { display: none; }
+    #gn-menu #menu-social-icons { display: none; }
 
     /* 4.6 Anchor
     ---------------------------------------------------------------------------*/
