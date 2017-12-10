@@ -58,6 +58,22 @@ class APIController extends Controller
 				'name' =>  'SAFESeA',
 				'date' => 2012,
 			),
+            'explabs' => array(
+                'id' 	 =>  'explabs',
+                'name' =>  'Digital Health Institute',
+                'date' => 2014,
+            ),
+            'intmentor' => array(
+                'id' 	 =>  'intmentor',
+                'name' =>  'intmentor',
+                'date' => 2016,
+            ),
+            'mypal' => array(
+                'id' 	 =>  'mypal',
+                'name' =>  'mypal',
+                'date' => 2016,
+            )
+
 		);
         uasort($projIdx, function ($item1, $item2) {
             return $item2['date'] - $item1['date'];
@@ -334,15 +350,16 @@ class APIController extends Controller
 		// build the URL for Zotero API
 		$param = http_build_query($data);
 		$url2 = 'https://api.zotero.org/users/'.$libraryID.'/collections/'.$collectionKey.'/items/top?'.$param;
-		
-		// Send the request to the server (bypassing Zotero_Library)	
+
+		// Send the request to the server (bypassing Zotero_Library)
 		$request = Requests::get($url2,array('Zotero-API-Version' => ZOTERO_API_VERSION));
 		
 		// retrieve the feed and parse it
 		$feed = new Zotero_Feed($request->body);
 		$fetchedItems = $library->items->addItemsFromFeed($feed);
-		
-		// combine the data into a better JSON structure
+
+
+        // combine the data into a better JSON structure
 		$pubs = array();
 		if (count($fetchedItems))
 		{
@@ -360,8 +377,17 @@ class APIController extends Controller
 				// fix the clsjson date
 				$tt['issued']['date-parts'] = array(array($item->year));
 
+
+
                 $loc = $tt['archive_location'];
 				$tt['PDF'] = $this->app->urlFor('publications.named.pdf',array('name'=>$loc));
+
+                $templatePathname = $this->app->view()->getTemplatePathname('publications/papers/'.$loc.'.twig');
+
+                if (is_file($templatePathname))
+                {
+                    $tt['PubReader'] = $this->app->urlFor('publications.named.pubreader',array('name'=>$loc));
+                }
 
 				// extract the coins for outputs 
 				$tt['output']['coins'] = htmlspecialchars_decode($item->subContents['coins']);
@@ -418,7 +444,7 @@ class APIController extends Controller
 		$this->app->expires('+1 week');
 
         try {
-            $pubs = $this->retrieveZotero($name, "umuai-NVL.csl");
+            $pubs = $this->retrieveZotero($name, "umuai-nvl.csl");
             $this->outputJSON($pubs);
         } catch (Exception $e) {
             $error = array(
@@ -447,48 +473,58 @@ class APIController extends Controller
         $param = http_build_query($data);
         $url2 = 'http://gallery.calques3d.org/ws.php?'.$param;
 
-        $request = Requests::get($url2);
-        $data = json_decode($request->body,true);
-        if ($data['err'])
-        {
-            throw new Exception($data['message'],$data['err']);
+        try {
+            $request = Requests::get($url2);
+            $data = json_decode($request->body, true);
+            if ($data['err']) {
+                throw new Exception($data['message'], $data['err']);
+            }
+
+            $cat = array_filter($data['result']['categories'], function ($var) use ($name) {
+                return ($name == $var['permalink']);
+            });
+            $cat = reset($cat);
+
+            if (!$cat) {
+                throw new Exception('No images for this project', 501);
+            }
+
+
+            $data = array(
+                'format' => 'json', // Zotero API key
+                'method' => 'pwg.categories.getImages', // Zotero API key
+                'cat_id' => $cat['id']
+            );
+
+            // build the URL for Zotero API
+            $param = http_build_query($data);
+            $url2 = 'http://gallery.calques3d.org/ws.php?' . $param;
+
+            $request = Requests::get($url2);
+            $data = json_decode($request->body, true);
+
+            if ($data['err']) {
+                throw new Exception($data['message'], $data['err']);
+            }
+
+            $imgs = array();
+            foreach ($data['result']['images'] as $img) {
+                $tmp['url'] = $img['element_url'];
+                $tmp['comment'] = $img['comment'];
+                $tmp['title'] = $img['name'];
+                $tmp['thumb'] = $img['derivatives']['thumb']['url'];
+                $imgs[] = $tmp;
+            }
+            $this->outputJSON($imgs);
         }
-
-        $cat = reset(array_filter($data['result']['categories'], function($var) use($name){
-            return ($name==$var['permalink']);
-        }));
-
-        if (!$cat)
+        catch (Exception $e)
         {
-            throw new Exception('no images for this',501);
+            $error = array(
+                'code'      =>    $e->getCode(),
+                'message'   =>    $e->getMessage());
+
+            $this->outputJSON($error,500);
         }
-
-
-        $data = array(
-            'format'=>		'json',					// Zotero API key
-            'method'=>		'pwg.categories.getImages',	// Zotero API key
-            'cat_id'=>      $cat['id']
-        );
-
-        // build the URL for Zotero API
-        $param = http_build_query($data);
-        $url2 = 'http://gallery.calques3d.org/ws.php?'.$param;
-
-        $request = Requests::get($url2);
-        $data = json_decode($request->body,true);
-        if ($data['err'])
-        {
-            throw new Exception($data['message'],$data['err']);
-        }
-
-        $imgs = array();
-        foreach ($data['result']['images'] as $img)
-        {
-            $tmp['url'] = $img['element_url'];
-            $tmp['comment'] = $img['comment'];
-            $imgs[]=$tmp;
-        }
-        $this->outputJSON($imgs);
     }
 
 	/**

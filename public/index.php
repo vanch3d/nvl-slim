@@ -4,6 +4,13 @@ session_start();
 
 
 require '../vendor/autoload.php';
+require_once "../app/utils/libZoteroSingle.php";
+require_once "../app/utils/CiteProc.php";
+require_once "../app/application.php";
+require_once "../app/controllers/home.controller.php";
+require_once "../app/controllers/project.controller.php";
+require_once "../app/controllers/api.controller.php";
+require_once "../app/controllers/sandbox.controller.php";
 
 
 // System's constants
@@ -16,7 +23,9 @@ $app = new \Slim\Slim(array(
     'templates.path' => '../templates',
 	'debug' => true
 ));
+
 $app->config(require "../app/config.php");
+
 
 
 // Create monolog logger and store logger in container as singleton
@@ -51,9 +60,54 @@ $app->hook('slim.before.dispatch', function() use ($app) {
 	));
 });
 
+// Create the application core
+$c = new Application($app);
+
+// Create the controllers
+$homeCtrl = new HomeController();
+$projectCtrl = new ProjectController();
+$apiCtrl = new APIController();
+$sdxCtrl = new SandboxController();
 
 // Define the routes
-$app->get("/",function(){ echo "hello world"; });
+// site routes
+$c->app->get('/', array($homeCtrl, 'index'))->name('home');
+$c->app->get('/about', array($homeCtrl, 'about'))->name('about.me');
+$c->app->get('/search', array($homeCtrl, 'search'))->name('search');
+$c->app->get('/about/site', array($homeCtrl, 'aboutSite'))->name('about.site');
+
+// project routes
+$c->app->get('/project/', array($projectCtrl, 'index'))->name('project.all');
+$c->app->get('/project/map/', array($projectCtrl, 'getStoryMap'))->name('project.story');
+$c->app->get('/project/:name/', array($projectCtrl, 'project'))->name('project.named');
+$c->app->get('/project/:name/cloud', array($projectCtrl, 'getWordCloud'))->name('project.named.cloud');
+
+// publication routes
+$c->app->get('/publications/', array($projectCtrl, 'publications'))->name('publications.all');
+$c->app->get('/publications/graph/', array($projectCtrl, 'getPubGraph'))->name('publications.all.graph');
+$c->app->get('/publications/map/', array($projectCtrl, 'getProcessMap'))->name('publications.all.map');
+$c->app->get('/publications/:name.pdf', array($projectCtrl, 'exportPublication'))->name('publications.named.pdf');
+//$c->app->get('/publications/:name/', array($projectCtrl, 'getPublication'))->name('publications.named');
+$c->app->get('/publications/(:name/)', array($projectCtrl, 'getPubReader'))->name('publications.named.pubreader');
+$c->app->get('/publications/:name/assets/:fig', array($projectCtrl, 'getPubAssets'))->name('publications.named.assets');
+$c->app->get('/publications/:name/freqdist', array($projectCtrl, 'getFreqDist'))->name('publications.named.freqdist');
+
+// other routes
+$c->app->get('/sandbox/isotope', array($sdxCtrl, 'getIsotope'))->name('sandbox.isotope');
+$c->app->get('/docs/:file.pdf', array($sdxCtrl, 'redirectLegacy'))->name('sandbox.legacy');
+
+
+// api routes
+$c->app->get('/api/unapi', array($apiCtrl, 'unAPI'))->name('api.unapi');
+//$c->app->get('/api/pub/:name.json', array($apiCtrl, 'getPublicationsJSON'))->name('api.pub.project');
+$c->app->get('/api/projects.json', array($apiCtrl, 'getAllProjectJSON'))->name('api.projects');
+$c->app->get('/api/projects/:name.json', array($apiCtrl, 'getProjectJSON'))->name('api.project.named');
+$c->app->get('/api/projects/:name/pubs.json', array($apiCtrl, 'getPublicationsJSON'))->name('api.pub.project');
+$c->app->get('/api/projects/:name/slides.json', array($apiCtrl, 'getSlidesJSON'))->name('api.slide.project');
+$c->app->get('/api/projects/:name/images.json', array($apiCtrl, 'getImagesJSON'))->name('api.images.project');
+
+$c->app->error(array($homeCtrl, 'showError'));
+$c->app->notFound(array($homeCtrl, 'showNotFound'));
 
 
 // Run app
