@@ -38,7 +38,7 @@
 				<ul class="timeline-graph">
 
 				{% for project in projects %}
-					<li id="{{ project.id }}" style="display: none;min-height: 150px">
+					<li id="{{ project.id }}" style="display: none;min-height: 150px" data-url="{{ urlFor('api.project.named',{'name':project.id }   ) }}">
 						<div class="tm-dt">
 						<!-- date --> 
 							<time class="prj-start"><span></span></time>
@@ -92,8 +92,9 @@ $(document).ready(function()
 	$(".timeline-graph li").each(function( index ) {
 		console.log( index + ": " + $(this).attr('id') );
 
-		var that = this;
-		$.getJSON( "/api/projects/"+$(this).attr('id')+".json", function( data,b,c )
+		var that = this
+
+		$.getJSON($(this).attr('data-url'), function( data,b,c )
 		{   console.log(data.description );
 			$(that).find(".post-content").html(data.description);
 			$(that).find(".prj-start span").html(data.start);
