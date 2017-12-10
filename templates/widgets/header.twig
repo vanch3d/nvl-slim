@@ -1,0 +1,47 @@
+     <!-- =========================================
+        Menu
+        ========================================== -->
+        <!-- gn-menu-main -->
+		<ul id="gn-menu" class="gn-menu-main">
+		
+			<!-- gn-trigger -->
+			<li class="gn-trigger">
+				<!-- gn-icon-menu --> <a class="gn-icon-menu"
+				href="javascript:void(0)" title="Menu"><i class="fa fa-bars"></i></a>
+		
+				<!-- gn-menu-wrapper -->
+				<nav class="gn-menu-wrapper">
+		
+					<!-- gn-scroller -->
+					<div class="gn-scroller">
+		
+						<!-- gn-menu -->
+						<ul class="gn-menu">        
+			        	{% include 'widgets/menu.twig' %}
+			        	</ul>
+						<!-- /gn-menu -->
+					</div>
+					<!-- /gn-scroller -->
+	
+				</nav>	
+				<!-- /gn-menu-wrapper -->
+		
+			</li>
+			<!-- /gn-trigger -->
+	
+			<!-- logo -->
+			<li class="logo"><a href="{{ urlFor('home')}}"
+				title="Nicolas Van Labeke"> <span class="base-color">N</span>VL
+			</a></li>
+			<!-- /logo -->
+
+			<!-- page-title -->
+			<li class="page-title"><h3>{% block pagetile %}{% endblock %}</h3></li>
+			<!-- /page-title -->
+
+			<!-- #menu-social-icons -->
+			{% include 'widgets/social.twig' %}
+			<!-- /#menu-social-icons -->
+		
+		</ul>
+		<!-- /gn-menu-main -->

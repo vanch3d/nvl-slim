@@ -1,0 +1,30 @@
+<script id="entry-template" type="text/x-handlebars-template">
+    <div class="pub-tag" id="publist">
+        {{#items}}
+            <div class="template item panel" data-type="{{type}}" data-year="{{issued.date-parts}}"
+                 style="z-index:{{index}};">
+                <div class="title collapsed" data-parent="#publist" data-toggle="collapse" data-target="#item-{{id}}">
+                    {{{output.ref}}}
+                </div>
+                <div id="item-{{id}}" class="expand collapse">
+                    <div class="abstract">
+                        {{#if abstract}}
+                            {{ abstract }}
+                        {{else}}
+                            No abstract available
+                        {{/if}}
+                    </div>
+                    <div class="meta">
+                        <span class="project"><a href="{{project.url}}" title="Go to project page">{{project.name}}</a></span>
+                        {{#if PubReader}}<span class="pubreader"><a href="{{PubReader}}" title="Go to full text">PubReader</a></span> {{/if}}
+                        {{#if DOI}}<span class="doi"><a href="http://dx.doi.org/{{DOI}}" title="Go to article in CrossRef">DOI</a></span> {{/if}}
+                        {{#if BIB}}<span class="bib"><a href=""></a></span> {{/if}}
+                        {{#if PDF}}<span class="pdf"><a href="{{PDF}}" title="Download the PDF">PDF</a></span>{{/if}}
+                    </div>
+                    <abbr class="unapi unapi-id" title="{{id}}"></abbr>
+                    {{{output.coins}}}
+                </div>
+            </div>
+        {{/items}}
+    </div>
+</script>
