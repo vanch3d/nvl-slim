@@ -21,6 +21,8 @@
         "twig/twig": "v1.15.1",
         "slim/slim": "2.4.3",
         "slim/views": "0.1.2",
-        "rmccue/requests": "1.6.0"
+        "rmccue/requests": "1.6.0",
+        "smalot/pdfparser": "v0.9.20",
+        "nlp-tools/nlp-tools": "1.0.x-dev"
     }
 }
