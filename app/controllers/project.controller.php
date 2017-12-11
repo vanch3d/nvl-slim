@@ -37,7 +37,7 @@ class ProjectController extends Controller
 		if (array_key_exists($name, $projIdx))
 		{
 			try {
-				$this->render('projects/'.$name,array(
+				$this->render('projects/content/'.$name,array(
 						'tmpl_base' => 'template.html.twig',
 						'project' => $projIdx[$name]
 				));

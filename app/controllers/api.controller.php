@@ -92,7 +92,7 @@ class APIController extends Controller
         foreach ($projIdx as $project)
         {
             try {
-                $renderedTemplate = $this->app->view()->fetch('projects/' . $project['id'] . ".twig", array(
+                $renderedTemplate = $this->app->view()->fetch('projects/content/' . $project['id'] . ".twig", array(
                     'tmpl_base' => 'template.json.twig',
                     'project' => $project
                 ));
@@ -121,7 +121,7 @@ class APIController extends Controller
 		}
 		else 
 		{
-			$templatePathname = $this->app->view()->getTemplatePathname('projects/'.$name.'.twig');
+			$templatePathname = $this->app->view()->getTemplatePathname('projects/content/'.$name.'.twig');
 			if (!is_file($templatePathname))
 			{
 				$error = array(
@@ -138,7 +138,7 @@ class APIController extends Controller
 		$response = $this->app->response();
 		$response['Content-Type'] = 'application/json;charset=UTF-8';
 		$response['X-Powered-By'] = APPLICATION . '/' . VERSION;
-		$this->render('projects/'.$name,array(
+		$this->render('projects/content/'.$name,array(
 			'tmpl_base' => 'template.json.twig',
 			'project' => $projIdx[$name]
 		));

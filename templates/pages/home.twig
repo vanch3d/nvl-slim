@@ -42,7 +42,7 @@
                                 <div class="widget-containt categories">
                                     <ul>
                                         {% for projID in projects[0:1] %}
-                                            {% include 'projects/'~projID~'.twig' with {
+                                            {% include 'projects/content/'~projID~'.twig' with {
                                             'tmpl_base':'template.list.twig','highlight' : loop.first
                                             } %}
                                         {% endfor %}
@@ -60,7 +60,7 @@
                                 <div class="widget-containt categories">
                                     <ul>
                                         {% for projID in projects[1:] %}
-                                            {% include 'projects/'~projID~'.twig' with {
+                                            {% include 'projects/content/'~projID~'.twig' with {
                                             'tmpl_base':'template.list.twig'
                                             } %}
                                         {% endfor %}
