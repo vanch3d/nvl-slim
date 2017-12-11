@@ -1,8 +1,10 @@
 
 # Created by https://www.gitignore.io/api/phpstorm,composer
 
+### Slim specifics ###
 .cache/
 .logs/
+/app/config.php
 
 ### Composer ###
 composer.phar
