@@ -60,17 +60,12 @@ class APIController extends Controller
 			),
             'explabs' => array(
                 'id' 	 =>  'explabs',
-                'name' =>  'Digital Health Institute',
+                'name' =>  'Experience Labs',
                 'date' => 2014,
-            ),
-            'intmentor' => array(
-                'id' 	 =>  'intmentor',
-                'name' =>  'intmentor',
-                'date' => 2016,
             ),
             'mypal' => array(
                 'id' 	 =>  'mypal',
-                'name' =>  'mypal',
+                'name' =>  'myPAL',
                 'date' => 2016,
             )
 
