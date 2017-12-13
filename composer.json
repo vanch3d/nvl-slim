@@ -23,6 +23,7 @@
         "slim/views": "0.1.2",
         "rmccue/requests": "1.6.0",
         "smalot/pdfparser": "v0.9.20",
-        "nlp-tools/nlp-tools": "1.0.x-dev"
+        "nlp-tools/nlp-tools": "1.0.x-dev",
+        "phpunit/phpunit": "6.5.4"
     }
 }
