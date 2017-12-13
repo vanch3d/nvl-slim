@@ -13,7 +13,9 @@ class HomeController extends Controller
 	 */
 	public function index()
 	{
-        $projIdx = APIController::getProjects(true);
+        //$projIdx = APIController::getProjects(true);
+        $projIdx = $this->getProjectDescriptors(true);
+
         $this->render('pages/home',array(
             'projects' => $projIdx
         ));
@@ -50,7 +52,7 @@ class HomeController extends Controller
      */
     public function search()
     {
-        $projIdx = APIController::getProjects(true);
+        //$projIdx = APIController::getProjects(true);
         $this->render('pages/search',array(
             'projects' => $projIdx
         ));

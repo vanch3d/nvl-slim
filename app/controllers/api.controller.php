@@ -13,7 +13,7 @@ class APIController extends Controller
 	 * @param boolean $keys
 	 * @return array	An array of project IDs, if $keys true, 
 	 * 					the complete descriptors otherwise 
-	 * @todo	Need to find a better way of handling this (database, JSON, ...)
+     * @deprecated      replaced by a self-defined handler
 	 */
 	public static function getProjects($keys=false)
 	{
@@ -83,11 +83,13 @@ class APIController extends Controller
 	}
 
     /**
-     *  Return a detailled list (JSON) of all projects
+     *  Return a detailed list (JSON) of all projects
      */
     public function getAllProjectJSON()
     {
-        $projIdx = APIController::getProjects();
+        //$projIdx = APIController::getProjects();
+        $projIdx = $this->getProjectDescriptors();
+
         $json = array();
         foreach ($projIdx as $project)
         {
@@ -98,8 +100,10 @@ class APIController extends Controller
                 ));
                 $data = json_decode($renderedTemplate);
                 $json[] = $data;
+
             } catch (Exception $e) {
             }
+
         }
         $this->outputJSON(array('projects'=>$json));
     }
@@ -111,15 +115,23 @@ class APIController extends Controller
 	public function getProjectJSON($name)
 	{
 		$error = null;
-		$projIdx = APIController::getProjects();
-		
-		if (!array_key_exists($name, $projIdx))
+		//$projIdx = APIController::getProjects();
+        //$found = current(array_filter($projIdx, function($item) use($name) {
+        //    return isset($item['id']) && $name == $item['id'];
+        //}));
+
+        $found = $this->isProjectDefined($name);
+
+        //if (!array_key_exists($name, $projIdx))
+        if (!$found)
 		{
 			$error = array(
 					"msg" 	=> "API cannot generate `$name` because the project does not exist",
 					"code"	=> 404);
+            $this->outputJSON($error,$error['code']);
+            return;
 		}
-		else 
+		/*else
 		{
 			$templatePathname = $this->app->view()->getTemplatePathname('projects/content/'.$name.'.twig');
 			if (!is_file($templatePathname))
@@ -133,14 +145,14 @@ class APIController extends Controller
 		{
 			$this->outputJSON($error,$error['code']);
 			return;
-		}		
+		}*/
 
 		$response = $this->app->response();
 		$response['Content-Type'] = 'application/json;charset=UTF-8';
 		$response['X-Powered-By'] = APPLICATION . '/' . VERSION;
 		$this->render('projects/content/'.$name,array(
 			'tmpl_base' => 'template.json.twig',
-			'project' => $projIdx[$name]
+			'project' => $found//$projIdx[$name]
 		));
 	}
 
@@ -394,10 +406,15 @@ class APIController extends Controller
 						$tt['keyword'][] = $tag['tag'];
 					else
 					{
-						$projIdx = APIController::getProjects();
-						$name2= strtolower(substr($tag['tag'], 4));
-						$tt['project']= $projIdx[$name2];
-						$tt['project']['url'] = $this->app->urlFor('project.named',array('name'=>$name2));
+						//$projIdx = APIController::getProjects();
+
+                        $name2= strtolower(substr($tag['tag'], 4));
+                        $projIdx = $this->isProjectDefined($name2);
+
+                        if ($projIdx) {
+                            $tt['project'] = $projIdx;
+                            $tt['project']['url'] = $this->app->urlFor('project.named', array('name' => $name2));
+                        }
 					}
 				}
 

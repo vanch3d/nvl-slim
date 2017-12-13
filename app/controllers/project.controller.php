@@ -13,37 +13,44 @@ class ProjectController extends Controller
 	 */
 	public function index()
 	{
-		$projIdx = APIController::getProjects();
-		$this->render('projects/index',array(
+		//$projIdx = APIController::getProjects();
+        $projIdx = $this->getProjectDescriptors();
+
+
+        $this->render('projects/index',array(
 						'projects' => $projIdx
 				));
 	}
 
     public function getStoryMap()
     {
-        $projIdx = APIController::getProjects();
+        //$projIdx = APIController::getProjects();
+        $projIdx = $this->getProjectDescriptors();
+
         $this->render('projects/storymap',array(
             'projects' => $projIdx
         ));
     }
+
 	/**
-	 * 
+	 *
 	 * @param string $name
-	 * @see APIController::getProjects
 	 */
 	public function project($name)
 	{
-		$projIdx = APIController::getProjects();
-		if (array_key_exists($name, $projIdx))
+		//$projIdx = APIController::getProjects();
+        $projIdx = $this->isProjectDefined($name);
+
+        if ($projIdx)
 		{
 			try {
 				$this->render('projects/content/'.$name,array(
 						'tmpl_base' => 'template.html.twig',
-						'project' => $projIdx[$name]
+						'project' => $projIdx
 				));
-				
+
 			} catch (Twig_Error_Loader $e) {
-				
+
 			$this->app->flash('error', 'The project you are looking for does not exist. <br>Try one below.');
 			$this->redirect('project.all');
 			}
@@ -57,10 +64,12 @@ class ProjectController extends Controller
 
     public function getWordCloud($name)
     {
-        $projIdx = APIController::getProjects();
+        //$projIdx = APIController::getProjects();
+        $projIdx = $this->getProjectDescriptors();
+
 
         $this->render('projects/template.cloud',array(
-            'project' => $projIdx[$name]
+            'project' => $projIdx
         ));
     }
 	
