@@ -25,7 +25,7 @@
 
 					<!-- main-title -->
 					<div class="main-title">
-						<h2>Research Project History</h2>
+						<h2>Research Projects - History</h2>
 					</div>
 					<!-- /main-title -->
 
@@ -38,12 +38,12 @@
 				<ul class="timeline-graph">
 
 				{% for project in projects %}
-					<li id="{{ project.id }}" style="display: none;min-height: 150px" data-url="{{ urlFor('api.project.named',{'name':project.id }   ) }}">
+					<li id="{{ project.id }}" data-url="{{ urlFor('api.project.named',{'name':project.id }   ) }}">
 						<div class="tm-dt">
 						<!-- date --> 
-							<time class="prj-start"><span></span></time>
+							<time class="prj-start"><span>{{ project.start }}</span></time>
 							
-							<time class="prj-end"><span></span></time>
+							<time class="prj-end"><span>{{ project.end }}</span></time>
 						</div>
 						<!-- icon -->
 						<div class="tm-icon">
@@ -54,8 +54,8 @@
 							<h4>{{ project.title }}
 							</h4>
 							<!-- post -->
-							<div class="post-content" style="height: 150px">
-								<p> </p>
+							<div class="post-content" >
+								<p>{{ project.description }}</p>
 							</div>
 							<div class="post-meta">
 								<span class="post-author"><a title="See more" href="{{ urlFor('project.named',{'name':project.id}) }}">See More ...</a></span>
@@ -83,38 +83,8 @@
 
 
 {% block injectJS %}
-    <script src="//cdn.jsdelivr.net/jquery.dotdotdot/1.6.13/jquery.dotdotdot.min.js"></script>
-
 <script>
-$(document).ready(function()
-{
-    "use strict";
-	$(".timeline-graph li").each(function( index ) {
-		console.log( index + ": " + $(this).attr('id') );
-
-		var that = this
-
-		$.getJSON($(this).attr('data-url'), function( data,b,c )
-		{   console.log(data.description );
-			$(that).find(".post-content").html(data.description);
-			$(that).find(".prj-start span").html(data.start);
-			$(that).find(".prj-end span").html(data.end);
-			$(that).find(".tm-label h4").html(data.title);
-		}).always(function() {
-			$(that).slideDown();
-			$(that).find(".post-content").dotdotdot({
-					ellipsis : ' [...] ',
-			        watch: "window"
-			    });
-			$("html").getNiceScroll().resize();
-		});
-		
-	});
-
-
-	
-
-
+$(document).ready(function() {
 });
 </script>
 {% endblock %}
