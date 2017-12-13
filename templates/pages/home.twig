@@ -19,12 +19,13 @@
                                 </div>
 
                                 <p>My research interests lies in the design and the evaluation of Technology-Enhanced
-                                    Learning (TEL) environments. Over the last couple of years, I have conducted several
+                                    Learning (TEL) environments. </p><p> Over the last couple of years, I have conducted several
                                     research projects in various areas: Participatory Design, 3D Dynamic Geometry,
                                     (Open) Learner Modelling, Multi-Representations Learning Environments, Life-long
-                                    Learning, and Auditory Perceptual Learning. I have been working in
+                                    Learning, and Auditory Perceptual Learning. </p><p>I have been working in
                                     inter-disciplinary contexts, tackling some of the key questions and problems of
-                                    learning technologies from a predominantly computer science perspective. Two threads
+                                    learning technologies from a predominantly computer science perspective.
+                                    </p><p>Two threads
                                     characterise my research agenda: 1) the role, usage and impact of external
                                     representations in learning and, 2) transforming learning experiences into
                                     transferable knowledge.</p>
@@ -41,8 +42,8 @@
                                 </div>
                                 <div class="widget-containt categories">
                                     <ul>
-                                        {% for projID in projects[0:1] %}
-                                            {% include 'projects/content/'~projID~'.twig' with {
+                                        {% for project in projects[0:1] %}
+                                            {% include 'projects/content/'~project.id~'.twig' with {
                                             'tmpl_base':'template.list.twig','highlight' : loop.first
                                             } %}
                                         {% endfor %}
@@ -58,18 +59,18 @@
                                     <h3>Other Projects</h3>
                                 </div>
                                 <div class="widget-containt categories">
+
                                     <ul>
-                                        {% for projID in projects[1:] %}
-                                            {% include 'projects/content/'~projID~'.twig' with {
+                                        {% for project in projects[1:5] %}
+                                            {% include 'projects/content/'~project.id~'.twig' with {
                                             'tmpl_base':'template.list.twig'
                                             } %}
                                         {% endfor %}
+                                        <li><a href="{{ urlFor('project.all') }}">See all projects ...</a>
                                     </ul>
                                 </div>
-
                             </div>
                             <!-- /text-widget -->
-
                         </div>
 
                         <div class="col-md-12">
@@ -83,7 +84,7 @@
                                 </ul>
                                 <div class="widget-containt categories">
                                     <ul>
-                                        <li><a href="{{ urlFor('publications.all') }}">See all publications</a>
+                                        <li><a href="{{ urlFor('publications.all') }}">See all publications ...</a>
                                          </ul>
 
                                 </div>
@@ -109,16 +110,16 @@
                                     <div class="img-shine"
                                          style="top: -185px; left: -185px; background: none repeat scroll 0% 0% rgba(255, 255, 255, 0);"></div>
                                     <a title="Preview Profile" href="{{ urlFor('about.me') }}">
-                                        <img alt="Nicolas Van&nbsp;Labeke head shot" src="/assets/images/nicolas.jpg"
+                                        <img alt="Nicolas Van&nbsp;Labeke head shot" src="/assets/images/nicolas.alt.jpg"
                                              draggable="false">
                                     </a>
                                 </div>
 
-                                <div class="title-caption">
+                                {#<div class="title-caption">
                                     <h3 class="name">Nicolas Van Labeke</h3>
 
                                     <p class="title">Researcher</p>
-                                </div>
+                                </div>#}
                             </li>
 
 
@@ -134,7 +135,7 @@
         </div>
 
     </section>
-    <aside class="gray-section">
+    {#<aside class="gray-section">
         <div class="container">
             <div class="col-md-12">
                 <div class="attention-box-small">
@@ -143,7 +144,7 @@
             </div>
 
         </div>
-    </aside>
+    </aside>#}
 
 
 

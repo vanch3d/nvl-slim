@@ -1,5 +1,5 @@
 <li>
-    <a href="{{ urlFor("project.named",{'name':projID}) }}" title="{% block pagetile %}{% endblock %}">{% block project_title %}{% endblock %}</a>
+    <a href="{{ urlFor("project.named",{'name':project.id}) }}" title="{% block pagetile %}{% endblock %}">{% block project_title %}{% endblock %}</a>
     {% if highlight %}
         <p>{{ block('project_overview')|striptags|split(" ")| slice(0,60) | join(" ") }} [...]</p>
     {% endif %}
