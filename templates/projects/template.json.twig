@@ -1,6 +1,9 @@
-{% macro linkedin(name,last,width) %}
-    "{{ name }}"{{ not(last)?"," }}
-{% endmacro %}
+	{% macro linkedin(name,last,width) %}
+		"{{ name }}"{{ not(last)?"," }}
+	{% endmacro %}
+	{% macro github(repo) %}
+	"{{ repo }}"{{ not(last)?"," }}
+	{% endmacro %}
 {% import _self as forms %}
 {
 	"id"	:	"{{ project.id }}",

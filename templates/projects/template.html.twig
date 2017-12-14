@@ -5,6 +5,9 @@
 {% macro linkedin(name,last,width) %}
     <script type="IN/MemberProfile" data-width="{{ width|default(250) }}" data-id="{{ name }}" data-related="false" data-format="inline"></script>
 {% endmacro %}
+{% macro github(name) %}
+    <div data-repo="{{ name }}"></div>
+{% endmacro %}
 
 {% block urltile %}{{ project.name}}{% endblock %}
 {% block pagetile %}{{ project.name}}{% endblock %} 
