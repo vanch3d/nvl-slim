@@ -98,7 +98,6 @@ $c->app->get('/docs/:file.pdf', array($sdxCtrl, 'redirectLegacy'))->name('sandbo
 
 // api routes
 $c->app->get('/api/unapi', array($apiCtrl, 'unAPI'))->name('api.unapi');
-//$c->app->get('/api/pub/:name.json', array($apiCtrl, 'getPublicationsJSON'))->name('api.pub.project');
 $c->app->get('/api/projects/', array($apiCtrl, 'getAllProjectJSON'))->name('api.projects');
 $c->app->get('/api/projects/:name', array($apiCtrl, 'getProjectJSON'))->name('api.project.named');
 $c->app->get('/api/projects/:name/publications', array($apiCtrl, 'getPublicationsJSON'))->name('api.pub.project');
