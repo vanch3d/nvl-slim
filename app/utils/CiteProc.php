@@ -349,7 +349,7 @@ class csl_format extends csl_rendering_element {
        $div_style =  'style="text-indent: 0px; padding-left: 45px;"';
     }
     if ($div_class || $div_style) {
-      return '<div ' . $div_class . $div_style . '>' . $prefix . $text . $suffix . '</div>';
+      return '<span ' . $div_class . $div_style . '>' . $prefix . $text . $suffix . '</span>';
     }
 
     return $prefix . $text . $suffix;
@@ -1361,7 +1361,7 @@ class csl_bibliography  extends csl_format {
     $this->citeproc->quash = array();
     $text = $this->layout->render($data, 'bibliography');
     if ($this->{'hanging-indent'} == 'true') {
-      $text = '<div style="  text-indent: -25px; padding-left: 25px;">' . $text . '</div>';
+      $text = '<span style="  text-indent: -25px; padding-left: 25px;">' . $text . '</span>';
     }
     $text = str_replace('?.', '?', str_replace('..', '.', $text));
     return $this->format($text);
@@ -1628,6 +1628,7 @@ class csl_locale  {
     $xml = '';
     $locale_nodes = $csl_doc->getElementsByTagName('locale');
     if ($locale_nodes) {
+      $xml_open = '<style-locale>';
       $xml_open = '<style-locale>';
       $xml_close = '</style-locale>';
       foreach ($locale_nodes as $key => $locale_node) {
