@@ -25,6 +25,11 @@ class Application {
 	{
 		$this->app->run();
 	}
+
+	public function getLog()
+    {
+        return $this->app->getLog();
+    }
 	
 	
 }
@@ -209,10 +214,173 @@ abstract class Controller extends Application {
     }
 
     /**
+     * @param string $project_id    The id of the project to retrieve publications from (or 'all')
+     * @param int $limit            The maximum number of publications to retrieve
+     * @param string $csl_file      The CSL file to use for formatting the publications
+     * @return array                A list of publications
+     * @throws Exception
+     */
+    public function getCachedZotero($project_id="all", $limit = 20, $csl_file="umuai-nvl.csl")
+    {
+        $cfg = $this->app->config("nvl-slim.zotero");
+        if (!isset($cfg))
+            throw new Exception("Zotero API authentication not configured",500);
+
+        // storage for publications data
+        $pubs = array();
+
+        // define Zotero parser
+        $libraryType = 'user'; //user or group
+        $libraryID = $cfg['userID'];
+        $librarySlug = 'all_things_zotero';
+        $apiKey = $cfg['api_key'];
+        $collectionKey = $cfg['collectID'];
+
+        //create a library object to interact with the zotero API
+        $library = new Zotero_Library($libraryType, $libraryID, $librarySlug, $apiKey);
+
+        $data = array(
+            'key'=>		$apiKey,					// Zotero API key
+            'limit'=>	$limit,						// max number of items
+            'order'=>	'date',						// sort by field
+            'sort'=>	'desc',						// sort order
+            'format'=>	'atom',						// output format
+            'content'=> 'csljson,rdf_bibliontology,bibtex,coins,json'		// content formats to retrieve
+        );
+        if ($project_id!='all')
+            $data['tag'] = 'nvl.'.$project_id;				// tags (project) to look for
+
+        $this->getLog()->notice("Retrieving publications",array(
+            "target" => (isset($data['tag']) ? $data['tag'] : "ALL"),
+            "limit" => $limit
+        ));
+
+        // build the request for Zotero API
+        $param = http_build_query($data);
+        $url = 'https://api.zotero.org/users/'.$libraryID.'/collections/'.$collectionKey.'/items/top?'.$param;
+
+        $headers = array(
+            'Zotero-API-Version' => ZOTERO_API_VERSION
+        );
+
+        // get cache and 'last-modified-version' if exist
+        $cache = $this->readZoteroCache("zotero".(isset($data['tag']) ? $data['tag'] : "ALL").$limit);
+
+        $isCached = isset($cache) && isset($cache['last-modified-version']);
+        if ($isCached)
+        {
+            $this->getLog()->notice("Cached version exists",array(
+                "version" => $cache['last-modified-version']
+            ));
+            $headers['If-Modified-Since-Version'] = $cache['last-modified-version'];
+        }
+        else
+        {
+            $this->getLog()->notice("No cached version");
+        }
+        $this->getLog()->notice("Generate request",$headers);
+
+
+        // Send the request to the server (bypassing Zotero_Library)
+        $request = Requests::get($url,$headers);
+        $this->getLog()->notice("Request sent & received",array(
+            "status" => $request->status_code
+        ));
+
+        $pubs['publications'] = [];
+        if ($request->status_code == 200)
+        {
+            // retrieve the feed and parse it
+            $feed = new Zotero_Feed($request->body);
+            $fetchedItems = $library->items->addItemsFromFeed($feed);
+
+            $pubs['last-modified-version'] = $request->headers['last-modified-version'];//->getAll();
+            $pubs['count'] = count($fetchedItems);
+
+            // Initialise the CSL generator
+            $csl_data ='../app/utils/styles/'.$csl_file;
+            $csl_data = file_get_contents($csl_data);
+            $citeproc = new citeproc($csl_data);
+
+            // extract the CSLJSON object as the basis for the publications
+            // add the COINS object in the output
+            foreach ($fetchedItems as $item)
+            {
+                $pubitem = json_decode($item->subContents['csljson'],true);
+                $pubitem['id']=$item->itemKey;
+                // fix the clsjson date
+                $pubitem['issued']['date-parts'] = array(array($item->year));
+
+                $loc = $pubitem['archive_location'];
+                $pubitem['PDF'] = $this->app->urlFor('publications.named.pdf',array('name'=>$loc));
+
+                $templatePathname = $this->app->view()->getTemplatePathname('publications/papers/'.$loc.'.twig');
+
+                if (is_file($templatePathname))
+                {
+                    $pubitem['PubReader'] = $this->app->urlFor('publications.named.pubreader',array('name'=>$loc));
+                }
+
+                // extract the coins for outputs
+                $pubitem['output']['coins'] = htmlspecialchars_decode($item->subContents['coins']);
+                $pubitem['output']['bib'] = htmlspecialchars_decode($item->subContents['bibtex']);
+
+                // extract keywords and project
+                $tags = $item->apiObject['tags'];
+                foreach ($tags as  $tag){
+                    if (false === strpos($tag['tag'], 'nvl.'))
+                        $pubitem['keyword'][] = $tag['tag'];
+                    else
+                    {
+                        $name2= strtolower(substr($tag['tag'], 4));
+                        $projIdx = $this->isProjectDefined($name2);
+
+                        if ($projIdx) {
+                            $pubitem['project'] = $projIdx;
+                            $pubitem['project']['url'] = $this->app->urlFor('project.named', array('name' => $name2));
+                        }
+                    }
+                }
+
+                $kk= json_decode(json_encode($pubitem));
+                $ref = $citeproc->render($kk);
+                $cite = $citeproc->render($kk,'citation');
+                $pubitem['output']['cite'] = $cite;
+                $pubitem['output']['ref'] = $ref;
+
+                $item->subContents['csljson']=json_encode($pubitem);
+                $pubs['publications'][] = $pubitem;
+                //$this->writeZoteroCache($item->itemKey, $item->subContents,$loc);
+            };
+
+            $this->writeZoteroCache("zotero".(isset($data['tag']) ? $data['tag'] : "ALL").$limit,$pubs,null);
+
+        }
+        else if ($request->status_code == 304)
+        {
+            $this->getLog()->notice("no change since last request, cache used",array(
+            ));
+            $pubs = $cache;
+
+        }
+        else
+        {
+            $this->getLog()->notice("ERROR",array(
+                "status" => $request->status_code
+            ));
+
+            throw new Exception($request->body,$request->status_code);
+        }
+
+        return $pubs;
+    }
+
+    /**
      * @param string $name      The id of the project
      * @param string $cslfile   The style to format publications
      * @return array
      * @throws Exception
+     * @deprecated  No longer in use
      */
     protected function retrieveFromZotero($name, $cslfile)
     {
@@ -250,8 +418,6 @@ abstract class Controller extends Application {
         // retrieve the feed and parse it
         $feed = new Zotero_Feed($request->body);
         $fetchedItems = $library->items->addItemsFromFeed($feed);
-
-
 
         // combine the data into a better JSON structure
         $pubs = array();
