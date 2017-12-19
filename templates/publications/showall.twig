@@ -196,83 +196,93 @@
 
             <!-- section-title -->
             <div class="section-title">
-
-                <!-- main-title -->
                 <div class="main-title">
                     <h2>Publications</h2>
                 </div>
-                <!-- /main-title -->
-
-
-
             </div>
 
-            <div class="col-sm-3 col-sm-push-9 "><aside class="sidebar" >
+            <div class="col-sm-3 col-sm-push-9">
+				<aside class="sidebar" >
 
-                    <!-- widget categories -->
+                    <!-- widget filter all -->
                     <div class="widget categories">
-
-                        <!-- widget-title -->
                         <div class="widget-title">
                             <h3>Filter</h3>
-                        </div><!-- /widget-title -->
+                        </div>
 
-                        <!-- widget-containt -->
-                        <div class="widget-containt">
+						<div class="widget-containt">
                             <button class="btn btn-black btn-clear active" data-filter-value="*">all</button>
-                        </div><!-- /widget-containt -->
+                        </div>
+                    </div>
 
-                    </div><!-- /widget categories -->
-
-                    <!-- widget categories -->
+                    <!-- widget types -->
                     <div class="widget categories">
-
-                        <!-- widget-title -->
                         <div class="widget-title">
                             <h3>By Type</h3>
                         </div>
-                        <!-- /widget-title -->
 
-                        <!-- widget-containt -->
                         <div class="widget-containt" id="pubtype">
-                            <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
-                        </div><!-- /widget-containt -->
+                            <div><i class="loading fa fa-spinner fa-spin"></i>
+                                {% for type in types %}
+									<button class="btn btn-black btn-filter" data-filter-type="type"
+										data-i18n="pub.{{ type }}" data-filter-value="{{ type }}">{{ type }}</button>
+                                {% endfor %}
+							</div>
+                        </div>
+                    </div>
 
-                    </div><!-- /widget categories -->
-
-                    <!-- widget tags -->
+                    <!-- widget years -->
                     <div class="widget tags">
-
-                        <!-- widget-title -->
                         <div class="widget-title">
                             <h3>By Year</h3>
-                        </div><!-- /widget-title -->
-
-                        <!-- widget-containt -->
+                        </div>
                         <div class="widget-containt" id="pubyear">
-                            <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
-                        </div><!-- /widget-containt -->
-
-                    </div><!-- /widget tags -->
-
-                </aside></div>
-
-		<div class="col-sm-9 col-sm-pull-3">
-
-			<div class="project-OverView">
-
-
-				<div class="panel-group" >
-					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
-					<div class="pub-tag" id="publist">
-	
-					</div>
-				</div>
-
-				<!-- /skills-tag -->
+                            <div><i class="loading fa fa-spinner fa-spin"></i>
+								{% for year in years %}
+									<button class="btn btn-black btn-filter" data-filter-type="year" data-filter-value="{{ year }}">{{ year }}</button>
+                                {% endfor %}
+							</div>
+                        </div>
+                    </div>
+                </aside>
 			</div>
 
-		</div>
+			<div class="col-sm-9 col-sm-pull-3">
+
+				<div class="project-OverView">
+					<div class="panel-group" >
+						<div class="pub-tag" id="publist">
+							{% for pub in publications %}
+								<div class="template item panel" data-type="{{pub.type}}" data-year="{{pub.issued.date-parts}}"
+									 style="z-index:{{index}};">
+									<div class="title collapsed" data-parent="#publist" data-toggle="collapse"
+										 data-target="#item-{{pub.id}}">
+										{{ pub.output.ref | raw}}
+									</div>
+									<div id="item-{{pub.id}}" class="expand collapse">
+										<div class="abstract">
+											{% if pub.abstract %}
+												{{ pub.abstract }}
+											{% endif %}
+										</div>
+										<div class="meta">
+											<span class="project"><a href="{{pub.project.url}}" title="Go to project page">{{pub.project.name}}</a></span>
+											{% if pub.PubReader %}
+												<span class="pubreader"><a href="{{pub.PubReader}}" title="Go to full text">PubReader</a></span>
+											{% endif %}
+											{% if pub.DOI %}<span class="doi"><a href="http://dx.doi.org/{{pub.DOI}}" title="Go to article in CrossRef">DOI</a></span>{% endif %}
+											{% if pub.BIB %}<span class="bib"><a href=""></a></span> {% endif %}
+											{% if pub.PDF %}<span class="pdf"><a href="{{pub.PDF}}" title="Download the PDF">PDF</a></span> {% endif %}
+										</div>
+										<abbr class="unapi unapi-id" title="{{pub.id}}"></abbr>
+										{# pub.output.coins #}
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
 
 	</div></div>
 </section>
@@ -310,11 +320,18 @@ Isotope.Item.prototype.hide = function() {
 	}
 };
 
-
 $(document).ready(function()
 {
-	
-	function updateWidget(list,tag,type,sortasc,group)
+	// Progressive template ready for processing
+
+    // add identifier to the coins markup.
+    $(".Z3988").toggleClass("coins");
+
+    $('.loading').animate({
+			opacity: 0
+	}, 200).hide(200);
+
+    function updateWidget(list,tag,type,sortasc,group)
 	{
 		sortasc = (typeof sortasc === "undefined") ? true : sortasc;
 		group = (typeof sortasc === "undefined") ? false : group;
@@ -352,9 +369,9 @@ $(document).ready(function()
 		document.dispatchEvent(ev);
 	};
 
-	 $('.loading').animate({
-	        opacity: 1
-	    }, 200);
+	 //$('.loading').animate({
+	 //       opacity: 0
+	 //   }, 200);
 
     function uniques(arr,attr) {
         var a = [];
@@ -370,104 +387,33 @@ $(document).ready(function()
         return a;
     }
 	    
-	$.getJSON("{{ urlFor('api.pub.project',{name: 'all'})}}")
+	/*	$.getJSON("{{ urlFor('api.pub.project',{name: 'all'})}}")
 		.done(function(data){
+		    return;
+
 			var dates={};
 			var types={};
 			var prevyear = null;
 			var ztotal = 100;
 			
-				var source   = $("#entry-template").html();
-	var template = Handlebars.compile(source);
-    var items = $.map(data, function (value, key)
-    { 	value.index= ztotal--;
-        value.year = value['issued']['date-parts'].toString();
-        return value;
-    });
-	var context = 
-		{	'items': items,
-            'years': uniques(items,'year')
-		};
-                dates =      uniques(items,'year');
-                types = uniques(items,'type');
-	var html    = template(context);
-	var gg =11;
+			var source   = $("#entry-template").html();
+			var template = Handlebars.compile(source);
+			var items = $.map(data, function (value, key)
+			{ 	value.index= ztotal--;
+				value.year = value['issued']['date-parts'].toString();
+				return value;
+			});
+			var context =
+				{	'items': items,
+					'years': uniques(items,'year')
+				};
+						dates =      uniques(items,'year');
+						types = uniques(items,'type');
+			var html    = template(context);
+			var gg =11;
 			$('#publist').replaceWith(html);
 			
-		/*	$.each( data, function( index, value){
 
-				var curyear = value.issued['date-parts'][0][0]; 
-				dates[curyear] = curyear;
-				types[value.type] = value.type;
-
-				if (prevyear==null || prevyear != curyear)
-				{
-					var temp2 = $('<div/>', {
-						'class' : 'item panel',
-					    'data-year': curyear + 'a',
-					    'data-group': 'true'
-					}).css('z-index',ztotal--).html(curyear);
-					temp2.appendTo('#publist');
-					prevyear = curyear;
-				}
-
-				var cnt = $(value.output.ref);
-
-				var template = $(".template.item").clone();
-				template
-					.css('z-index',ztotal--)
-					.attr("data-type",value.type)
-					.attr("data-year",curyear);
-				template.find(".title")
-					.attr("data-parent",'#publist')
-					.attr("data-target",'#item-'+index)
-					.html(cnt);
-				template.find(".expand")
-					.attr("id","item-"+index);
-				template.find(".abstract")
-					.text(value.abstract || "No abastact");
-				template.find(".unapi")
-					.addClass("unapi-id")
-					.attr("title",value.id);
-				template.find(".coins")
-					.replaceWith(value.output.coins);
-				if (value.project)
-					template.find(".meta .project a")
-						.attr("title","Go to the project " + value.project.name)
-						.attr("href",value.project.url)
-						.text(value.project.name);
-				else
-					template.find(".meta .project").remove();
-				if (value.DOI)
-					template.find(".meta .doi a")
-						.attr("title","doi")
-						.attr("href","http://dx.doi.org/" + value.DOI)
-						.text("DOI");
-				else
-					template.find(".meta .doi").remove();
-				if (value.output.bib)
-					template.find(".meta .bib a")
-						.attr("title","Export Bibtex record")
-						.attr("href","{{ urlFor('api.unapi')~'?id='}}" + value.id + "&format=bibtex")
-						.text("Bibtex");
-				else
-					template.find(".meta .bib").remove();
-				if (value.PDF)
-					template.find(".meta .pdf a")
-						.attr("title","Download this publication")
-						.attr("href",value.PDF)
-						.text("PDF");
-				else
-					template.find(".meta .pdf").remove();
-			
-				
-					
-					
-				template.removeClass("template").appendTo('#publist').show();
-			});*/
-
-			// add identifier to the coins markup.
-			$(".Z3988").toggleClass("coins");
 
 			// feed the filter widgets
 			updateWidget(dates,'#pubyear','year',false);
@@ -526,10 +472,10 @@ $(document).ready(function()
 		.always(function() {
 			// force update of Zotero plugin (Firefox)
 			updateZotero();
-			$('.loading').animate({
-		        opacity: 0
-		    }, 200).hide(200);
-		});
+		//	$('.loading').animate({
+		 //       opacity: 0
+		 //   }, 200).hide(200);
+		}); */
 });
 </script>
 {% endblock %}

@@ -75,7 +75,28 @@ class ProjectController extends Controller
 	
 	public function publications()
 	{
-		$this->render('publications/showall');
+        $publications = [];
+        try {
+            $pubs = $this->getCachedZotero("all", 100);
+            $publications = $pubs['publications'];
+        } catch (Exception $e) {
+        }
+
+        //$uniqueYears = array_unique(array_map(function ($i) {
+        //    return $i['issued']['date-parts'];
+        //    }, $$publications));
+        $uniqueYears = array_unique(array_map(function($v){
+            return $v['issued']['date-parts'][0][0];
+        },$publications));
+        $uniqueTypes = array_unique(array_map(function($v){
+            return $v['type'];
+        },$publications));
+
+        $this->render('publications/showall',array(
+            'publications' => $publications,
+            'years' => $uniqueYears,
+            'types' => $uniqueTypes
+        ));
 	}
 
     public function getPubGraph()
