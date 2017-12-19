@@ -8,16 +8,22 @@
  */
 class HomeController extends Controller
 {
-	/**
-	 * route for home
-	 */
+    /**
+     * route for home
+     */
 	public function index()
 	{
-        //$projIdx = APIController::getProjects(true);
         $projIdx = $this->getProjectDescriptors(true);
+        $publications = [];
+        try {
+            $pubs = $this->getCachedZotero("all", 4);
+            $publications = $pubs['publications'];
+        } catch (Exception $e) {
+        }
 
         $this->render('pages/home',array(
-            'projects' => $projIdx
+            'projects' => $projIdx,
+            'publications' => $publications
         ));
 	}
 	
@@ -52,7 +58,7 @@ class HomeController extends Controller
      */
     public function search()
     {
-        //$projIdx = APIController::getProjects(true);
+        $projIdx = $this->getProjectDescriptors(true);
         $this->render('pages/search',array(
             'projects' => $projIdx
         ));

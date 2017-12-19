@@ -76,11 +76,21 @@
                         <div class="col-md-12">
                             <div class="text-widget">
                                 <div class="text-widget-title">
-                                    <h3>Recent Publications</h3>
+                                    <h3>Selected Publications</h3>
                                 </div>
 
                                 <ul class="pub-tag" id="publist">
-
+                                    {% for pub in publications %}
+                                        <li id="{{ pub.id }}" data-type="{{ pub.type }}">{{ pub.output.ref | raw }}
+                                            {% if (pub.PDF) %}
+                                                [<a href="{{ pub.PDF }}">PDF</a>]
+                                            {% endif %}
+                                            {% if (pub.DOI) %}
+                                                [<a href="{{ pub.DOI }}">DOI</a>]
+                                            {% endif %}
+                                            <abbr class="unapi-id" title="{{ pub.id }}"></abbr>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                                 <div class="widget-containt categories">
                                     <ul>
@@ -161,7 +171,7 @@
     </style>
 {% endblock %}
 {% block injectJS %}
-    <script>
+{#    <script>
         $(document).ready(function () {
             $.getJSON("{{ urlFor('api.pub.project',{name: 'all'})}}")
                     .done(function(data){
@@ -201,5 +211,5 @@
                     });
 
         });
-    </script>
+    </script> #}
 {% endblock %}
