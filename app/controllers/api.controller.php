@@ -2,7 +2,7 @@
 
 /**
  * Controller for all the API routes and other services
- * 
+ *
  * @author Nicolas Van Labeke (https://github.com/vanch3d)
  *
  */
@@ -11,8 +11,8 @@ class APIController extends Controller
 	/**
 	 * Return a short list of all projects
 	 * @param boolean $keys
-	 * @return array	An array of project IDs, if $keys true, 
-	 * 					the complete descriptors otherwise 
+	 * @return array	An array of project IDs, if $keys true,
+	 * 					the complete descriptors otherwise
      * @deprecated      replaced by a self-defined handler
 	 */
 	public static function getProjects($keys=false)
@@ -42,7 +42,7 @@ class APIController extends Controller
 				'id' 	 =>  'myplan',
 				'name' =>  'MyPlan',
 				'date' => 2007,
-			),	
+			),
 			'makingstuff' => array(
 				'id' 	 =>  'makingstuff',
 				'name' =>  'Making Stuff',
@@ -221,12 +221,12 @@ class APIController extends Controller
     /**
 	 * Retrieve the list of publications for the given project (tag).
 	 * The tag is expected to be one of the projects (see ), or 'all' for the complete list.
-	 * 
+	 *
 	 * @param string $name	The project tag to retrieve publications for
 	 */
 	public function getPublicationsJSON($name)
 	{
-		// set the cache for the request 
+		// set the cache for the request
 		$this->app->etag($name.'BWPDQJUN');
 		$this->app->expires('+1 week');
 
@@ -322,8 +322,8 @@ class APIController extends Controller
      */
     private function getUnAPIFormats()
 	{
-		
-		
+
+
 		$formatsList = array(
 			array(
 					'name' => 'rdf_bibliontology',
@@ -344,7 +344,7 @@ class APIController extends Controller
 		);
 		return $formatsList;
 	}
-	
+
 	private function searchItem( $myarray, $key, $val) {
 		foreach ($myarray as $item) {
 			if (isset($item[$key]) && $item[$key] == $val)
@@ -352,7 +352,7 @@ class APIController extends Controller
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Return the list of available formats for the given publication or collection
 	 * @param string $id	The ID of a publication, null for the overall collection
@@ -370,24 +370,29 @@ class APIController extends Controller
 		}
 		return $xml;
 	}
-	
+
 	/**
 	 * Implementation of a basic UnAPI service
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	public function unAPI()
 	{
 		$req = $this->app->request();
 		$id = $req->get('id');
 		$format = $req->get('format');
-		
-		// set the cache for the request
+
+        $this->getLog()->notice("unapi microservice called",array(
+            'id' => $id,
+            'format' => $format
+        ));
+
+        // set the cache for the request
 		$this->app->etag('UnAPI/'.$id.$format);
 		$this->app->expires('+1 week');
 
 		$xml = null;
-	
+
 		if (!isset($id) && !isset($format))
 		{
 			$xml = $this->outputUnAPIFormats();
@@ -398,7 +403,7 @@ class APIController extends Controller
 
 			if (!isset($id))
 				throw new Exception('Argument \'id\' is required', 400);
-				
+
 			$ftdata = null;
 			if (isset($format))
 			{
@@ -406,19 +411,23 @@ class APIController extends Controller
 				if ( !$ftdata )
 					throw new Exception('Argument \'format\': format not acceptable', 405);
 			}
-				
+
 			if (isset($id) && isset($format))
 			{
-				$item = $this->readZoteroCache($id);
+                $items = $this->getCachedZotero("all",200);
+                $item=array_filter($items['publications'],function($v) use($id){
+                    return($v['id']===$id);
+                });
 
-				if (!isset($item))
+
+                if (!isset($item) || empty($item))
 					throw new Exception('Id Not Found', 404);
-				$content = $item[$format];
-				
+
+				$content = $item[0]['output'][$format];
+
 				if (!isset($content))
 					throw new Exception('Content Not Found', 404);
-				
-				//var_dump($item);die();
+
 				$response = $this->app->response();
 				$response['Content-Type'] = $ftdata['type'];
 				$response['X-Powered-By'] = APPLICATION . '/' . VERSION;
@@ -430,8 +439,8 @@ class APIController extends Controller
 				$xml = $this->outputUnAPIFormats($id);
 				$this->outputXML($xml);
 			}
-		
-		} 
+
+		}
 		catch (\Exception  $e) {
 			$xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><nvlAppError/>');
             $xml->addChild("method",$req->getPathInfo());
