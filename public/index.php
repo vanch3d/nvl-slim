@@ -71,25 +71,25 @@ $sdxCtrl = new SandboxController();
 
 // Define the routes
 // site routes
-$c->app->get('/', array($homeCtrl, 'index'))->name('home');
-$c->app->get('/about/', array($homeCtrl, 'about'))->name('about.me');
+$c->app->get('/', array($homeCtrl, 'home'))->name('home');
+$c->app->get('/about/', array($homeCtrl, 'aboutMe'))->name('about.me');
 $c->app->get('/search', array($homeCtrl, 'search'))->name('search');
 $c->app->get('/about/site', array($homeCtrl, 'aboutSite'))->name('about.site');
 
 // project routes
-$c->app->get('/projects/', array($projectCtrl, 'index'))->name('project.all');
-$c->app->get('/projects/map/', array($projectCtrl, 'getStoryMap'))->name('project.story');
+$c->app->get('/projects/', array($projectCtrl, 'allProjects'))->name('project.all');
+$c->app->get('/projects/map/', array($projectCtrl, 'storyMap'))->name('project.story');
 $c->app->get('/projects/:name/', array($projectCtrl, 'project'))->name('project.named');
-$c->app->get('/projects/:name/cloud', array($projectCtrl, 'getWordCloud'))->name('project.named.cloud');
+$c->app->get('/projects/:name/cloud', array($projectCtrl, 'wordCloud'))->name('project.named.cloud');
 
 // publication routes
-$c->app->get('/publications/', array($projectCtrl, 'publications'))->name('publications.all');
-$c->app->get('/publications/graph/', array($projectCtrl, 'getPubGraph'))->name('publications.all.graph');
-$c->app->get('/publications/map/', array($projectCtrl, 'getProcessMap'))->name('publications.all.map');
-$c->app->get('/publications/:name.pdf', array($projectCtrl, 'exportPublication'))->name('publications.named.pdf');
-$c->app->get('/publications/(:name/)', array($projectCtrl, 'getPubReader'))->name('publications.named.pubreader');
-$c->app->get('/publications/:name/assets/:fig', array($projectCtrl, 'getPubAssets'))->name('publications.named.assets');
-$c->app->get('/publications/:name/freqdist', array($projectCtrl, 'getFreqDist'))->name('publications.named.freqdist');
+$c->app->get('/publications/', array($projectCtrl, 'allPublications'))->name('publications.all');
+$c->app->get('/publications/graph/', array($projectCtrl, 'pubGraph'))->name('publications.all.graph');
+$c->app->get('/publications/map/', array($projectCtrl, 'pubMap'))->name('publications.all.map');
+$c->app->get('/publications/:name.pdf', array($projectCtrl, 'pubExportPDF'))->name('publications.named.pdf');
+$c->app->get('/publications/(:name/)', array($projectCtrl, 'pubReader'))->name('publications.named.pubreader');
+$c->app->get('/publications/:name/assets/:fig', array($projectCtrl, 'pubAssets'))->name('publications.named.assets');
+$c->app->get('/publications/:name/freqdist', array($projectCtrl, 'pubDistrib'))->name('publications.named.freqdist');
 
 // other routes
 $c->app->get('/sandbox/isotope', array($sdxCtrl, 'getIsotope'))->name('sandbox.isotope');
