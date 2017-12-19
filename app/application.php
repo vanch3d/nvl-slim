@@ -323,7 +323,8 @@ abstract class Controller extends Application {
 
                 // extract the coins for outputs
                 $pubitem['output']['coins'] = htmlspecialchars_decode($item->subContents['coins']);
-                $pubitem['output']['bib'] = htmlspecialchars_decode($item->subContents['bibtex']);
+                $pubitem['output']['bibtex'] = htmlspecialchars_decode($item->subContents['bibtex']);
+                $pubitem['output']['rdf_bibliontology'] = htmlspecialchars_decode($item->subContents['rdf_bibliontology']);
 
                 // extract keywords and project
                 $tags = $item->apiObject['tags'];
