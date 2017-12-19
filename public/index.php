@@ -32,7 +32,7 @@ $app->config(require "../app/config.php");
 // (Singleton resources retrieve the same log resource definition each time)
 $app->container->singleton('log', function () {
     $log = new \Monolog\Logger('nvl-slim');
-    $log->pushHandler(new \Monolog\Handler\StreamHandler('../.logs/app.log', \Monolog\Logger::DEBUG));
+    $log->pushHandler(new \Monolog\Handler\StreamHandler('../.logs/app.log', \Monolog\Logger::NOTICE));
     $log->pushHandler(new \Monolog\Handler\StreamHandler('../.logs/error.log', \Monolog\Logger::ERROR));
     return $log;
 });
@@ -107,6 +107,11 @@ $c->app->get('/api/projects/:name/images', array($apiCtrl, 'getImagesJSON'))->na
 $c->app->error(array($homeCtrl, 'showError'));
 $c->app->notFound(array($homeCtrl, 'showNotFound'));
 
+$c->app->get('/test', function() use($apiCtrl) {
+
+    $ret = $apiCtrl->getCachedZotero();
+    $apiCtrl->outputJSON($ret);
+});
 
 // Run app
 $app->run();
