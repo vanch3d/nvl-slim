@@ -9,38 +9,34 @@
 class ProjectController extends Controller
 {
 	/**
-	 * 
+	 * route for 'all projects'
 	 */
-	public function index()
+	public function allProjects()
 	{
-		//$projIdx = APIController::getProjects();
         $projIdx = $this->getProjectDescriptors();
-
-
         $this->render('projects/index',array(
-						'projects' => $projIdx
-				));
+            'projects' => $projIdx
+        ));
 	}
 
-    public function getStoryMap()
+    /**
+     * route for the 'story map' visualisation
+     */
+    public function storyMap()
     {
-        //$projIdx = APIController::getProjects();
         $projIdx = $this->getProjectDescriptors();
-
         $this->render('projects/storymap',array(
             'projects' => $projIdx
         ));
     }
 
 	/**
-	 *
-	 * @param string $name
+	 * route for individual projects
+	 * @param string $name  The id of an existing project
 	 */
 	public function project($name)
 	{
-		//$projIdx = APIController::getProjects();
         $projIdx = $this->isProjectDefined($name);
-
         if ($projIdx)
 		{
 			try {
@@ -50,9 +46,8 @@ class ProjectController extends Controller
 				));
 
 			} catch (Twig_Error_Loader $e) {
-
-			$this->app->flash('error', 'The project you are looking for does not exist. <br>Try one below.');
-			$this->redirect('project.all');
+    			$this->app->flash('error', 'The project you are looking for does not exist. <br>Try one below.');
+	    		$this->redirect('project.all');
 			}
 		}
 		else
@@ -62,18 +57,22 @@ class ProjectController extends Controller
 		}
 	}
 
-    public function getWordCloud($name)
+    /**
+     * Route for the project's wordcloud
+     * @param $name The id of an existing project
+     */
+    public function wordCloud($name)
     {
-        //$projIdx = APIController::getProjects();
         $projIdx = $this->getProjectDescriptors();
-
-
         $this->render('projects/template.cloud',array(
             'project' => $projIdx
         ));
     }
-	
-	public function publications()
+
+    /**
+     * route for all publications
+     */
+    public function allPublications()
 	{
         $publications = [];
         try {
@@ -99,17 +98,17 @@ class ProjectController extends Controller
         ));
 	}
 
-    public function getPubGraph()
+    public function pubGraph()
     {
         $this->render('publications/graph');
     }
 
-    public function getProcessMap()
+    public function pubMap()
     {
         $this->render('publications/map');
     }
 
-    public function getPubReader($name)
+    public function pubReader($name)
     {
         global $apiCtrl;
         $idx = $apiCtrl->readZoteroFileIndex();
@@ -171,7 +170,7 @@ class ProjectController extends Controller
         }
     }
 
-    public function getPubAssets($name,$fig)
+    public function pubAssets($name,$fig)
     {
         global $apiCtrl;
         $idx = $apiCtrl->readZoteroFileIndex();
@@ -201,7 +200,7 @@ class ProjectController extends Controller
 
     }
 
-        public function getPublication($name)
+    public function pubShow($name)
 	{
 		global $apiCtrl;
 		$idx = $apiCtrl->readZoteroFileIndex();
@@ -254,7 +253,7 @@ class ProjectController extends Controller
         ));
 	}
 	
-	public function exportPublication($name)
+	public function pubExportPDF($name)
 	{
 		$filename = "../docs/$name.pdf";
 		if (!file_exists($filename))
@@ -279,7 +278,7 @@ class ProjectController extends Controller
 
 
 
-    public function getFreqDist($name)
+    public function pubDistrib($name)
     {
         $stopwords = array("'s",",","(",")",":",";","'",".","%","a", "about", "above", "above", "across", "after", "afterwards", "again", "against", "all", "almost", "alone", "along", "already", "also","although","always","am","among", "amongst", "amoungst", "amount",  "an", "and", "another", "any","anyhow","anyone","anything","anyway", "anywhere", "are", "around", "as",  "at", "back","be","became", "because","become","becomes", "becoming", "been", "before", "beforehand", "behind", "being", "below", "beside", "besides", "between", "beyond", "bill", "both", "bottom","but", "by", "call", "can", "cannot", "cant", "co", "con", "could", "couldnt", "cry", "de", "describe", "detail", "do", "done", "down", "due", "during", "each", "eg", "eight", "either", "eleven","else", "elsewhere", "empty", "enough", "etc", "even", "ever", "every", "everyone", "everything", "everywhere", "except", "few", "fifteen", "fify", "fill", "find", "fire", "first", "five", "for", "former", "formerly", "forty", "found", "four", "from", "front", "full", "further", "get", "give", "go", "had", "has", "hasnt", "have", "he", "hence", "her", "here", "hereafter", "hereby", "herein", "hereupon", "hers", "herself", "him", "himself", "his", "how", "however", "hundred", "ie", "if", "in", "inc", "indeed", "interest", "into", "is", "it", "its", "itself", "keep", "last", "latter", "latterly", "least", "less", "ltd", "made", "many", "may", "me", "meanwhile", "might", "mill", "mine", "more", "moreover", "most", "mostly", "move", "much", "must", "my", "myself", "name", "namely", "neither", "never", "nevertheless", "next", "nine", "no", "nobody", "none", "noone", "nor", "not", "nothing", "now", "nowhere", "of", "off", "often", "on", "once", "one", "only", "onto", "or", "other", "others", "otherwise", "our", "ours", "ourselves", "out", "over", "own","part", "per", "perhaps", "please", "put", "rather", "re", "same", "see", "seem", "seemed", "seeming", "seems", "serious", "several", "she", "should", "show", "side", "since", "sincere", "six", "sixty", "so", "some", "somehow", "someone", "something", "sometime", "sometimes", "somewhere", "still", "such", "system", "take", "ten", "than", "that", "the", "their", "them", "themselves", "then", "thence", "there", "thereafter", "thereby", "therefore", "therein", "thereupon", "these", "they", "thickv", "thin", "third", "this", "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "top", "toward", "towards", "twelve", "twenty", "two", "un", "under", "until", "up", "upon", "us", "very", "via", "was", "we", "well", "were", "what", "whatever", "when", "whence", "whenever", "where", "whereafter", "whereas", "whereby", "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "whoever", "whole", "whom", "whose", "why", "will", "with", "within", "without", "would", "yet", "you", "your", "yours", "yourself", "yourselves", "the");
 

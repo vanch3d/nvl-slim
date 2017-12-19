@@ -11,7 +11,7 @@ class HomeController extends Controller
     /**
      * route for home
      */
-	public function index()
+	public function home()
 	{
         $projIdx = $this->getProjectDescriptors(true);
         $publications = [];
@@ -30,7 +30,7 @@ class HomeController extends Controller
 	/**
 	 * route for "about me"
 	 */
-	public function about()
+	public function aboutMe()
 	{
 		$this->render('pages/about');
 	}
@@ -42,19 +42,25 @@ class HomeController extends Controller
 	{
 		$this->render('pages/about.site');
 	}
-	
-	public function showError()
-	{
-		$this->render('pages/notfound');
-	}
 
-	public function showNotFound()
+    /**
+     * 500
+     */
+    public function showError()
 	{
 		$this->render('pages/notfound');
 	}
 
     /**
-     * route for home
+     * 404
+     */
+    public function showNotFound()
+	{
+		$this->render('pages/notfound');
+	}
+
+    /**
+     * route for 'search'
      */
     public function search()
     {
