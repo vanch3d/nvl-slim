@@ -110,21 +110,26 @@ class ProjectController extends Controller
 
     public function pubReader($name)
     {
-        global $apiCtrl;
-        $idx = $apiCtrl->readZoteroFileIndex();
-        $cache = $idx[$name];
-        //
+        //global $apiCtrl;
+        //$idx = $apiCtrl->readZoteroFileIndex();
+        //$cache = $idx[$name];
+
+        $cache = $this->isPublicationDefined($name);
+
         if (!isset($cache))
         {
             throw new Exception("Cannot find the index of this reference", 500);
         }
-        $fullitem = $apiCtrl->readZoteroCache($cache);
+        //$fullitem = $apiCtrl->readZoteroCache($cache);
+        $fullitem = $cache;
         if (!$fullitem)
         {
             throw new Exception("Cannot find this reference", 500);
         }
 
-        $item = json_decode($fullitem['csljson']);
+        //$item = json_decode($fullitem['csljson']);
+        $item = json_decode(json_encode($fullitem));
+        //$item = $fullitem;
 
 
         // build the Highwire Press tags
@@ -151,14 +156,14 @@ class ProjectController extends Controller
                 if ($pages[0]) $meta[] = array('citation_firstpage',$pages[0]);
                 if ($pages[1]) $meta[] = array('citation_lastpage',$pages[1]);
             }
-            if ($item->DOI) $meta[] = array('citation_doi',$item->DOI);
+            if (isset($item->DOI)) $meta[] = array('citation_doi',$item->DOI);
         }
-        $item = json_decode($fullitem['csljson'],true);
+        //$item = json_decode($fullitem['csljson'],true);
 
         try {
             $this->render('publications/papers/'.$name,array(
                 'meta' => $meta,
-                'item'=> $item
+                'item'=> $fullitem
             ));
 
         } catch (Twig_Error_Loader $e)
@@ -172,10 +177,12 @@ class ProjectController extends Controller
 
     public function pubAssets($name,$fig)
     {
-        global $apiCtrl;
-        $idx = $apiCtrl->readZoteroFileIndex();
-        $cache = $idx[$name];
-        //
+        // set the cache for the request
+        $this->app->etag($name.'assets'.$fig);
+        $this->app->expires('+1 week');
+
+        $cache = $this->isPublicationDefined($name);
+
         if (!isset($cache))
         {
             throw new Exception("Cannot find the index of this reference", 500);
@@ -202,21 +209,20 @@ class ProjectController extends Controller
 
     public function pubShow($name)
 	{
-		global $apiCtrl;
-		$idx = $apiCtrl->readZoteroFileIndex();
-        $cache = $idx[$name];
-        //
-		if (!isset($cache))
-		{
-			throw new Exception("Cannot find the index of this reference", 500);
-		}
-        $fullitem = $apiCtrl->readZoteroCache($cache);
+        $cache = $this->isPublicationDefined($name);
+
+        if (!isset($cache))
+        {
+            throw new Exception("Cannot find the index of this reference", 500);
+        }
+        //$fullitem = $apiCtrl->readZoteroCache($cache);
+        $fullitem = $cache;
         if (!$fullitem)
         {
             throw new Exception("Cannot find this reference", 500);
         }
-
-        $item = json_decode($fullitem['csljson']);
+        //$item = json_decode($fullitem['csljson']);
+        $item = json_decode(json_encode($fullitem));
 
 
 		// build the Highwire Press tags
@@ -243,13 +249,15 @@ class ProjectController extends Controller
 				if ($pages[0]) $meta[] = array('citation_firstpage',$pages[0]);
 				if ($pages[1]) $meta[] = array('citation_lastpage',$pages[1]);
 			}
-			if ($item->DOI) $meta[] = array('citation_doi',$item->DOI);
+			if (isset($item->DOI)) $meta[] = array('citation_doi',$item->DOI);
 		}
 
 			
-		$this->render('publications/show', array(
+		//$this->render('publications/show', array(
+        $this->render('publications/papers/'.$name,array(
             'meta' => $meta,
-            'publication' => $item
+            'publication' => $item,
+            'template_base' => 'publications/show.twig'
         ));
 	}
 	
