@@ -73,8 +73,8 @@ $sdxCtrl = new SandboxController();
 // site routes
 $c->app->get('/', array($homeCtrl, 'home'))->name('home');
 $c->app->get('/about/', array($homeCtrl, 'aboutMe'))->name('about.me');
-$c->app->get('/search', array($homeCtrl, 'search'))->name('search');
 $c->app->get('/about/site', array($homeCtrl, 'aboutSite'))->name('about.site');
+$c->app->get('/search', array($homeCtrl, 'search'))->name('search');
 
 // project routes
 $c->app->get('/projects/', array($projectCtrl, 'allProjects'))->name('project.all');
@@ -88,6 +88,7 @@ $c->app->get('/publications/graph/', array($projectCtrl, 'pubGraph'))->name('pub
 $c->app->get('/publications/map/', array($projectCtrl, 'pubMap'))->name('publications.all.map');
 $c->app->get('/publications/:name.pdf', array($projectCtrl, 'pubExportPDF'))->name('publications.named.pdf');
 $c->app->get('/publications/(:name/)', array($projectCtrl, 'pubReader'))->name('publications.named.pubreader');
+$c->app->get('/publications/:name/show', array($projectCtrl, 'pubShow'))->name('publications.named.show');
 $c->app->get('/publications/:name/assets/:fig', array($projectCtrl, 'pubAssets'))->name('publications.named.assets');
 $c->app->get('/publications/:name/freqdist', array($projectCtrl, 'pubDistrib'))->name('publications.named.freqdist');
 
@@ -109,7 +110,9 @@ $c->app->notFound(array($homeCtrl, 'showNotFound'));
 
 $c->app->get('/test', function() use($apiCtrl) {
 
-    $ret = $apiCtrl->getCachedZotero();
+    //$ret = $apiCtrl->getCachedZotero();
+    $ret = $apiCtrl->isPublicationDefined("2013.RANLP.Summarisation");
+
     $apiCtrl->outputJSON($ret);
 });
 
