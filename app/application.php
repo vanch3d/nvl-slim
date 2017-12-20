@@ -158,6 +158,24 @@ abstract class Controller extends Application {
         return $found;
     }
 
+    public function isPublicationDefined($id)
+    {
+        if (empty($id)) return false;
+
+        try {
+            $items = $this->getCachedZotero("all", 200);
+            $item=array_filter($items['publications'],function($v) use($id){
+                return($v['archive_location']===$id);
+            });
+            if (!isset($item) || empty($item))
+                return false;
+            return reset($item);
+
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * Return the path of the cache file for the given bib item
      * @param string $name	the ID of the bib to cache
