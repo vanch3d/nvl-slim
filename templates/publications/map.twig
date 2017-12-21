@@ -193,9 +193,10 @@
 {% endblock %}
 
 {% block injectJS %}
+    <script src="//code.jquery.com/jquery-migrate-1.0.0.js"></script>
     <script src="//cdn.jsdelivr.net/d3js/3.4.3/d3.js"></script>
-    <script src="/plugins/d3js/colorbrewer.js"></script>
-    <script src="/plugins/d3js/process-map/geometry.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/colorbrewer.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/lib/geometry.js"></script>
     <script type="text/javascript">
 
         var defaults = {
@@ -316,7 +317,7 @@
             $.each( config.data, function( key, value ) {
                 formatDoc(value);
             });
-            $.getScript("/plugins/d3js/process-map/script.js");
+            $.getScript("//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/script.js");
 
             function formatDoc(item)
             {

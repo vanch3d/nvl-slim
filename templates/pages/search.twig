@@ -25,18 +25,18 @@
 
 {% block injectCSS %}
     <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-    <link href="/plugins/Tipue-Search/tipuesearch/tipuesearch.css" rel="stylesheet">
+    <link href="//cdn.jsdelivr.net/gh/Tipue/Tipue-Search@3.1.0/tipuesearch/tipuesearch.css" rel="stylesheet">
 
 {% endblock %}
 {% block injectJS %}
-    <script src="/plugins/Tipue-Search/tipuesearch/tipuesearch_set.js"></script>
-    <script src="/plugins/Tipue-Search/tipuesearch/tipuesearch.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/Tipue/Tipue-Search@3.1.0/tipuesearch/tipuesearch_set.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/Tipue/Tipue-Search@3.1.0/tipuesearch/tipuesearch.min.js"></script>
     <script>
         var tipuesearch_pages =
                 [
                     "{{ urlFor('home') }}",
                     {% for projID in projects[1:] %}
-                    "{{ urlFor('project.named',{'name':projID}) }}",
+                    "{{ urlFor('project.named',{'name': projID.id}) }}",
                     {% endfor %}
                     "{{ urlFor('publications.all') }}",
                     "{{ urlFor('publications.named.pubreader',{'name':'2013.RANLP.Summarisation'}) }}",
