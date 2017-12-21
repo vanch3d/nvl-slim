@@ -63,10 +63,12 @@ class ProjectController extends Controller
      */
     public function wordCloud($name)
     {
-        $projIdx = $this->getProjectDescriptors();
-        $this->render('projects/template.cloud',array(
-            'project' => $projIdx
-        ));
+        //$projIdx = $this->getProjectDescriptors();
+        $projIdx = $this->isProjectDefined($name);
+        if ($projIdx)
+            $this->render('projects/template.cloud',array(
+                'project' => $projIdx
+            ));
     }
 
     /**
