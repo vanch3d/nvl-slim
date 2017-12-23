@@ -7,20 +7,31 @@ $(function() {
     resize();
 
     isIE = $.browser.msie;
-
     if ($.browser.mozilla) {
         $('body').addClass('firefox');
     }
 
-    d3.json(config.jsonUrl, function(data) {
-        if (data.errors.length) {
-            alert('Data error(s):\n\n' + data.errors.join('\n'));
-            return;
-        }
+    // data could be loaded as object rather than by ajax
+    if (config.data)
+    {
+        graph.data = config.data;
+        setTimeout(function(){
+            drawGraph();
+        },300);
+    }
+    else
+    {
+        d3.json(config.jsonUrl, function(data) {
+            if (data.errors.length) {
+                alert('Data error(s):\n\n' + data.errors.join('\n'));
+                return;
+            }
 
-        graph.data = data.data;
-        drawGraph();
-    });
+            graph.data = data.data;
+            drawGraph();
+        });
+    }
+
 
     $('#docs-close').on('click', function() {
         deselectObject();
