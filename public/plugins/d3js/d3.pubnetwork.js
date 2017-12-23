@@ -6,12 +6,13 @@ var graph       = {},
 $(function() {
     resize();
 
+    //made tests safer
     isIE = ($.browser && $.browser.msie);
     if ($ .browser && $.browser.mozilla) {
         $('body').addClass('firefox');
     }
 
-    // data could be loaded as object rather than by ajax
+    // data could be loaded directly as object rather than by ajax
     if (config.data)
     {
         graph.data = config.data;
@@ -90,6 +91,15 @@ function drawGraph() {
 
                 case 'linkStrength':
                     obj.linkStrength *= c.strength;
+                    break;
+
+                case 'radialConstraints':
+                    // added radial constraints to config
+                    obj.radialConstraints = {
+                        radius      : c.radius,
+                        startAngle  : c.startAngle,
+                        index       : c.index
+                    };
                     break;
             }
         });
@@ -489,8 +499,15 @@ function preventCollisions() {
 function tick(e) {
     graph.numTicks++;
 
+    /// Indexes for radial position
+    var allItems = Object.keys(graph.data).length;
+    allItems = 360 / allItems;
+    var radIndex = -1;
+
     for (var name in graph.data) {
         var obj = graph.data[name];
+
+        radIndex++;
 
         obj.positionConstraints.forEach(function(c) {
             var w = c.weight * e.alpha;
@@ -501,6 +518,45 @@ function tick(e) {
                 obj.y = (c.y * w + obj.y * (1 - w));
             }
         });
+
+        if (obj.radialConstraints)
+        {
+            var D2R = Math.PI / 180;
+
+            // check out the post
+            // http://macwright.org/2013/03/05/math-for-pictures.html
+            // for more info on how this works
+            var startAngle = obj.radialConstraints.startAngle || -90;
+            var radius = obj.radialConstraints.radius * Math.min(graph.width,graph.height);
+            var currentAngle = startAngle + (allItems * radIndex);
+            var currentAngleRadians = currentAngle * D2R;
+            var radialPoint = {
+                x: graph.width/2 + radius * Math.cos(currentAngleRadians),
+                y: graph.height/2 + radius * Math.sin(currentAngleRadians)
+            };
+            // here we attenuate the effect of the centering
+            // by the alpha of the force layout.
+            // this gives other forces - like gravity -
+            // to have an effect on the nodes
+            var affectSize = e.alpha * 0.1;
+
+            // here we adjust the x / y coordinates stored in our
+            // data to move them closer to where we want them
+            obj.x += (radialPoint.x - obj.x) * affectSize;
+            obj.y += (radialPoint.y - obj.y) * affectSize;
+
+        }
+
+        /// Added config option for Bounding Box
+        if (config.graph.boundingBox == true)
+        {
+            _w = obj.extent.right - obj.extent.left;
+            _h = obj.extent.bottom - obj.extent.top;
+            obj.x = Math.max(_w/2, Math.min(graph.width - _w/2, obj.x))
+            obj.y = Math.max(0, Math.min(graph.height - _h/2, obj.y))
+        }
+
+
     }
 
     if (graph.preventCollisions) {
