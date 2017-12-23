@@ -72,15 +72,16 @@
         #docs-close {
             display: block;
             position: fixed;
-            font-size: 1.4em;
+            /*font-size: 1.4em;
             width: 24px;
             height: 24px;
             line-height: 24px;
-            right: 8px;
             background: white;
             color: #333;
             text-align: center;
             text-decoration: none;
+            */
+            right: 8px;
         }
         #docs-close:hover {
             background: #ccc;
@@ -173,6 +174,26 @@
             font: 10px sans-serif;
             pointer-events: none;
         }
+
+        button#btn-fullscreen
+        {
+            position: relative;
+            left: 10px;
+            top: 30px;
+        }
+
+
+        :-webkit-full-screen { background-color: black }
+        :-moz-full-screen { background-color: black }
+        :-ms-fullscreen { background-color: black }
+        :fullscreen { background-color: black }
+
+        :-webkit-full-screen .legend .category text { fill: white }
+        :-moz-full-screen .legend .category text { fill: white }
+        :-ms-fullscreen .legend .category text { fill: white }
+        :-fullscreen .legend .category text { fill: white }
+
+
     </style>
 {% endblock %}
 
@@ -185,10 +206,11 @@
                     <div id="split-container">
 
                         <div id="graph-container">
+                            <button id="btn-fullscreen"><i class="fa fa-window-maximize"></i></button>
                             <div id="graph"></div>
                         </div>
                         <div id="docs-container">
-                            <a id="docs-close" class="btn btn-default" href="#">&times;</a>
+                            <a id="docs-close" class="btn btn-default" href="#"><i class="fa fa-close"></i></a>
                             <div id="docs" class="docs"></div>
                         </div>
                     </div>
@@ -201,10 +223,10 @@
 {% endblock %}
 
 {% block injectJS %}
-    <script src="//code.jquery.com/jquery-migrate-1.0.0.js"></script>
     <script src="//cdn.jsdelivr.net/d3js/3.4.3/d3.js"></script>
     <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/colorbrewer.js"></script>
     <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/lib/geometry.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/kayahr/jquery-fullscreen-plugin@1.1.4/jquery.fullscreen-min.js"></script>
     <script type="text/javascript">
 
         function formatDoc(item)
@@ -233,7 +255,7 @@
             {
 
                 $("<h2/>").text(item.data.given+ " " + item.data.family).appendTo(_html);
-                /*var itemA = $("<ul/>");
+                var itemA = $("<ul/>");
                 $.each( item.dependedOnBy, function( idx, pub ) {
                     var li = $("<li/>").appendTo(itemA);
                     var pubObj = config.data[pub];
@@ -244,7 +266,7 @@
                     }).text(pub).appendTo(li);
 
                 });
-                itemA.appendTo(_html);*/
+                itemA.appendTo(_html);
             }
             item.docs = _html.html();
         }
@@ -372,6 +394,10 @@
             //$.getScript("//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/script.js");
             $.getScript("/plugins/d3js/d3.pubnetwork.js");
 
+            $("#btn-fullscreen").click(function()
+            {
+                $("#split-container").toggleFullScreen();
+            });
         });
 
 
