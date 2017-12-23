@@ -1,7 +1,15 @@
 {% extends 'site.twig' %}
 
-{% block urltile %}Publication Map{% endblock %}
-{% block pagetile %}Publications{% endblock %}
+{% block urltile %}Publication Network{% endblock %}
+{% block pagetile %}Publication Network{% endblock %}
+
+{% block pagedescription %}
+    <h2>Co-authorship Network</h2>
+    <div class="subtitle">
+        Visualising network of scientific research
+    </div>
+{% endblock %}
+
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
@@ -199,6 +207,48 @@
     <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/lib/geometry.js"></script>
     <script type="text/javascript">
 
+        function formatDoc(item)
+        {
+            var _html = $("<div/>");
+            if (item.type=="publication")
+            {
+                $("<h2/>").text(item.data.title).appendTo(_html);
+                $("<h3/>").text(item.data.archive_location).appendTo(_html);
+                var itemA = $("<div/>");
+                $.each( item.data.author, function( idx, author ) {
+                    $("<a/>",{
+                        "href": "#" + author.family,
+                        "class": "select-object",
+                        "data-name": author.family
+                    }).text(author.given+ " " + author.family).appendTo(itemA).append(" / ");
+                })
+                itemA.appendTo(_html);
+                var itemP = $("<div/>");
+                $("<span/>").text("Project: ").appendTo(itemP);
+                $("<span/>").text(item.data.project.name).appendTo(itemP);
+                itemP.appendTo(_html);
+                $("<div/>").text(item.data.abstract).appendTo(_html);
+            }
+            else if (item.type=="author")
+            {
+
+                $("<h2/>").text(item.data.given+ " " + item.data.family).appendTo(_html);
+                /*var itemA = $("<ul/>");
+                $.each( item.dependedOnBy, function( idx, pub ) {
+                    var li = $("<li/>").appendTo(itemA);
+                    var pubObj = config.data[pub];
+                    $("<a/>",{
+                        "href": "#" + pubObj.name,
+                        "class": "select-object",
+                        "data-name": pubObj.name
+                    }).text(pub).appendTo(li);
+
+                });
+                itemA.appendTo(_html);*/
+            }
+            item.docs = _html.html();
+        }
+
         var defaults = {
             "title" : "Default Title",
             "graph" : {
@@ -277,9 +327,11 @@
 
         authName = [],
         authObj = [];
-        d3.json("{{ urlFor('api.pub.project',{name: 'all'} ) }}", function(data) {
+        d3.json("{{ urlFor('api.pub.project',{name: 'all'} ) }}", function(data)
+        {
             $.each( data, function( key, value ) {
 
+                console.log(value.archive_location);
                 var object = {
                     "name": value.archive_location,
                     "type": "publication",
@@ -319,47 +371,6 @@
             });
             $.getScript("//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/script.js");
 
-            function formatDoc(item)
-            {
-                var _html = $("<div/>");
-                if (item.type=="publication")
-                {
-                    $("<h2/>").text(item.data.title).appendTo(_html);
-                    $("<h3/>").text(item.data.archive_location).appendTo(_html);
-                    var itemA = $("<div/>");
-                    $.each( item.data.author, function( idx, author ) {
-                        $("<a/>",{
-                            "href": "#" + author.family,
-                            "class": "select-object",
-                            "data-name": author.family
-                        }).text(author.given+ " " + author.family).appendTo(itemA).append(" / ");
-                    })
-                    itemA.appendTo(_html);
-                    var itemP = $("<div/>");
-                    $("<span/>").text("Project: ").appendTo(itemP);
-                    $("<span/>").text(item.data.project.name).appendTo(itemP);
-                    itemP.appendTo(_html);
-                    $("<div/>").text(item.data.abstract).appendTo(_html);
-                }
-                else if (item.type=="author")
-                {
-
-                    $("<h2/>").text(item.data.given+ " " + item.data.family).appendTo(_html);
-                    var itemA = $("<ul/>");
-                    $.each( item.dependedOnBy, function( idx, pub ) {
-                         var li = $("<li/>").appendTo(itemA);
-                         var pubObj = config.data[pub];
-                            $("<a/>",{
-                            "href": "#" + pubObj.name,
-                            "class": "select-object",
-                            "data-name": pubObj.name
-                        }).text(pub).appendTo(li);
-
-                    });
-                    itemA.appendTo(_html);
-                }
-                item.docs = _html.html();
-            }
         });
 
 
