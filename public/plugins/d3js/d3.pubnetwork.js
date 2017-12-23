@@ -6,8 +6,8 @@ var graph       = {},
 $(function() {
     resize();
 
-    isIE = $.browser.msie;
-    if ($.browser.mozilla) {
+    isIE = ($.browser && $.browser.msie);
+    if ($ .browser && $.browser.mozilla) {
         $('body').addClass('firefox');
     }
 
