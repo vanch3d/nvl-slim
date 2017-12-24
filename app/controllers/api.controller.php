@@ -8,80 +8,6 @@
  */
 class APIController extends Controller
 {
-	/**
-	 * Return a short list of all projects
-	 * @param boolean $keys
-	 * @return array	An array of project IDs, if $keys true,
-	 * 					the complete descriptors otherwise
-     * @deprecated      replaced by a self-defined handler
-	 */
-	public static function getProjects($keys=false)
-	{
-		$projIdx = array(
-			'ilp' => array(
-				'id' 	 =>  'ilp',
-				'name' =>  'Student Model',
-				'date' => 1995,
-			),
-			'calques3d' => array(
-				'id' 	 =>  'calques3d',
-				'name' =>  'Calques 3D',
-				'date' => 1996,
-			),
-			'demist' => array(
-				'id' 	 =>  'demist',
-				'name' =>  'DEMIST',
-				'date' => 2000,
-			),
-			'leactivemath' => array(
-				'id' 	 =>  'leactivemath',
-				'name' =>  'LeActiveMath',
-				'date' => 2004,
-			),
-			'myplan' => array(
-				'id' 	 =>  'myplan',
-				'name' =>  'MyPlan',
-				'date' => 2007,
-			),
-			'makingstuff' => array(
-				'id' 	 =>  'makingstuff',
-				'name' =>  'Making Stuff',
-				'date' => 2008,
-			),
-			'auditorygames' => array(
-				'id' 	 =>  'auditorygames',
-				'name' =>  'Auditory Games',
-				'date' => 2008,
-			),
-			'safesea' => array(
-				'id' 	 =>  'safesea',
-				'name' =>  'SAFESeA',
-				'date' => 2012,
-			),
-            'explabs' => array(
-                'id' 	 =>  'explabs',
-                'name' =>  'Experience Labs',
-                'date' => 2014,
-            ),
-            'mypal' => array(
-                'id' 	 =>  'mypal',
-                'name' =>  'myPAL',
-                'date' => 2016,
-            )
-
-		);
-        uasort($projIdx, function ($item1, $item2) {
-            return $item2['date'] - $item1['date'];
-        });
-
-		if ($keys==true)
-			return array_keys($projIdx);
-		else
-		{
-			return $projIdx;
-		}
-	}
-
     /**
      *  Return a detailed list (JSON) of all projects
      */
@@ -157,6 +83,34 @@ class APIController extends Controller
 	}
 
     /**
+     * Retrieve the list of publications for the given project (tag).
+     * The tag is expected to be one of the projects (see ), or 'all' for the complete list.
+     *
+     * @param string $name	The project tag to retrieve publications for
+     *
+     * @todo[vanch3d] Need to get a Swagger specification in place to normalise output
+     */
+    public function getPublicationsJSON($name)
+    {
+        // set the cache for the request
+        $this->app->etag($name.'BWPDQJUN');
+        $this->app->expires('+1 week');
+
+        try {
+            $pubs = $this->getCachedZotero("$name",200);
+            $publications = $pubs['publications'];
+            $this->outputJSON($publications);
+        } catch (Exception $e) {
+            $error = array(
+                'code'      =>    $e->getCode(),
+                'message'   =>    $e->getMessage());
+
+            $this->outputJSON($error,500);
+
+        }
+    }
+
+    /**
      * Return a detailed list (JSON) of all slides associated with the given project
      * @param string $name The ID of the project
      */
@@ -217,31 +171,6 @@ class APIController extends Controller
             $this->outputJSON($error,500);
         }
     }
-
-    /**
-	 * Retrieve the list of publications for the given project (tag).
-	 * The tag is expected to be one of the projects (see ), or 'all' for the complete list.
-	 *
-	 * @param string $name	The project tag to retrieve publications for
-	 */
-	public function getPublicationsJSON($name)
-	{
-		// set the cache for the request
-		$this->app->etag($name.'BWPDQJUN');
-		$this->app->expires('+1 week');
-
-        try {
-            $pubs = $this->retrieveFromZotero($name, "umuai-nvl.csl");
-            $this->outputJSON($pubs);
-        } catch (Exception $e) {
-            $error = array(
-                'code'      =>    $e->getCode(),
-                'message'   =>    $e->getMessage());
-
-            $this->outputJSON($error,500);
-
-        }
-	}
 
 
     public function getImagesJSON($name)
