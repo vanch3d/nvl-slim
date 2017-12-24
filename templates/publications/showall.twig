@@ -1,187 +1,13 @@
 {% extends 'site.twig' %}
 
-
-{% block injectCSS %}
-<style>
-<!--
-/*.pub-tag .csl-bib-body:after {
-    color: #E10707;
-    content: "";
-    font-family: 'FontAwesome';
-    height: 24px;
-    position: absolute;
-    right: 0;
-    text-align: right;
-    top: 0;
-    width: 24px;
-}
-
-.pub-tag li{
-	text-align: justify;
-}
-
-.csl-entry {
-	text-align: justify;
-	padding-right: 30px;		
-}*/
-
-
-.expand.collapsing, .expand.collapse.in
-{
-	z-index: 99999;
-	
-}
-
-.item
-{
- 	z-index: auto; 
- 	position: relative;
- 	width: 100%;
-}
-
-.item[data-group]
-{
-	z-index: 0;
-	width: auto; 
-}
-
-
-.expand
-{
-	background-color: #ffffff;
-    padding-left: 25px;
-    border-left: 5px solid #E10707;
-    
-}
-
-.expand .abstract
-{
-	padding: 10px 0;
-    font-size: 14px;
-    line-height: 16px;
-}
-
-.panel
-{
-	padding: 10px;
-	text-align: justify;
-}
-
-.title:after {
-    color: #333333;
-    content: "";
-    font-family: 'FontAwesome';
-    height: 0;
-    padding-top: 10px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 24px;
-
-}
-
-.title
-{
-    cursor: pointer;
-}
-
-.title.collapsed:after {
-    color: #E10707;
-    content: "";
-}
-
-.panel {
-    padding-right: 30px;
-}
-
-
-
-.meta span {
-    padding-right: 4px;
-}
-
-.meta span:before
-{
-    color: #E10707;
-    font-family: 'FontAwesome';
-    line-height: 17px;
-    position: relative;
-    padding-right:4px;
-}
-
-.meta span + span {
-    border-left: 1px solid #747474;
-    padding-left: 8px;
-}
-
-.meta .project:before {
-    content: "";
-}
-
-.meta .pubreader:before {
-    content: "";
-}
-
-.meta .doi:before {
-    content: "";
-}
-
-.meta .pdf:before {
-    content: "";
-}
-
-.meta .bib:before {
-    content: "";
-}
-
-@media only screen and (max-width: 1199px) {
-.gray-section {
-
-}
-}
-
-@media only screen and (max-width: 990px) and (min-width: 768px) {
-    .gray-section {
-
-    }
-}
-
-@media only screen and (max-width: 767px)  {
-    .gray-section {
-
-    }
-    .widget-title {
-        display: inline-block;
-        width: auto;
-        margin-bottom: 0;
-    }
-
-    .widget-containt {
-        display: inline;
-    }
-
-    .widget-title h3 {
-        padding-bottom: 0;
-    }
-    .widget {
-        margin-bottom: 0px;
-        padding-bottom: 2px;
-    }
-
-}
-
-@media only screen and (max-width: 479px) {
-    .gray-section {
-
-    }
-}
-
--->
-</style>
-{% endblock %}
-
 {% block urltile %}Publications{% endblock %}
 {% block pagetile %}Publications{% endblock %}
+
+
+{% block pagedescription %}
+    <h2>List of all publications</h2>
+{% endblock %}
+
 
 {% block breadcrumb %}
  <ol class="breadcrumb">
@@ -190,58 +16,242 @@
 </ol>
 {% endblock %}   
 
+{% block injectCSS %}
+    <style>
+        <!--
+        /*.pub-tag .csl-bib-body:after {
+            color: #E10707;
+            content: "";
+            font-family: 'FontAwesome';
+            height: 24px;
+            position: absolute;
+            right: 0;
+            text-align: right;
+            top: 0;
+            width: 24px;
+        }
+
+        .pub-tag li{
+            text-align: justify;
+        }
+
+        .csl-entry {
+            text-align: justify;
+            padding-right: 30px;
+        }*/
+
+
+        .expand.collapsing, .expand.collapse.in
+        {
+            z-index: 99999;
+
+        }
+
+        .item
+        {
+            z-index: auto;
+            position: relative;
+            width: 100%;
+        }
+
+        .item[data-group]
+        {
+            z-index: 0;
+            width: auto;
+        }
+
+
+        .expand
+        {
+            background-color: #ffffff;
+            padding-left: 25px;
+            border-left: 5px solid #E10707;
+
+        }
+
+        .expand .abstract
+        {
+            padding: 10px 0;
+            font-size: 14px;
+            line-height: 16px;
+        }
+
+        .panel
+        {
+            padding: 10px;
+            text-align: justify;
+        }
+
+        .title:after {
+            color: #333333;
+            content: "";
+            font-family: 'FontAwesome';
+            height: 0;
+            padding-top: 10px;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 24px;
+
+        }
+
+        .title
+        {
+            cursor: pointer;
+        }
+
+        .title.collapsed:after {
+            color: #E10707;
+            content: "";
+        }
+
+        .panel {
+            padding-right: 30px;
+        }
+
+
+
+        .meta span {
+            padding-right: 4px;
+        }
+
+        .meta span:before
+        {
+            color: #E10707;
+            font-family: 'FontAwesome';
+            line-height: 17px;
+            position: relative;
+            padding-right:4px;
+        }
+
+        .meta span + span {
+            border-left: 1px solid #747474;
+            padding-left: 8px;
+        }
+
+        .meta .project:before {
+            content: "";
+        }
+
+        .meta .pubreader:before {
+            content: "";
+        }
+
+        .meta .doi:before {
+            content: "";
+        }
+
+        .meta .pdf:before {
+            content: "";
+        }
+
+        .meta .bib:before {
+            content: "";
+        }
+
+        @media only screen and (max-width: 1199px) {
+            .gray-section {
+
+            }
+        }
+
+        @media only screen and (max-width: 990px) and (min-width: 768px) {
+            .gray-section {
+
+            }
+        }
+
+        @media only screen and (max-width: 767px)  {
+            .gray-section {
+
+            }
+            .widget-title {
+                display: inline-block;
+                width: auto;
+                margin-bottom: 0;
+            }
+
+            .widget-containt {
+                display: inline;
+            }
+
+            .widget-title h3 {
+                padding-bottom: 0;
+            }
+            .widget {
+                margin-bottom: 0px;
+                padding-bottom: 2px;
+            }
+
+        }
+
+        .panel-group .panel {
+            margin-bottom: 3px;
+        }
+
+        .panel-group .panel + .panel {
+            margin-top: 0px;
+        }
+
+        button.btn-filter {
+            float: left;
+        }
+
+        @media only screen and (max-width: 479px) {
+            .gray-section {
+
+            }
+        }
+
+        .widget:last-child::after {
+            background-image: none;
+        }
+
+        -->
+    </style>
+{% endblock %}
+
+
 {% block content %}
 <section class="gray-section">
 	<div class="container-fluid"><div class="row">
-
-            <!-- section-title -->
-            <div class="section-title">
-                <div class="main-title">
-                    <h2>Publications</h2>
-                </div>
-            </div>
 
             <div class="col-sm-3 col-sm-push-9">
 				<aside class="sidebar" >
 
                     <!-- widget filter all -->
                     <div class="widget categories">
-                        <div class="widget-title">
+                        <!--<div class="widget-title">
                             <h3>Filter</h3>
-                        </div>
-
+                        </div>-->
 						<div class="widget-containt">
                             <button class="btn btn-black btn-clear active" data-filter-value="*">all</button>
                         </div>
+
                     </div>
 
                     <!-- widget types -->
                     <div class="widget categories">
-                        <div class="widget-title">
+                        <!--<div class="widget-title">
                             <h3>By Type</h3>
-                        </div>
-
+                        </div> -->
                         <div class="widget-containt" id="pubtype">
-                            <div><i class="loading fa fa-spinner fa-spin"></i>
-                                {% for type in types %}
-									<button class="btn btn-black btn-filter" data-filter-type="type"
-										data-i18n="pub.{{ type }}" data-filter-value="{{ type }}">{{ type }}</button>
-                                {% endfor %}
-							</div>
+                            {% for type in types %}
+                                <button class="btn btn-black btn-filter" data-filter-type="type"
+                                    data-i18n="pub.{{ type }}" data-filter-value="{{ type }}">{{ type }}</button>
+                            {% endfor %}
                         </div>
                     </div>
 
                     <!-- widget years -->
-                    <div class="widget tags">
-                        <div class="widget-title">
+                    <div class="widget categories">
+                        <!--<div class="widget-title">
                             <h3>By Year</h3>
-                        </div>
+                        </div>-->
                         <div class="widget-containt" id="pubyear">
-                            <div><i class="loading fa fa-spinner fa-spin"></i>
-								{% for year in years %}
-									<button class="btn btn-black btn-filter" data-filter-type="year" data-filter-value="{{ year }}">{{ year }}</button>
-                                {% endfor %}
-							</div>
+                            {% for year in years %}
+                                <button class="btn btn-black btn-filter" data-filter-type="year" data-filter-value="{{ year }}">{{ year }}</button>
+                            {% endfor %}
                         </div>
                     </div>
                 </aside>
@@ -253,7 +263,7 @@
 					<div class="panel-group" >
 						<div class="pub-tag" id="publist">
 							{% for pub in publications %}
-								<div class="template item panel" data-type="{{pub.type}}" data-year="{{pub.issued.date-parts}}"
+								<div class="template item panel" data-type="{{pub.type}}" data-year="{{pub.issued['date-parts'][0][0]}}"
 									 style="z-index:{{index}};">
 									<div class="title collapsed" data-parent="#publist" data-toggle="collapse"
 										 data-target="#item-{{pub.id}}">
@@ -323,6 +333,7 @@ Isotope.Item.prototype.hide = function() {
 $(document).ready(function()
 {
 	// Progressive template ready for processing
+    console.debug("starting templating ...");
 
     // add identifier to the coins markup.
     $(".Z3988").toggleClass("coins");
@@ -330,6 +341,50 @@ $(document).ready(function()
     $('.loading').animate({
 			opacity: 0
 	}, 200).hide(200);
+
+    // start isotope layout
+    var $container = $('#publist').isotope({
+        itemSelector: '.item',
+        layoutMode: 'vertical',
+        transitionDuration: '0.8s',
+        getSortData: {
+            year: function(elem){
+                return $(elem).attr('data-year');
+            }
+        },
+        //sortBy : 'year',
+        //sortAscending: false
+    });
+    $('.btn-filter').click(function( event ) {
+        $('.btn-filter,.btn-clear').removeClass("active");
+        $(this).addClass("active");
+        var filterValue = $(this).attr('data-filter-value');
+        var filterType = 'data-' + $(this).attr('data-filter-type');
+        $container.isotope({ filter: "["+filterType+"='"+filterValue+"'],[data-group='true']"});
+    });
+    $('.btn-clear').click(function( event ) {
+        $('.btn-filter').removeClass("active");
+        $(this).addClass("active");
+        $container.isotope({ filter: "*"});
+    });
+
+    // force update of Zotero plugin when layout completed
+    $container.isotope( 'on', 'layoutComplete', updateZotero);
+
+    // re-layout when collapsed info shown or hidden
+    $('.expand').on('hidden.bs.collapse', function () {
+        $container.isotope('layout');
+    });
+    $('.expand').on('shown.bs.collapse', function () {
+        $container.isotope('layout');
+    });
+
+
+    $("span.cite").each(function() {
+        var ref = $( this ).data( "pubidx" );
+        if (ref && data[ref])
+            $( this ).html(data[ref].output.cite);
+    });
 
     function updateWidget(list,tag,type,sortasc,group)
 	{
