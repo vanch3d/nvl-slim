@@ -282,7 +282,7 @@
                                     {% if pub.PubReader %}
                                         <span class="pubreader"><a href="{{pub.PubReader}}" title="Go to full text">PubReader</a></span>
                                     {% endif %}
-                                    {% if pub.DOI %}<span class="doi"><a href="http://dx.doi.org/{{pub.DOI}}" title="Go to article in CrossRef">DOI</a></span>{% endif %}
+                                    {% if pub.DOI %}<span class="doi">{{ macros.hrefDOI(pub.DOI) }}</span>{% endif %}
                                     {% if pub.PDF %}<span class="pdf"><a href="{{pub.PDF}}" title="Download the PDF">PDF</a></span> {% endif %}
                                     {% if pub.output.bibtex %}
                                         <span class="bib"><a class="bib-copy" data-bib="{{ pub.output.bibtex }}" href="#" title="Copy bibtex to clipboard">Bibtex</a></span>

@@ -93,7 +93,7 @@
                                                 [<a href="{{ pub.PDF }}">PDF</a>]
                                             {% endif %}
                                             {% if (pub.DOI) %}
-                                                [<a href="{{ pub.DOI }}">DOI</a>]
+                                                [{{ macros.hrefDOI(pub.DOI) }}]
                                             {% endif %}
                                             <abbr class="unapi-id" title="{{ pub.id }}"></abbr>
                                         </li>
