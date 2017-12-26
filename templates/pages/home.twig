@@ -6,6 +6,13 @@
     </div>
 {% endblock %}
 
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li class="active">Home</li>
+    </ol>
+{% endblock %}
+
+
 {% block content %}
     <section class="white-section">
         <div class="container-fluid">
@@ -19,13 +26,13 @@
                                 </div>
 
                                 <p>My research interests lies in the design and the evaluation of Technology-Enhanced
-                                    Learning (TEL) environments. </p><p> Over the last couple of years, I have conducted several
+                                    Learning (TEL) environments. <br> Over the last couple of years, I have conducted several
                                     research projects in various areas: Participatory Design, 3D Dynamic Geometry,
                                     (Open) Learner Modelling, Multi-Representations Learning Environments, Life-long
-                                    Learning, and Auditory Perceptual Learning. </p><p>I have been working in
+                                    Learning, and Auditory Perceptual Learning. <br>I have been working in
                                     inter-disciplinary contexts, tackling some of the key questions and problems of
                                     learning technologies from a predominantly computer science perspective.
-                                    </p><p>Two threads
+                                    <br>Two threads
                                     characterise my research agenda: 1) the role, usage and impact of external
                                     representations in learning and, 2) transforming learning experiences into
                                     transferable knowledge.</p>
@@ -35,7 +42,7 @@
 
 
 
-                        <div class="col-sm-6 col-lg-7">
+                        <div class="col-sm-5 col-lg-5">
                             <div class="text-widget">
                                 <div class="text-widget-title">
                                     <h3>Recent Project</h3>
@@ -53,7 +60,7 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-6 col-lg-5">
+                        <div class="col-sm-7 col-lg-7">
                             <div class="text-widget">
                                 <div class="text-widget-title">
                                     <h3>Other Projects</h3>
@@ -66,7 +73,7 @@
                                             'tmpl_base':'template.list.twig'
                                             } %}
                                         {% endfor %}
-                                        <li><a href="{{ urlFor('project.all') }}">See all projects ...</a>
+                                        <li><a href="{{ urlFor('project.all') }}" title="Go to the complete list of projects">See all projects ...</a>
                                     </ul>
                                 </div>
                             </div>
@@ -81,12 +88,12 @@
 
                                 <ul class="pub-tag" id="publist">
                                     {% for pub in publications %}
-                                        <li id="{{ pub.id }}" data-type="{{ pub.type }}">{{ pub.output.ref | raw }}
+                                        <li id="{{ pub.id }}" {{ pub.PubReader ? "data-reader="~pub.PubReader }} data-type="{{ pub.type }}">{{ pub.output.ref | raw }}
                                             {% if (pub.PDF) %}
-                                                [<a href="{{ pub.PDF }}">PDF</a>]
+                                                [<a href="{{ pub.PDF }}" title="Download the PDF version" download>PDF</a>]
                                             {% endif %}
                                             {% if (pub.DOI) %}
-                                                [<a href="{{ pub.DOI }}">DOI</a>]
+                                                [{{ macros.hrefDOI(pub.DOI) }}]
                                             {% endif %}
                                             <abbr class="unapi-id" title="{{ pub.id }}"></abbr>
                                         </li>
@@ -94,7 +101,7 @@
                                 </ul>
                                 <div class="widget-containt categories">
                                     <ul>
-                                        <li><a href="{{ urlFor('publications.all') }}">See all publications ...</a>
+                                        <li><a href="{{ urlFor('publications.all') }}" title="Go to the complete list of publications">See all publications ...</a>
                                          </ul>
 
                                 </div>
@@ -145,71 +152,19 @@
         </div>
 
     </section>
-    {#<aside class="gray-section">
-        <div class="container">
-            <div class="col-md-12">
-                <div class="attention-box-small">
-                    <h3>This site is under construction. Please come back again ...</h3>
-                </div>
-            </div>
-
-        </div>
-    </aside>#}
-
-
-
 {% endblock %}
 
 {% block injectCSS %}
-    <style>
     <style>
         .team-style1 li .img-cover {
             border: 1px solid #E4E4E4;
             max-height: 180px;
         }
-
     </style>
 {% endblock %}
 {% block injectJS %}
-{#    <script>
+    <script>
         $(document).ready(function () {
-            $.getJSON("{{ urlFor('api.pub.project',{name: 'all'})}}")
-                    .done(function(data){
-                        var _counter = 1;
-                        $.each( data, function( index, value){
-                            var ref = $(value.output.ref);
-                            if (value.PubReader)
-                            {
-                                $(ref).find("span.csl-title").wrap($("<a/>",
-                                        {
-                                            'href': value.PubReader,
-                                            'title': "Go to full text"
-                                        }
-                                ));
-                            }
-                            $(ref).append("&nbsp;[").append($(" <a/>",
-                                    {
-                                        'class': "refpdf",
-                                        'text': "PDF",
-                                        'href': value.PDF,
-                                        'title': "Download the PDF"
-                                    }
-                            )).append("]");
-                            var temp = $('<li/>', {
-                                        'id': index,
-                                        'data-type': value.type
-                                    }).html(ref)
-                                            .append($('<abbr/>', {
-                                                'class': 'unapi-id',
-                                                'title': value.id
-                                            }))
-
-                                    ;//.append(value.output.coins);
-                            temp.appendTo('#publist');
-                          return (_counter++!=3);
-                        })
-                    });
-
         });
-    </script> #}
+    </script>
 {% endblock %}
