@@ -39,11 +39,19 @@ class ProjectController extends Controller
         $projIdx = $this->isProjectDefined($name);
         if ($projIdx)
 		{
-			try {
+            $publications = [];
+            try {
+                $pubs = $this->getCachedZotero($name);
+                $publications = $pubs['publications'];
+            } catch (Exception $e) {}
+
+            try {
 				$this->render('projects/content/'.$name,array(
 						'tmpl_base' => 'template.html.twig',
-						'project' => $projIdx
-				));
+						'project' => $projIdx,
+                        'publications' => $publications
+
+                ));
 
 			} catch (Twig_Error_Loader $e) {
     			$this->app->flash('error', 'The project you are looking for does not exist. <br>Try one below.');
