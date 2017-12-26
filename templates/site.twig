@@ -75,7 +75,7 @@
 
             <!-- page-title -->
         </li>
-        <li class="page-title"><h2>{% block pagetile %}{% endblock %}</h2></li>
+        <li class="page-title">{% if block('pagetile') %}<h2>{{ block('pagetile') }}</h2>{% endif %}</li>
 
         <!-- #menu-social-icons -->
 
