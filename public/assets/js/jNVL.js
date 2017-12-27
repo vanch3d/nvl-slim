@@ -83,11 +83,7 @@
          });
 
      }
-
-
-
+     
      return self;
 
  }( jNVL || {}, jQuery ));
-
-

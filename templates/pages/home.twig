@@ -121,13 +121,13 @@
                         <ul class="team-style1">
                             <li>
                                 <div class="img-cover">
-                                    <img alt="member cover 5" src="/assets/images/project.png" draggable="false">
+                                    <img alt="Screenshot of the openEssayist webapp" src="/assets/images/project.png" draggable="false">
                                 </div>
                                 <div class="member-img">
                                     <div class="img-shine"
                                          style="top: -185px; left: -185px; background: none repeat scroll 0% 0% rgba(255, 255, 255, 0);"></div>
                                     <a title="Preview Profile" href="{{ urlFor('about.me') }}">
-                                        <img alt="Nicolas Van&nbsp;Labeke head shot" src="/assets/images/nicolas.alt.jpg"
+                                        <img alt="Nicolas Van&nbsp;Labeke headshot" src="/assets/images/nicolas.alt.jpg"
                                              draggable="false">
                                     </a>
                                 </div>
@@ -163,4 +163,9 @@
     </style>
 {% endblock %}
 {% block injectJS %}
+    <script>
+        $(document).ready(function () {
+            jNVL.addPubReaderLinks();
+        });
+    </script>
 {% endblock %}

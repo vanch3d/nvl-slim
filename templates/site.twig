@@ -31,14 +31,14 @@
     <link rel="shortcut icon" href="/assets/images/favicon.png"/>
     <link rel="unapi-server" type="application/xml" title="unAPI" href="{{ app_base~'/api/unapi' }}"/>
 
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@3.1.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/jpswalsh/academicons@1.8.1/css/academicons.min.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/vanch3d/jquery-oembed-all@1.2/jquery.oembed.min.css">
 
     <link rel="stylesheet" href="/assets/style.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/vanch3d/MultiLevelPushMenu@1.1/css/icons.css"/>
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/vanch3d/MultiLevelPushMenu@1.1/css/component.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/vanch3d/MultiLevelPushMenu@1.2/css/icons.css"/>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/vanch3d/MultiLevelPushMenu@1.2/css/component.css"/>
     <style>
         .mp-level {
             background-color: white;
@@ -46,6 +46,12 @@
 
         .mp-pusher:after {
             z-index: 210;
+        }
+        .skip-content
+        {
+            position: absolute !important;
+            top: 50px;
+            z-index: 1500;
         }
     </style>
     {% block injectCSS %}
@@ -59,12 +65,13 @@
     <![endif]-->
 </head>
 <body>
+<a href="#main-content" class="skip-content sr-only sr-only-focusable">Skip to main content</a>
 <div class="mp-container">
 
     <ul class="gn-menu-main" id="gn-menu">
         <!-- trigger -->
         <li class="gn-trigger">
-            <a href="#" id="trigger" class="menu-trigger"> <i class="fa fa-bars fa-lg"></i></a>
+            <a href="#" id="trigger" aria-label="Open main menu" class="menu-trigger"> <i class="fa fa-bars fa-lg"></i></a>
 
         </li>
 
@@ -93,40 +100,31 @@
         <!-- mp-menu -->
         <nav id="mp-menu" class="mp-menu">
             <div class="mp-level">
-
-                <h2 class="icon icon-world">All Categories</h2>
+                <div class="mp-level-panel icon icon-world">All Categories</div>
                 <ul>
                     <li><a href="{{ urlFor('home') }}" title="Home"><i class="fa fa-home fa-fw"></i> Home</a></li>
                     <li class="icon icon-arrow-left">
-                        <a href="javascript:void(0)" title="Projects"><i
-                                    class="fa fa-briefcase fa-fw"></i> Projects</a>
-
+                        <a href="javascript:void(0)" title="Projects"><i class="fa fa-briefcase fa-fw"></i> Projects</a>
                         <div class="mp-level">
-                            <h2 class="icon icon-display">Projects</h2>
+                            <div class="mp-level-panel icon icon-display">Projects</div>
                             <a class="mp-back" href="#">back</a>
                             <ul>
-                                <li><a href="{{ urlFor('project.named',{ 'name' : 'safesea'}) }}" title="SAFeSEA">SAFeSEA</a>
-                                </li>
-                                <li><a href="{{ urlFor('project.named',{ 'name' : 'auditorygames'}) }}" title="NBRUH">NBRUH</a>
-                                </li>
-                                <li><a href="{{ urlFor('project.named',{ 'name' : 'calques3d'}) }}" title="Calques 3D">Calques
-                                        3D</a></li>
+                                <li><a href="{{ urlFor('project.named',{ 'name' : 'safesea'}) }}" title="Go to the project">SAFeSEA</a></li>
+                                <li><a href="{{ urlFor('project.named',{ 'name' : 'auditorygames'}) }}" title="Go to the project">NBRUH</a></li>
+                                <li><a href="{{ urlFor('project.named',{ 'name' : 'calques3d'}) }}" title="Go to the project">Calques 3D</a></li>
                                 <li><a href="{{ urlFor('project.all') }}" title="All projects">See more ...</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li><a href="{{ urlFor('publications.all') }}" title="Publications"><i class="fa fa-book fa-fw"></i>
-                            Publications</a></li>
-
+                    <li><a href="{{ urlFor('publications.all') }}" title="Publications"><i class="fa fa-book fa-fw"></i> Publications</a></li>
                     <li class="icon icon-arrow-left">
                         <a class="" href="javascript:void(0)" title="About..."><i class="fa fa-user fa-fw"></i> About...</a>
-
                         <div class="mp-level">
-                            <h2 class="icon icon-news">About</h2>
+                            <div class="mp-level-panel icon icon-news">About</div>
                             <a class="mp-back" href="#">back</a>
                             <ul>
-                                <li><a href="{{ urlFor('about.me') }}" title="About Me">About Me</a></li>
-                                <li><a href="{{ urlFor('about.site') }}" title="About This">About This</a></li>
+                                <li><a href="{{ urlFor('about.me') }}" title="More information about me">About Me</a></li>
+                                <li><a href="{{ urlFor('about.site') }}" title="More information about the site">About This</a></li>
                             </ul>
                         </div>
                     </li>
@@ -156,7 +154,9 @@
                     <!-- /container -->
                 </div>
 
+                <main id="main-content" tabindex="-1">
                 {% block content %}{% endblock %}
+                </main>
 
                 <div class="push"></div>
             </div>
@@ -171,7 +171,7 @@
 <!-- /container -->
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 <script src="//cdn.jsdelivr.net/i18next/1.7.1/i18next.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/fitvids@2.0.0/fitvids.min.js"></script>
 <script src="//cdn.jsdelivr.net/jquery.easing/1.3/jquery.easing.1.3.min.js"></script>
