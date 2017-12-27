@@ -70,8 +70,8 @@
       * @todo[vanch3d] check if this could be done directly at the level of CSL transformation
       */
      self.addPubReaderLinks = function()
-	 {
-         $("li[data-reader]").each(function(idx,obj){
+     {
+         $("[data-reader]").each(function(idx,obj){
              var elt= $(obj).find("span.csl-title");
              if (!elt) return;
              var newLink = $("<a/>", {
@@ -82,10 +82,8 @@
              elt.empty().append(newLink);
          });
 
-	 }
-
-	 return self;
+     }
+     
+     return self;
 
  }( jNVL || {}, jQuery ));
-
-
