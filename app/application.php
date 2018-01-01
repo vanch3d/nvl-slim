@@ -231,6 +231,8 @@ abstract class Controller extends Application {
      * @param string $csl_file      The CSL file to use for formatting the publications
      * @return array                A list of publications
      * @throws Exception
+     *
+     * @todo[vanch3d] Make sure all URLs are fully qualified (eg PDF, URL, ...)
      */
     public function getCachedZotero($project_id="all", $limit = 20, $csl_file="umuai-nvl.csl")
     {
@@ -257,7 +259,7 @@ abstract class Controller extends Application {
             'order'=>	'date',						// sort by field
             'sort'=>	'desc',						// sort order
             'format'=>	'atom',						// output format
-            'content'=> 'csljson,rdf_bibliontology,bibtex,coins,json'		// content formats to retrieve
+            'content'=> 'csljson,rdf_bibliontology,bibtex,json'		// content formats to retrieve
         );
         if ($project_id!='all')
             $data['tag'] = 'nvl.'.$project_id;				// tags (project) to look for
@@ -315,28 +317,46 @@ abstract class Controller extends Application {
             $citeproc = new citeproc($csl_data);
 
             // extract the CSLJSON object as the basis for the publications
-            // add the COINS object in the output
             foreach ($fetchedItems as $item)
             {
                 $pubitem = json_decode($item->subContents['csljson'],true);
                 $pubitem['id']=$item->itemKey;
-                // fix the clsjson date
-                $pubitem['issued']['date-parts'] = array(array($item->year));
 
                 $loc = $pubitem['archive_location'];
-                $pubitem['PDF'] = $this->app->urlFor('publications.named.pdf',array('name'=>$loc));
+                if (!in_array($pubitem['type'],array("software") )) {
+                    $pubitem['PDF'] = $this->app->urlFor('publications.named.pdf', array('name' => $loc));
+                }
 
                 $templatePathname = $this->app->view()->getTemplatePathname('publications/papers/'.$loc.'.twig');
-
                 if (is_file($templatePathname))
                 {
                     $pubitem['PubReader'] = $this->app->urlFor('publications.named.pubreader',array('name'=>$loc));
                 }
 
-                // extract the coins for outputs
-                $pubitem['output']['coins'] = htmlspecialchars_decode($item->subContents['coins']);
                 $pubitem['output']['bibtex'] = htmlspecialchars_decode($item->subContents['bibtex']);
                 $pubitem['output']['rdf_bibliontology'] = htmlspecialchars_decode($item->subContents['rdf_bibliontology']);
+
+                // some attributes might be saved in notes/extra if not supported by schema
+                if (isset($pubitem['note']))
+                {
+                    $noteStr = $pubitem['note'];
+                    $notes = explode("\n",$noteStr);
+                    foreach ($notes as $note)
+                    {
+                        // try if item is KEY: VALUE, with KEY = DOI|fig
+                        $match = null;
+                        if (preg_match("/(doi|fig):\s*(.*)/i", $note,$match))
+                        {
+                            // make sure it does not overwrite something
+                            if (!isset($pubitem[$match[1]])) {
+                                $pubitem[$match[1]] = $match[2];
+                            }
+                        }
+
+                    }
+
+                }
+
 
                 // extract keywords and project
                 $tags = $item->apiObject['tags'];
@@ -355,13 +375,14 @@ abstract class Controller extends Application {
                     }
                 }
 
-                $kk= json_decode(json_encode($pubitem));
-                $ref = $citeproc->render($kk);
-                $cite = $citeproc->render($kk,'citation');
+                // format reference and citation
+                $temObj= json_decode(json_encode($pubitem));
+                $ref = $citeproc->render($temObj);
+                $cite = $citeproc->render($temObj,'citation');
                 $pubitem['output']['cite'] = $cite;
                 $pubitem['output']['ref'] = $ref;
 
-                $item->subContents['csljson']=json_encode($pubitem);
+                //$item->subContents['csljson']=json_encode($pubitem);
                 $pubs['publications'][] = $pubitem;
                 //$this->writeZoteroCache($item->itemKey, $item->subContents,$loc);
             };
