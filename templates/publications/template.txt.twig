@@ -1,0 +1,15 @@
+{% spaceless %}
+{% set conBody %}
+    {% block article %}{% endblock %}
+{% endset %}
+{{ conBody|striptags|replace({
+        '     ' : " ",
+        '    ' : " ",
+        '   ' : " ",
+        '  ' : " ",
+        '\n\n\n\n' : '\n',
+        '\n\n\n' : '\n',
+        '\n\n' : '\n',
+    }) }}
+
+{% endspaceless %}
