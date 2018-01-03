@@ -57,6 +57,7 @@ $app->view($twig);
 $app->hook('slim.before.dispatch', function() use ($app) {
 	$app->view()->appendData(array(
 			'app_base' => $app->request()->getUrl()
+            //'app_base' => "http://nvl.calques3d.org"
 	));
 });
 
@@ -84,13 +85,15 @@ $c->app->get('/projects/:name/cloud', array($projectCtrl, 'wordCloud'))->name('p
 
 // publication routes
 $c->app->get('/publications/', array($projectCtrl, 'allPublications'))->name('publications.all');
-$c->app->get('/publications/graph/', array($projectCtrl, 'pubGraph'))->name('publications.all.graph');
-$c->app->get('/publications/map/', array($projectCtrl, 'pubMap'))->name('publications.all.map');
+//$c->app->get('/publications/graph/', array($projectCtrl, 'pubGraph'))->name('publications.all.graph');
+$c->app->get('/publications/network/', array($projectCtrl, 'pubMap'))->name('publications.all.map');
+$c->app->get('/publications/narrative/', array($sdxCtrl, 'pubNarrative'))->name('sandbox.narrative');
 $c->app->get('/publications/:name.pdf', array($projectCtrl, 'pubExportPDF'))->name('publications.named.pdf');
-$c->app->get('/publications/(:name/)', array($projectCtrl, 'pubReader'))->name('publications.named.pubreader');
-$c->app->get('/publications/:name/show', array($projectCtrl, 'pubShow'))->name('publications.named.show');
+$c->app->get('/publications/:name.txt', array($projectCtrl, 'pubExportTXT'))->name('publications.named.txt');
+$c->app->get('/publications/:name/', array($projectCtrl, 'pubReader'))->name('publications.named.pubreader');
+$c->app->get('/publications/:name/show/', array($projectCtrl, 'pubShow'))->name('publications.named.show');
 $c->app->get('/publications/:name/assets/:fig', array($projectCtrl, 'pubAssets'))->name('publications.named.assets');
-$c->app->get('/publications/:name/freqdist', array($projectCtrl, 'pubDistrib'))->name('publications.named.freqdist');
+$c->app->get('/publications/:name/cloud/', array($projectCtrl, 'pubDistrib'))->name('publications.named.freqdist');
 
 // other routes
 $c->app->get('/sandbox/isotope', array($sdxCtrl, 'getIsotope'))->name('sandbox.isotope');
@@ -105,16 +108,9 @@ $c->app->get('/api/projects/:name/publications', array($apiCtrl, 'getPublication
 $c->app->get('/api/projects/:name/slides', array($apiCtrl, 'getSlidesJSON'))->name('api.slide.project');
 $c->app->get('/api/projects/:name/images', array($apiCtrl, 'getImagesJSON'))->name('api.images.project');
 
-$c->app->error(array($homeCtrl, 'showError'));
+//$c->app->error(array($homeCtrl, 'showError'));
 $c->app->notFound(array($homeCtrl, 'showNotFound'));
 
-$c->app->get('/test', function() use($apiCtrl) {
-
-    //$ret = $apiCtrl->getCachedZotero();
-    $ret = $apiCtrl->isPublicationDefined("2013.RANLP.Summarisation");
-
-    $apiCtrl->outputJSON($ret);
-});
 
 // Run app
 $app->run();
