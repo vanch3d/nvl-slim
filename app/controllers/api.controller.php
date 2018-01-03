@@ -338,7 +338,7 @@ class APIController extends Controller
 			{
 				$ftdata = $this->searchItem($this->getUnAPIFormats(),"name",$format);
 				if ( !$ftdata )
-					throw new Exception('Argument \'format\': format not acceptable', 405);
+					throw new Exception("Argument 'format': $format not acceptable", 405);
 			}
 
 			if (isset($id) && isset($format))
@@ -348,19 +348,17 @@ class APIController extends Controller
                     return($v['id']===$id);
                 });
 
+                $record = reset($item);
+                if ($record===false)
+                    throw new Exception('Content Not Found', 404);
 
-                if (!isset($item) || empty($item))
-					throw new Exception('Id Not Found', 404);
-
-				$content = $item[0]['output'][$format];
-
+				$content = $record['output'][$format];
 				if (!isset($content))
-					throw new Exception('Content Not Found', 404);
+					throw new Exception('Format Not Found', 404);
 
 				$response = $this->app->response();
 				$response['Content-Type'] = $ftdata['type'];
 				$response['X-Powered-By'] = APPLICATION . '/' . VERSION;
-				//if ($ftdata['type'] == 'application/xml')
 				$response->setBody($content);
 			}
 			else
