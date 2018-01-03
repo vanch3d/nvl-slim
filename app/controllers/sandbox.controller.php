@@ -1,14 +1,110 @@
 <?php
 
+/**
+ * Class SandboxController
+ */
 class SandboxController extends Controller
 {
 
-	public function getIsotope()
+    /**
+     * @return array
+     * @todo[vanch3d] way to slow, even with 'etag'. Need proper hard-caching
+     */
+    private function getPublicationNarrative()
+    {
+        // @var array $narrative
+        $narrative = array(
+            "characters" => [],
+            "scenes" => [],
+            "errors" => []
+        );
+
+        try {
+
+            // get publications in reverse chronological order
+            $pubs = $this->getCachedZotero("all",100);
+            while ($pub = array_pop($pubs['publications'])) {
+
+                // Do not incorporate non-english publications
+                if (isset($pub['language']) && strcasecmp($pub['language'],'English')) {
+                    $narrative['errors'][]= "Unable to process ". $pub['archive_location'] . ", not an English source";
+                    continue;
+                }
+
+                // compute Freq Dist
+                $tags = $this->getFrequencyDistribution(array($pub['archive_location']));
+
+                if (isset($tags['error'])) {
+                    $narrative['errors'][]=$tags['error'];
+                    continue;
+                }
+
+                // only take the top X n-grams
+                $shortList = array_slice($tags,0,10);
+                foreach ($shortList as $tag)
+                {
+                    $count = $tag['value'];
+                    $enum = 1;
+                    $affiliation = "other";
+                    if (isset($narrative['characters'][$tag['key']]['count']))
+                    {
+                        $count += $narrative['characters'][$tag['key']]['count'];
+                        $enum += $narrative['characters'][$tag['key']]['enum'];
+                    }
+                    if ($enum >=2 ) $affiliation = "light";
+                    if ($enum >=5 ) $affiliation = "dark";
+                    // reformat the output to match the narrative plugin
+                    // @todo[vanch3d] the plugin also wrangles the data - check for redundancy
+                    $narrative['characters'][$tag['key']] = array(
+                            "id" => $tag['key'],
+                            "name" => $tag['key'],
+                            "affiliation" => $affiliation,
+                            "count" => $count,
+                            "enum" => $enum
+                        );
+                    $narrative['scenes'][$pub['archive_location']][] = $tag['key'];
+                }
+
+           }
+
+        } catch (Exception $e) {
+        }
+
+        // remove the keys
+        $narrative['scenes'] = array_values($narrative['scenes']);
+        $narrative['characters'] = array_values($narrative['characters']);
+
+        return $narrative;
+    }
+
+    /**
+     *
+     */
+    public function pubNarrative()
+    {
+        // set the cache for the request
+        $this->app->etag('nvl-slim.narrative');
+        $this->app->expires('+1 week');
+
+        $narrative = $this->getPublicationNarrative();
+
+        $this->render('publications/pub.narrative',array(
+            'narrative'=> json_encode($narrative)
+        ));
+    }
+
+    /**
+     *
+     */
+    public function getIsotope()
 	{
 		$this->render('sandbox/isotope');
 	}
 
-	public function redirectLegacy($name)
+    /**
+     * @param $name
+     */
+    public function redirectLegacy($name)
 	{
 		$oldarchive=array(
 			'1998_Calques_3D,_a_microworld_for_spatial_geometry_learning_(ITS_WS)'=>'1998.ITS.Calques3D',
