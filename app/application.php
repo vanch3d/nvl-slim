@@ -408,4 +408,220 @@ abstract class Controller extends Application {
 
         return $pubs;
     }
+
+
+    /**
+     * @param array $files
+     * @return array
+     */
+    protected function getFrequencyDistribution(array $files)
+    {
+        $stopwords = array_merge(
+            //array("#","-","...",">","=","&","'s",",","(",")",":",";","'",".","%","a","”","''","“","[","]","|"),
+            array("pp.","i.e.","e.g.","j","j.","p",),
+            file("../app/utils/nlp/stopwords.data", FILE_IGNORE_NEW_LINES)
+        );
+
+
+        /** @var string $text */
+        $text = null;
+        $errors = [];
+
+        foreach ($files as $file) {
+
+            try {
+                /** @var \Slim\View $view */
+                $view = $this->app->view();
+                $renderedTemplate = $view->fetch('publications/papers/' . $file . '.twig', array(
+                    'template_base' => 'publications/template.txt.twig'
+                ));
+                $text .= $renderedTemplate;
+
+            } catch (Exception $e) {
+                // @todo[vanch3d] need to build an helper function for that
+                $filename = "../docs/$file.pdf";
+                if (file_exists($filename)) {
+
+                    $parser = new \Smalot\PdfParser\Parser();
+                    $pdf    = $parser->parseFile($filename);
+                    $text .= $pdf->getText() . "\n";
+                }
+                else
+                    $errors[] = $e->getMessage();
+            }
+
+            /*
+            if (preg_match('/\.pdf$/i', $file)) {
+                $parser = new \Smalot\PdfParser\Parser();
+                $pdf    = $parser->parseFile($file);
+                $text .= $pdf->getText() . "\n";
+            } else {
+
+                try {
+                    // @var \Slim\View $view
+                    $view = $this->app->view();
+                    $renderedTemplate = $view->fetch('publications/papers/' . $file . '.twig', array(
+                        'template_base' => 'publications/template.txt.twig'
+                    ));
+                    $text .= $renderedTemplate;
+
+                } catch (Exception $e) {
+                    //var_dump($e->getMessage());
+                    $errors[] = $e->getMessage();
+                }
+
+
+            }*/
+        }
+
+        if (!isset($text))
+        {
+            return array("error" => $errors);
+        }
+        $arr = array();
+        try {
+
+            // @todo[vanch3d] Define a #### to deal with n-grams such as "learner model"
+            $tok = new NlpTools\Tokenizers\PennTreeBankTokenizer();
+            $norm = new NVLEnglish();
+            $stop = new NVLStopWords($stopwords);
+            $stemer = new NVLDummyLemmatizer();
+
+            // normalise the raw text
+            $d1 = new NlpTools\Documents\RawDocument(json_encode($text));
+            $d1->applyTransformation($norm);
+
+            // tokenise the text
+            $d = new NlpTools\Documents\TokensDocument($tok->tokenize($d1->getDocumentData()));
+            $d->applyTransformation($stop);
+            $d->applyTransformation($stemer);
+
+            // compute the frequency distribution
+            $freqDist = new NlpTools\Analysis\FreqDist($d->getDocumentData());
+
+            foreach ($freqDist->getKeyValues() as $key => $val) {
+                $arr[] = array('key' => $key, 'value' => $val);
+            }
+        } catch (Exception $e)
+        {
+            //var_dump($e->getMessage());
+            $errors[] = $e->getMessage();
+        }
+
+        return $arr;
+    }
+
+    protected function getPublicationAnalytics($name)
+    {
+        /** @var array $files */
+        $files = [];
+        $files[] = $name;
+        $tags = $this->getFrequencyDistribution($files);
+
+        return array(
+            "files" => $name,
+            "tags" => $tags);
+
+    }
+
+    /**
+     * @param $name
+     * @return array|mixed
+     */
+    protected function getProjectAnalytics($name)
+    {
+        $ret = array("files" => [], "tags" => []);
+
+        try {
+            $pubs = $this->getCachedZotero("$name");
+            foreach ($pubs['publications'] as $pub) {
+
+                // @todo[vanch3d] need to build an helper function for that
+                //$filename = "../docs/".$pub['archive_location'].".pdf";
+
+                //if (file_exists($filename)) {
+                 //   $ret['files'][] = $filename;
+                  //
+                //}
+                $ret['files'][] = $pub['archive_location'];
+            }
+            $tags = $this->getFrequencyDistribution($ret['files']);
+            $ret['tags'] = $tags;
+
+        } catch (Exception $e) {
+        }
+        return $ret;
+
+    }
+
+}
+
+class NVLEnglish extends NlpTools\Utils\Normalizers\Normalizer
+{
+    protected static $dirty = array(
+        "•",'“','-\n','\u0002','\u0003','\u2013','\u2014',' \u00b4\ne','ύ','ώ','ς'
+    );
+    protected static $clean = array(
+        "-",'','','fi','fl','-','-','é','υ','ω','σ'
+    );
+
+    public function normalize($w)
+    {
+        return json_decode(str_replace(self::$dirty, self::$clean, mb_strtolower($w, "utf-8")));
+    }
+}
+
+class NVLStopWords extends NlpTools\Utils\StopWords
+{
+
+    /**
+     * Remove stop words, defined by
+     * - the array given in the constructor
+     * - numerical symbols
+     * - less than 3 characters
+     *
+     * @param string $token
+     * @return string|null
+     */
+    public function transform($token)
+    {
+        return (isset($this->stopwords[$token]) || is_numeric($token) || strlen($token)<3) ? null : $token;
+    }
+}
+
+class NVLDummyLemmatizer extends NlpTools\Stemmers\Stemmer
+{
+    // @todo[vanch3d] Not a very good way of doing lemmas, will do for the time being. Try to find a better source
+    private static $baseList = array(
+        "learners" => "learner",
+        "students" => "learner",
+        "systems" => "system",
+        "student" => "learner",
+        "participants" => "participant",
+        "lemmas" => "lemma",
+        "words" => "word",
+        "sentences" => "sentence",
+        "essays" => "essay",
+        "coordinates" => "coordinate",
+        "timelines" => "timeline",
+        "episodes" => "episode",
+        "occupations" => "occupation",
+        "managers" => "manager",
+        "representations" => "representation",
+        "beliefs" => "belief"
+    );
+
+    /**
+     * Remove the suffix from $word
+     *
+     * @return string
+     */
+    public function stem($word)
+    {
+        $stem = $word;
+        if (isset(self::$baseList[$word]))
+            $stem = self::$baseList[$word];
+
+        return $stem;
+    }
 }
