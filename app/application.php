@@ -193,7 +193,7 @@ abstract class Controller extends Application {
      * @param stdClass 	$data
      * @throws RuntimeException
      */
-    private function writeZoteroCache($name,$data,$loc)
+    protected function writeZoteroCache($name,$data,$loc = null)
     {
         $file = $this->getZoteroCacheFilename($name);
         $dir = dirname($file);

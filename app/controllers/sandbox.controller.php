@@ -8,7 +8,7 @@ class SandboxController extends Controller
 
     /**
      * @return array
-     * @todo[vanch3d] way to slow, even with 'etag'. Need proper hard-caching
+     * @todo[vanch3d] simple hard-caching done, nned to check zotero request version for forcing update
      */
     private function getPublicationNarrative()
     {
@@ -18,6 +18,14 @@ class SandboxController extends Controller
             "scenes" => [],
             "errors" => []
         );
+
+        // check for cached data
+        $ret = $this->readZoteroCache("narrative");
+        if (isset($ret))
+        {
+            return $ret;
+        }
+
 
         try {
 
@@ -73,6 +81,8 @@ class SandboxController extends Controller
         // remove the keys
         $narrative['scenes'] = array_values($narrative['scenes']);
         $narrative['characters'] = array_values($narrative['characters']);
+
+        $this->writeZoteroCache("narrative",$narrative);
 
         return $narrative;
     }
