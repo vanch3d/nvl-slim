@@ -70,10 +70,13 @@
 
 {% endblock %}
 
+{% block injectCSS %}
+{% endblock %}
+
 
 {% block injectJS %}
 <script>
-$(document).ready(function() {
-});
+    $(document).ready(function() {
+	});
 </script>
 {% endblock %}
