@@ -79,7 +79,7 @@ class SandboxController extends Controller
         }
 
         // remove the keys
-        $narrative['scenes'] = array_values($narrative['scenes']);
+        //$narrative['scenes'] = array_values($narrative['scenes']);
         $narrative['characters'] = array_values($narrative['characters']);
 
         $this->writeZoteroCache("narrative",$narrative);
