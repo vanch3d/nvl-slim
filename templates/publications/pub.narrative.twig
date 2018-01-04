@@ -39,19 +39,50 @@
 
 {% block injectCSS %}
     <style>
+        :root{
+            --base: #ccc;
+            --dark : #df2929;
+            --light : #3c6da8;
+        }
+
+        .doesitwork {
+            opacity: .2;
+        }
+
         .white-section
         {
             padding: 0;
         }
 
         text {
-            font-family: "ProximaNova",Helvetica,Arial,sans-serif;
+            font-family: "Lato", Helvetica, Arial, sans-serif;
             font-size: 14px;
         }
 
-        rect {
-            fill: none;
-            stroke: #000;
+        .intro:hover {
+            cursor: pointer;
+        }
+
+        .intro:hover text {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .scene rect {
+            fill: rgba(255,255,255,0.7);
+            stroke: var(--base);
+            stroke-width: 1
+        }
+        .scene:hover rect {
+            fill: rgba(170,170,170,0.8);
+        }
+
+        .scene circle.dark {
+            fill: var(--dark);;
+        }
+
+        .scene circle.light {
+            fill: var(--light);;
         }
         path {
             fill: none;
@@ -60,11 +91,11 @@
         }
 
         path.light {
-            stroke: #3c6da8;
+            stroke: var(--light);
         }
 
         path.dark {
-            stroke: #df2929;
+            stroke: var(--dark);
         }
 
         .intro text:first-child {
@@ -75,14 +106,28 @@
 
         .intro text+text {
             fill: #333;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: -moz-none;
+            -o-user-select: none;
+            user-select: none;
+
+        }
+
+        .intro rect.dark {
+            fill: var(--dark);;
+        }
+
+        .intro rect.light {
+            fill: var(--light);;
         }
 
         .intro text+text.dark {
-            fill: #df2929;
+            fill: var(--dark);;
         }
 
         .intro text+text.light {
-            fill: #3c6da8;
+            fill: var(--light);;
         }
 
         button#btn-fullscreen
@@ -98,10 +143,10 @@
         :-ms-fullscreen { background-color: black }
         :fullscreen { background-color: black }
 
-        :-webkit-full-screen .legend .category text { fill: white }
-        :-moz-full-screen .legend .category text { fill: white }
-        :-ms-fullscreen .legend .category text { fill: white }
-        :-fullscreen .legend .category text { fill: white }
+        :-webkit-full-screen .intro text:first-child { stroke: unset }
+        :-moz-full-screen .intro text:first-child { stroke: unset }
+        :-ms-fullscreen .intro text:first-child { stroke: unset }
+        :fullscreen .intro text:first-child { stroke: unset }
 
     </style>
 {% endblock %}
@@ -117,19 +162,55 @@
             $("#d3-container").toggleFullScreen();
         });
 
-        d3.json('/data.json', function(err, response){
+        // Modified the wrangled to deal with scene's id
+        function wrangle(data) {
 
+            var charactersMap = {};
+            var newScenes = [];
+
+            for (var key in data.scenes)
+            {
+                var chars = data.scenes[key];
+                newScenes.push({
+                    id: key,
+                    characters: chars.map(function(id){
+                        return (characterById(id));
+                    }).filter(function(d) { return (d); })}
+                );
+            }
+            return newScenes;
+            /*return data.scenes.map(function(scene){
+                return {characters: scene.map(function(id){
+                        return (characterById(id));
+                    }).filter(function(d) { return (d); })};
+            });*/
+
+            // Helper to get characters by ID from the raw data
+            function characterById(id) {
+                charactersMap = charactersMap || {};
+                charactersMap[id] = charactersMap[id] || data.characters.find(function(character){
+                    return (character.id === id && character.enum > 1);
+                });
+                return charactersMap[id];
+            }
+
+        }
+
+        // body of the function
+        (function () {
+            // @todo[vanch3d] twig is adding the data inline. try ajax
             response = {{ narrative | raw }};
 
             var svg, scenes, charactersMap, width, height, sceneWidth;
 
             // Get the data in the format we need to feed to d3.layout.narrative().scenes
+            // @todo[vanch3d] let's do this directly in the php handler
             scenes = wrangle(response);
 
             // Some defaults
-            sceneWidth = 10;
+            sceneWidth = 14;
             width = scenes.length * sceneWidth * 4;
-            height = 600;
+            height = 800;
             labelSize = [150,20];
 
             // The container element (this is the HTML fragment);
@@ -163,12 +244,27 @@
                 .labelPosition('left')
                 .layout();
 
+            // @todo[vanch3d] debug
+            console.debug(narrative);
+
             // Get the extent so we can re-size the SVG appropriately.
             svg.attr('height', narrative.extent()[1]);
+
+            // Draw links
+            svg.append('g').attr('class', 'trajectories')
+                .selectAll('.link').data(narrative.links()).enter()
+                .append('path')
+                .attr('class', function(d) {
+                    return 'link ' + d.character.affiliation.toLowerCase();
+                })
+                .attr('d', narrative.link());
 
             // Draw the scenes
             svg.selectAll('.scene').data(narrative.scenes()).enter()
                 .append('g').attr('class', 'scene')
+                .attr('data-scene',function(d){
+                    return d.id;
+                })
                 .attr('transform', function(d){
                     var x,y;
                     x = Math.round(d.x)+0.5;
@@ -196,19 +292,11 @@
                     return d.y;
                 })
                 .attr('r', function(){
-                    return 2;
+                    return 3;
                 })
                 .attr('class', function(d){
                     return 'appearance ' + d.character.affiliation;
                 });
-
-            // Draw links
-            svg.selectAll('.link').data(narrative.links()).enter()
-                .append('path')
-                .attr('class', function(d) {
-                    return 'link ' + d.character.affiliation.toLowerCase();
-                })
-                .attr('d', narrative.link());
 
             // Draw intro nodes
             svg.selectAll('.intro').data(narrative.introductions())
@@ -227,7 +315,21 @@
 
                 // Apppend two actual 'text' nodes to fake an 'outside' outline.
                 text.append('text');
-                text.append('text').attr('class', 'color');
+                text.append('text').attr('class', 'color')
+                    // adding mouseover/mouseout
+                    .on('mouseover', function(s) {
+                        var src = s.character.id;
+                        //console.log(src);
+                        d3.selectAll('.link').classed("doesitwork",function(t){
+                            var trg = t.character.id;
+                            return (src !== trg);
+                        });
+                    })
+                    .on('mouseout', function(d) {
+                        d3.selectAll('.link').classed("doesitwork",false);
+                    });
+
+
 
                 g.attr('transform', function(d){
                     var x,y;
@@ -254,30 +356,8 @@
 
             });
 
+        }());
 
-
-            function wrangle(data) {
-
-                var charactersMap = {};
-
-                return data.scenes.map(function(scene){
-                    return {characters: scene.map(function(id){
-                            return (characterById(id));
-                        }).filter(function(d) { return (d); })};
-                });
-
-                // Helper to get characters by ID from the raw data
-                function characterById(id) {
-                    charactersMap = charactersMap || {};
-                    charactersMap[id] = charactersMap[id] || data.characters.find(function(character){
-                        return (character.id === id && character.enum > 1);
-                    });
-                    return charactersMap[id];
-                }
-
-            }
-
-        });
 
     });
 </script>
