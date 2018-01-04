@@ -418,7 +418,7 @@ abstract class Controller extends Application {
     {
         $stopwords = array_merge(
             //array("#","-","...",">","=","&","'s",",","(",")",":",";","'",".","%","a","”","''","“","[","]","|"),
-            array("pp.","i.e.","e.g.","j","j.","p",),
+            array("pp.","i.e.","e.g.","j","j.","p","amp","quot","etc."),
             file("../app/utils/nlp/stopwords.data", FILE_IGNORE_NEW_LINES)
         );
 
@@ -479,13 +479,14 @@ abstract class Controller extends Application {
             return array("error" => $errors);
         }
         $arr = array();
+
         try {
 
-            // @todo[vanch3d] Define a #### to deal with n-grams such as "learner model"
+            // @todo[vanch3d] Define a classifier-based tokeniser to deal with n-grams such as "learner model"
             $tok = new NlpTools\Tokenizers\PennTreeBankTokenizer();
             $norm = new NVLEnglish();
             $stop = new NVLStopWords($stopwords);
-            $stemer = new NVLDummyLemmatizer();
+            $stemmer = new NVLDummyLemmatizer();
 
             // normalise the raw text
             $d1 = new NlpTools\Documents\RawDocument(json_encode($text));
@@ -494,7 +495,7 @@ abstract class Controller extends Application {
             // tokenise the text
             $d = new NlpTools\Documents\TokensDocument($tok->tokenize($d1->getDocumentData()));
             $d->applyTransformation($stop);
-            $d->applyTransformation($stemer);
+            $d->applyTransformation($stemmer);
 
             // compute the frequency distribution
             $freqDist = new NlpTools\Analysis\FreqDist($d->getDocumentData());
@@ -511,7 +512,7 @@ abstract class Controller extends Application {
         return $arr;
     }
 
-    protected function getPublicationAnalytics($name)
+    public function getPublicationAnalytics($name)
     {
         /** @var array $files */
         $files = [];
@@ -535,14 +536,6 @@ abstract class Controller extends Application {
         try {
             $pubs = $this->getCachedZotero("$name");
             foreach ($pubs['publications'] as $pub) {
-
-                // @todo[vanch3d] need to build an helper function for that
-                //$filename = "../docs/".$pub['archive_location'].".pdf";
-
-                //if (file_exists($filename)) {
-                 //   $ret['files'][] = $filename;
-                  //
-                //}
                 $ret['files'][] = $pub['archive_location'];
             }
             $tags = $this->getFrequencyDistribution($ret['files']);
@@ -559,10 +552,10 @@ abstract class Controller extends Application {
 class NVLEnglish extends NlpTools\Utils\Normalizers\Normalizer
 {
     protected static $dirty = array(
-        "•",'“','-\n','\u0002','\u0003','\u2013','\u2014',' \u00b4\ne','ύ','ώ','ς'
+        "&amp;cup;","&#039;","•",'“','-\n','\u0002','\u0003','\u2013','\u2014',' \u00b4\ne','ύ','ώ','ς'
     );
     protected static $clean = array(
-        "-",'','','fi','fl','-','-','é','υ','ω','σ'
+        "<=","'","-",'','','fi','fl','-','-','é','υ','ω','σ'
     );
 
     public function normalize($w)
