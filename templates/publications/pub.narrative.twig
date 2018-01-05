@@ -45,10 +45,6 @@
             --light : #3c6da8;
         }
 
-        .doesitwork {
-            opacity: .2;
-        }
-
         .white-section
         {
             padding: 0;
@@ -59,14 +55,15 @@
             font-size: 14px;
         }
 
+
         .intro:hover {
             cursor: pointer;
         }
 
         .intro:hover text {
-            font-weight: bold;
-            font-size: 16px;
         }
+
+
 
         .scene rect {
             fill: rgba(255,255,255,0.7);
@@ -75,6 +72,10 @@
         }
         .scene:hover rect {
             fill: rgba(170,170,170,0.8);
+        }
+
+        .scene circle {
+            pointer-events: none;
         }
 
         .scene circle.dark {
@@ -90,6 +91,10 @@
             stroke: #333;
         }
 
+        path.highlighted {
+            opacity: .2;
+        }
+
         path.light {
             stroke: var(--light);
         }
@@ -97,6 +102,12 @@
         path.dark {
             stroke: var(--dark);
         }
+
+        .intro.highlighted text {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
 
         .intro text:first-child {
             fill: #fff;
@@ -189,6 +200,7 @@
             function characterById(id) {
                 charactersMap = charactersMap || {};
                 charactersMap[id] = charactersMap[id] || data.characters.find(function(character){
+                    // filter out characters that are present in only one scene
                     return (character.id === id && character.enum > 1);
                 });
                 return charactersMap[id];
@@ -196,9 +208,10 @@
 
         }
 
-        // body of the function
+        // body of the narrative widget
         (function () {
-            // @todo[vanch3d] twig is adding the data inline. try ajax
+
+            // @todo[vanch3d] data added inline through twig. try ajax
             response = {{ narrative | raw }};
 
             var svg, scenes, charactersMap, width, height, sceneWidth;
@@ -218,6 +231,16 @@
                 .attr('id', 'narrative-chart')
                 .attr('width', width)
                 .attr('height', height);
+
+
+            svg.on('click', function(s) {
+                console.log("clear selection")
+                d3.selectAll('.intro').classed("highlighted",false);
+                d3.selectAll('.link').classed("highlighted",false);
+                d3.selectAll('.intro').each(function(d) {
+                    d.isActive = false;});
+            });
+
 
             // Calculate the actual width of every character label.
             scenes.forEach(function(scene){
@@ -244,9 +267,6 @@
                 .labelPosition('left')
                 .layout();
 
-            // @todo[vanch3d] debug
-            console.debug(narrative);
-
             // Get the extent so we can re-size the SVG appropriately.
             svg.attr('height', narrative.extent()[1]);
 
@@ -262,9 +282,6 @@
             // Draw the scenes
             svg.selectAll('.scene').data(narrative.scenes()).enter()
                 .append('g').attr('class', 'scene')
-                .attr('data-scene',function(d){
-                    return d.id;
-                })
                 .attr('transform', function(d){
                     var x,y;
                     x = Math.round(d.x)+0.5;
@@ -316,19 +333,32 @@
                 // Apppend two actual 'text' nodes to fake an 'outside' outline.
                 text.append('text');
                 text.append('text').attr('class', 'color')
-                    // adding mouseover/mouseout
-                    .on('mouseover', function(s) {
+                    .on('click', function(s) {
                         var src = s.character.id;
-                        //console.log(src);
-                        d3.selectAll('.link').classed("doesitwork",function(t){
-                            var trg = t.character.id;
-                            return (src !== trg);
-                        });
-                    })
-                    .on('mouseout', function(d) {
-                        d3.selectAll('.link').classed("doesitwork",false);
-                    });
+                        var intro = d3.select(this.parentNode.parentNode);
 
+                        if ('isActive' in s && s.isActive) {
+                            d3.selectAll('.link').classed("highlighted",false);
+                            intro.classed("highlighted",false);
+                            s.isActive = false;
+
+                        }
+                        else {
+                            d3.selectAll('.intro').each(function(d) {
+                                d3.select(this).classed("highlighted",false);
+                                d.isActive = false;
+                            });
+
+                            s.isActive = true;
+                            intro.classed("highlighted",true);
+                            d3.selectAll('.link').classed("highlighted",function(t){
+                                var trg = t.character.id;
+                                return (src !== trg);
+                            });
+                        }
+                        // to make sure the SVG onclick is not triggered
+                        d3.event.stopPropagation();
+                    });
 
 
                 g.attr('transform', function(d){
@@ -357,8 +387,6 @@
             });
 
         }());
-
-
     });
 </script>
 {%  endblock %}
