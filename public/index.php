@@ -96,8 +96,13 @@ $c->app->get('/publications/:name/assets/:fig', array($projectCtrl, 'pubAssets')
 $c->app->get('/publications/:name/cloud/', array($projectCtrl, 'pubDistrib'))->name('publications.named.freqdist');
 
 // other routes
-$c->app->get('/sandbox/isotope', array($sdxCtrl, 'getIsotope'))->name('sandbox.isotope');
 $c->app->get('/docs/:file.pdf', array($sdxCtrl, 'redirectLegacy'))->name('sandbox.legacy');
+$c->app->get('/sandbox/isotope', array($sdxCtrl, 'getIsotope'))->name('sandbox.isotope');
+$c->app->get('/sandbox/test', function() use($apiCtrl) {
+    // A quick & dirty route for quick & dirty tests
+    $ret = $apiCtrl->getPublicationsJSON("2013.RANLP.Summarisation");
+    $apiCtrl->outputJSON($ret);
+});
 
 
 // api routes
