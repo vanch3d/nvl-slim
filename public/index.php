@@ -87,7 +87,7 @@ $c->app->get('/projects/:name/cloud', array($projectCtrl, 'wordCloud'))->name('p
 $c->app->get('/publications/', array($projectCtrl, 'allPublications'))->name('publications.all');
 //$c->app->get('/publications/graph/', array($projectCtrl, 'pubGraph'))->name('publications.all.graph');
 $c->app->get('/publications/network/', array($projectCtrl, 'pubMap'))->name('publications.all.map');
-$c->app->get('/publications/narrative/', array($sdxCtrl, 'pubNarrative'))->name('sandbox.narrative');
+$c->app->get('/publications/narrative/', array($sdxCtrl, 'pubNarrative'))->name('publications.all.narrative');
 $c->app->get('/publications/:name.pdf', array($projectCtrl, 'pubExportPDF'))->name('publications.named.pdf');
 $c->app->get('/publications/:name.txt', array($projectCtrl, 'pubExportTXT'))->name('publications.named.txt');
 $c->app->get('/publications/:name/', array($projectCtrl, 'pubReader'))->name('publications.named.pubreader');
@@ -110,7 +110,6 @@ $c->app->get('/api/projects/:name/images', array($apiCtrl, 'getImagesJSON'))->na
 
 //$c->app->error(array($homeCtrl, 'showError'));
 $c->app->notFound(array($homeCtrl, 'showNotFound'));
-
 
 // Run app
 $app->run();
