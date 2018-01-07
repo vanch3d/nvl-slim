@@ -1,0 +1,48 @@
+{% verbatim %}
+<script id="docs-publication" type="text/x-handlebars-template">
+    <div>
+        <h3>{{ title }}</h3>
+        <div class="authors"><p>
+            {{#each author }}
+                <a href="#{{ family }}" class="select-object" data-name="{{ family }}">{{ given }} {{ family }}</a>
+                {{#unless @last}}
+                    /
+                {{/unless}}
+            {{/each}}
+            <span>(<span>{{ issued.date-parts.[0].[0] }}</span>)</span>
+        </p></div>
+    </div>
+    <div style="column-count: 3;">
+        <p>{{ abstract }}</p>
+        <div><p>
+            <span style="white-space: nowrap">Project: <code>{{ project.name}}</code></span> |
+            <span style="white-space: nowrap">Publication : <code>{{ archive_location }}</code></span>
+        </p></div>
+
+    </div>
+
+</script>
+<script id="docs-author" type="text/x-handlebars-template">
+    <div>
+        <h3>{{ author.data.given }} {{ author.data.family }}</h3>
+        <div class="publist"><p>
+            <ul>
+            {{#each publications }}
+                <li><a href="#{{ name }}" class="select-object" data-name="{{ name }}">{{ data.title }}</a>
+                </li>
+            {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+<script id="docs-me" type="text/x-handlebars-template">
+    <div>
+        <h3>Co-Authorship Network</h3>
+        <div>
+            <p></p>
+            For example, you can select this publication <a href="#2016.IMS.myPAL" class="select-object"
+                                                            data-name="2016.IMS.myPAL">#2016.IMS.myPAL</a>
+        </div>
+    </div>
+</script>
+{% endverbatim %}
