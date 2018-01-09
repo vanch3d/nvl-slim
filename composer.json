@@ -1,29 +1,38 @@
 {
     "name": "vanch3d/nvl-slim",
     "description": "A Slim/Twig-based web application for research portfolio",
-    "license" : "GPL-2.0",
+    "type": "project",
+    "license" : "MIT",
     "homepage" : "https://github.com/vanch3d/nvl-slim",
     "keywords" : [
+        "Slim",
+        "Slim 3",
         "Research",
         "Technology Enhanced Learning",
         "Zotero",
         "SlideShare"
     ],
-    "authors" : [{
-        "name" : "Nicolas Van Labeke",
-        "homepage" : "https://github.com/vanch3d",
-        "role" : "author"
-        }],
-
-    "minimum-stability": "dev",
+    "authors" : [
+        {
+            "name" : "Nicolas Van Labeke",
+            "homepage" : "https://github.com/vanch3d",
+            "role" : "author"
+        }
+    ],
     "require" : {
-        "monolog/monolog": "1.8.0",
-        "twig/twig": "v1.15.1",
-        "slim/slim": "2.4.3",
-        "slim/views": "0.1.2",
-        "rmccue/requests": "1.6.0",
-        "smalot/pdfparser": "v0.9.20",
+        "php": ">=7.0.0",
+        "slim/slim": "^3.8",
+        "slim/twig-view": "^2.1",
+        "slim/csrf": "^0.8.1",
+        "slim/flash": "^0.2.0",
+        "php-di/slim-bridge": "^1.0",
+        "symfony/var-dumper": "^3.2",
+        "vlucas/phpdotenv": "^2.4",
+        "nesbot/carbon": "1.22.1",
+        "monolog/monolog": "1.23.0",
+        "rmccue/requests": "1.7.0",
+        "smalot/pdfparser": "v0.11.0",
         "nlp-tools/nlp-tools": "1.0.x-dev",
-        "phpunit/phpunit": "6.5.4"
+        "phpunit/phpunit": "6.5.5"
     }
 }
