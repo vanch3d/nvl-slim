@@ -52,8 +52,7 @@ $(function() {
                         // added radial constraints to config
                         obj.radialConstraints = {
                             radius      : c.radius,
-                            startAngle  : c.startAngle,
-                            index       : c.index
+                            startAngle  : c.startAngle
                         };
                         break;
                 }
