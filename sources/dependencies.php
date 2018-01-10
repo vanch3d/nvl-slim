@@ -7,12 +7,12 @@
  */
 
 use Interop\Container\ContainerInterface;
+use NVL\Support\Storage\Session;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
 $container = $app->getContainer();
-
 
 // -----------------------------------------------------------------------------
 // Service providers
@@ -31,4 +31,9 @@ $container['view'] = function (ContainerInterface $c) {
 // Flash messages
 $container['flash'] = function ($c) {
     return new Messages;
+};
+
+// Session
+$container['session'] = function ($c) {
+    return new Session();
 };
