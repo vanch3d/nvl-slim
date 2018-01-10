@@ -7,16 +7,27 @@
  */
 
 return [
+    // SLIM settings
+    'settings' => [
+        'httpVersion' => '1.1',
+        'responseChunkSize' => 4096,
+        'outputBuffering' => 'append',
+        'determineRouteBeforeAppMiddleware' => true,
+        'displayErrorDetails' => getenv('APP_DEBUG') === 'true',
+    ],
 
-    'settings.httpVersion' => '1.1',
-    'settings.responseChunkSize' => 4096,
-    'settings.outputBuffering' => 'append',
-    'settings.determineRouteBeforeAppMiddleware' => true,
-    'settings.displayErrorDetails' => getenv('APP_DEBUG') === 'true',
+    // LOGGER settings
+    'logger' => [
+        'directory' => '/../.logs',
+        'filename' => 'my-app.log',
+        'timezone' => 'Europe/London',
+        'level' => 'debug',
+        'handlers' => []
+    ],
 
     // TWIG settings
     'twig' => [
-        'debug' => true,
+        'debug' => getenv('APP_DEBUG') === 'true',
         'cache' => __DIR__ . '/../.cache/',
     ]
 
