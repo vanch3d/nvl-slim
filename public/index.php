@@ -9,34 +9,28 @@ session_start();
 //date_default_timezone_set('Europe/London');
 //setlocale (LC_TIME, 'en_GB.UTF8','en_GB');
 
-require '../vendor/autoload.php';
+require './../vendor/autoload.php';
 
 
 try {
-    (new Dotenv(__DIR__ . '/../'))->load();
+    (new Dotenv(__DIR__ . './../'))->load();
 } catch (InvalidPathException $e) {
     die($e);
 }
 
-
 require_once __DIR__ . './../sources/helpers.php';
 
+// Initiate the app with configuration
 $config = require_once __DIR__.'./../sources/config.php';
 $app = new \NVL\App($config);
-$container = $app->getContainer();
 
-require_once __DIR__ . '/../sources/routes.php';
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+// set up containers
+require_once __DIR__.'./../sources/dependencies.php';
 
-//$app = new \Slim\App;
-$app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
-    $name = $args['name'];
-    throw new Exception("dvfdf");
-    $response->getBody()->write("Hello, $name");
+// Set up routes & middleware
+require_once __DIR__ . './../sources/routes.php';
 
-    return $response;
-});
+// start the app
 $app->run();
 
 
