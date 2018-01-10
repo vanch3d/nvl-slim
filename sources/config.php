@@ -21,7 +21,7 @@ return [
             'directory' => __DIR__ . '/../.logs',
             'filename' => 'my-app.log',
             'timezone' => 'Europe/London',
-            'level' => Monolog,
+            'level' => 'debug',
             'handlers' => []
         ],
 
