@@ -8,8 +8,26 @@
 
 namespace NVL\Controllers;
 
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Slim\Route;
 
 abstract class Controller
 {
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @todo[vanch3d] A temporary 'catchall' route. To be removed when all routes defined
+     */
+    public function _default(Request $request, Response $response, array $args)
+    {
+        /** @var Route $req */
+        $req = $request->getAttribute("route");
+        $pattern = $req->getPattern();
+        dump("this is the route for $pattern");
+    }
+
 
 }
