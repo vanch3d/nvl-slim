@@ -8,18 +8,31 @@
 
 namespace NVL\Controllers;
 
+use Interop\Container\ContainerInterface;
+use NVL\Support\Storage\Session;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Route;
+use Slim\Views\Twig;
 
 abstract class Controller
 {
+    //protected $container;
+    private $view;
+    private $session;
+
+    // constructor receives container instance
+    public function __construct(ContainerInterface $container) {
+        //$this->container = $container;
+        $this->view = $container->get("view");
+        $this->session = $container->get("session");
+    }
+
     /**
      * @param Request  $request
      * @param Response $response
      * @param array    $args
      *
-     * @todo[vanch3d] A temporary 'catchall' route. To be removed when all routes defined
+     * @todo[vanch3d] A temporary 'catch all' route. To be removed when all routes defined
      */
     public function _default(Request $request, Response $response, array $args)
     {
@@ -27,6 +40,23 @@ abstract class Controller
         $req = $request->getAttribute("route");
         $pattern = $req->getPattern();
         dump("this is the route for $pattern");
+    }
+
+
+    /**
+     * @return Twig
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    /**
+     * @return Session
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 
 
