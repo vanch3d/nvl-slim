@@ -7,6 +7,9 @@
  */
 
 namespace NVL\Controllers;
+use Interop\Container\ContainerInterface;
+use NVL\Data\ProjectWrapper;
+use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -16,4 +19,35 @@ use Slim\Http\Response;
  */
 class ProjectController extends Controller
 {
+    private $prjManager;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->prjManager = null;
+        parent::__construct($container);
+    }
+
+    public function allProjects(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
+    public function storyMap(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
+    public function showProject(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
+    public function wordCloud(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
 }

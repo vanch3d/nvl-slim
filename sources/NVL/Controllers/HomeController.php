@@ -10,17 +10,30 @@ use Slim\Http\Response;
  * Class HomeController
  * @package NVL\Controllers
  */
-class HomeController extends Controller {
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @param array    $args
-     */
-    public function index(Request $request, Response $response, array $args)
+class HomeController extends Controller
+{
+    public function home(Request $request, Response $response, array $args)
     {
-        dump($request);
-        echo "this is the route for '/'";
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
+    public function aboutMe(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
+    public function aboutSite(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
+    public function search(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
     }
 
 }
