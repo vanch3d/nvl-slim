@@ -1,11 +1,9 @@
 {# ... #}
 {% import _self as macros %}
-
 {% macro hrefDOI(name) %}{% spaceless %}
     {# To make sure all DOI are stored as identifier only but URLs are consistent #}
     <a href="//dx.doi.org/{{ name }}" title="Go to article through CrossRef's DOI">DOI</a>
 {% endspaceless %}{% endmacro %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +26,7 @@
 
     <title>NVL | {% block urltile %}Nicolas Van Labeke Website{% endblock %}</title>
 
-    <link rel="shortcut icon" href="/assets/images/favicon.png"/>
+    <link rel="shortcut icon" href="/images/favicon.png"/>
     <link rel="unapi-server" type="application/xml" title="unAPI" href="{{ app_base~'/api/unapi' }}"/>
 
     <link rel="stylesheet" href="/css/app.css">
