@@ -34,5 +34,18 @@
         "smalot/pdfparser": "v0.11.0",
         "nlp-tools/nlp-tools": "1.0.x-dev",
         "phpunit/phpunit": "6.5.5"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "NVL\\": "sources/NVL"
+        }
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ]
     }
+
+
 }
