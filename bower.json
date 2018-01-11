@@ -1,5 +1,5 @@
 {
-  "name": "vanch3d/nvl-slim",
+  "name": "vanch3d.nvl-slim",
   "dependencies": {
     "jquery": "^3.2",
     "bootstrap": "^3.3",
@@ -9,6 +9,8 @@
     "jquery-oembed-all": "*",
     "jquery-fullscreen": "^1.1",
     "handlebars": "^4.0",
-    "font-awesome": "font-awsome#^4.7.0"
+    "font-awesome": "font-awsome#^4.7.0",
+    "multi-pushmenu" : "vanch3d/MultiLevelPushMenu#v1.2",
+    "academicons" : "jpswalsh/academicons#1.8.1"
   }
 }
