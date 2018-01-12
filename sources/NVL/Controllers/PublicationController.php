@@ -68,4 +68,10 @@ class PublicationController extends Controller
         return $this->getView()->render($response, 'site.twig');
     }
 
+    public function redirectLegacy(Request $request, Response $response, array $args)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'site.twig');
+    }
+
 }
