@@ -5,6 +5,7 @@
     "url": "http://nvl.calques3d.org/api/"
   },
   "dependencies": {
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-apidoc": "^0.2.6",
     "gulp-autoprefixer": "^3.1.1",

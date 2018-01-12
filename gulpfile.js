@@ -1,3 +1,4 @@
+const del = require('del');
 const gulp = require('gulp');
 const debug = require('gulp-debug');
 const sass = require('gulp-sass');
@@ -78,6 +79,13 @@ gulp.task('apidoc', function(done){
         includeFilters: [ '.*\\.php$' ]
     }, done);
 });
+
+gulp.task('clean:cache', function () {
+    return del([
+        '.cache/**/*'
+    ]);
+});
+
 
 gulp.task('watch-build', function () {
 	// /**/**/*.ext pour inclure les éventuels subdir
