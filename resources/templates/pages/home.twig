@@ -73,7 +73,7 @@
                                             'tmpl_base':'template.list.twig'
                                             } %}
                                         {% endfor %}
-                                        <li><a href="{{ urlFor('project.all') }}" title="Go to the complete list of projects">See all projects ...</a>
+                                        <li><a href="{{ path_for('project.all') }}" title="Go to the complete list of projects">See all projects ...</a>
                                     </ul>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                                 </ul>
                                 <div class="widget-containt categories">
                                     <ul>
-                                        <li><a href="{{ urlFor('publications.all') }}" title="Go to the complete list of publications">See all publications ...</a>
+                                        <li><a href="{{ path_for('publications.all') }}" title="Go to the complete list of publications">See all publications ...</a>
                                          </ul>
 
                                 </div>
@@ -121,13 +121,13 @@
                         <ul class="team-style1">
                             <li>
                                 <div class="img-cover">
-                                    <img alt="Screenshot of the openEssayist webapp" src="/assets/images/project.png" draggable="false">
+                                    <img alt="Screenshot of the openEssayist webapp" src="/images/project.png" draggable="false">
                                 </div>
                                 <div class="member-img">
                                     <div class="img-shine"
                                          style="top: -185px; left: -185px; background: none repeat scroll 0% 0% rgba(255, 255, 255, 0);"></div>
-                                    <a title="Preview Profile" href="{{ urlFor('about.me') }}">
-                                        <img alt="Nicolas Van&nbsp;Labeke headshot" src="/assets/images/nicolas.alt.jpg"
+                                    <a title="Preview Profile" href="{{ path_for('about.me') }}">
+                                        <img alt="Nicolas Van&nbsp;Labeke headshot" src="/images/nicolas.alt.png"
                                              draggable="false">
                                     </a>
                                 </div>

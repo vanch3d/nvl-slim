@@ -5,8 +5,8 @@
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
-        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
-        <li><a title="Home" href="{{ urlFor('project.all') }}">Projects</a></li>
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Home" href="{{ path_for('project.all') }}">Projects</a></li>
         <li class="active">Story Map</li>
     </ol>
 {% endblock %}
@@ -80,7 +80,7 @@
             this._el.content_item	= VCO.Dom.create("img", "vco-media-item vco-media-image vco-media-flickr vco-media-shadow", this._el.content);
 
             // API URL
-            api_url = this.data.url; //"{{ urlFor('api.images.project',{'name': 'calques3d'}) }}";
+            api_url = this.data.url; //"{{ path_for('api.images.project',{'name': 'calques3d'}) }}";
 
             // API Call
             $.getJSON(api_url, function(d) {
@@ -125,7 +125,7 @@
         }
     })();
 
-    $.getJSON("{{ urlFor('api.projects') }}").done(function(data){
+    $.getJSON("{{ path_for('api.projects') }}").done(function(data){
         // storymap_data can be an URL or a Javascript object
         //var storymap_data = '/plugins/demo.json';
         var mapdata= {

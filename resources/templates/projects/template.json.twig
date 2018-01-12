@@ -20,6 +20,6 @@
 				split("\t")|join(" ")|
 				slice(0,500)~"[...]" }}",
     "people":   [{{ block('project_people') }}],
-    "images":   "{{ urlFor('api.images.project',{'name': project.id}) }}",
-        "url":  "{{ urlFor('project.named',{'name': project.id}) }}"
+    "images":   "{{ path_for('api.images.project',{'name': project.id}) }}",
+        "url":  "{{ path_for('project.named',{'name': project.id}) }}"
 }

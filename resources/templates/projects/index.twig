@@ -4,7 +4,7 @@
 
 {% block breadcrumb %}
 	<ol class="breadcrumb">
-		<li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+		<li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
 		<li class="active">Projects</li>
 	</ol>
 {% endblock %}
@@ -27,7 +27,7 @@
 				<ul class="timeline-graph">
 
 				{% for project in projects %}
-					<li id="{{ project.id }}" data-url="{{ urlFor('api.project.named',{'name':project.id }   ) }}">
+					<li id="{{ project.id }}" data-url="{{ path_for('api.project.named',{'name':project.id }   ) }}">
 						<div class="tm-dt">
 						<!-- date --> 
 							<time class="prj-start"><span>{{ project.start }}</span></time>
@@ -47,7 +47,7 @@
 								<p>{{ project.description | raw }}</p>
 							</div>
 							<div class="post-meta">
-								<span class="post-author"><a title="See more" href="{{ urlFor('project.named',{'name':project.id}) }}">See More ...</a></span>
+								<span class="post-author"><a title="See more" href="{{ path_for('project.named',{'name':project.id}) }}">See More ...</a></span>
 							</div>	
 						</div>
 						
@@ -57,7 +57,7 @@
 
 				</ul>
 				<!-- /timeline-graph -->
-				<a href="{{ urlFor('project.story') }}" class="btn btn-black btn-clear">Explore the Story Map</a>
+				<a href="{{ path_for('project.story') }}" class="btn btn-black btn-clear">Explore the Story Map</a>
 			</div>
 			<!-- /col-md-12 -->
 

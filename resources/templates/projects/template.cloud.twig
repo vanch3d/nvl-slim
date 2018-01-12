@@ -12,8 +12,8 @@
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
-        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
-        <li><a title="Projects" href="{{ urlFor('project.all') }}">Projects</a></li>
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Projects" href="{{ path_for('project.all') }}">Projects</a></li>
         <li class="active">{{ project.name}}</li>
     </ol>
 {% endblock %}

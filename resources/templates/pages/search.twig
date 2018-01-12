@@ -34,17 +34,17 @@
     <script>
         var tipuesearch_pages =
                 [
-                    "{{ urlFor('home') }}",
+                    "{{ path_for('home') }}",
                     {% for projID in projects[1:] %}
-                    "{{ urlFor('project.named',{'name': projID.id}) }}",
+                    "{{ path_for('project.named',{'name': projID.id}) }}",
                     {% endfor %}
-                    "{{ urlFor('publications.all') }}",
-                    "{{ urlFor('publications.named.pubreader',{'name':'2013.RANLP.Summarisation'}) }}",
-                    "{{ urlFor('publications.named.pubreader',{'name':'2013.FFILE.Reflection'}) }}",
-                    "{{ urlFor('publications.named.pubreader',{'name':'2013.DCLA.OpenEssayist'}) }}",
-                    "{{ urlFor('publications.named.pubreader',{'name':'2013.CAA.Experience'}) }}",
-                    "{{ urlFor('publications.named.pubreader',{'name':'2013.CAA.Characteristics'}) }}",
-                    "{{ urlFor('publications.named.pubreader',{'name':'2010.MatCom.Connecting'}) }}",
+                    "{{ path_for('publications.all') }}",
+                    "{{ path_for('publications.named.pubreader',{'name':'2013.RANLP.Summarisation'}) }}",
+                    "{{ path_for('publications.named.pubreader',{'name':'2013.FFILE.Reflection'}) }}",
+                    "{{ path_for('publications.named.pubreader',{'name':'2013.DCLA.OpenEssayist'}) }}",
+                    "{{ path_for('publications.named.pubreader',{'name':'2013.CAA.Experience'}) }}",
+                    "{{ path_for('publications.named.pubreader',{'name':'2013.CAA.Characteristics'}) }}",
+                    "{{ path_for('publications.named.pubreader',{'name':'2010.MatCom.Connecting'}) }}",
                 ];
         $(document).ready(function () {
 

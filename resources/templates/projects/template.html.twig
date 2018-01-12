@@ -178,8 +178,8 @@
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
-        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
-        <li><a title="Projects" href="{{ urlFor('project.all') }}">Projects</a></li>
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Projects" href="{{ path_for('project.all') }}">Projects</a></li>
         <li class="active">{{ project.name}}</li>
     </ol>
 {% endblock %}   
@@ -302,7 +302,7 @@
         };
 
         // Load Project Images
-        $.getJSON("{{ urlFor('api.images.project',{name: project.id})}}").done(function(data){
+        $.getJSON("{{ path_for('api.images.project',{name: project.id})}}").done(function(data){
             var _dataSource = [];
             $.each( data, function( index, slide ){
                 _dataSource.push({
@@ -336,7 +336,7 @@
         }).fail(glOnFail);
 
         // Load Project Slides
-        $.getJSON("{{ urlFor('api.slide.project',{name: project.id})}}")
+        $.getJSON("{{ path_for('api.slide.project',{name: project.id})}}")
             .done(function(data){
                 data.Slideshow = data.Slideshow || {};
                 $(".project-details").empty();
