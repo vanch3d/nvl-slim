@@ -9,6 +9,8 @@
 namespace NVL\Controllers;
 
 use Interop\Container\ContainerInterface;
+use NVL\Data\ProjectManager;
+use NVL\Data\ZoteroManager;
 use NVL\Support\Storage\Session;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -16,12 +18,18 @@ use Slim\Views\Twig;
 
 abstract class Controller
 {
-    //protected $container;
+    private $prjManager;
+    private $pubManager;
+
     private $view;
     private $session;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container) {
+
+        $this->prjManager = new ProjectManager($container);
+        $this->pubManager = new ZoteroManager($container);
+
         //$this->container = $container;
         $this->view = $container->get("view");
         $this->session = $container->get("session");
@@ -57,6 +65,22 @@ abstract class Controller
     public function getSession()
     {
         return $this->session;
+    }
+
+    /**
+     * @return ProjectManager
+     */
+    public function getProjectManager()
+    {
+        return $this->prjManager;
+    }
+
+    /**
+     * @return ZoteroManager
+     */
+    public function getPublicationManager()
+    {
+        return $this->pubManager;
     }
 
 

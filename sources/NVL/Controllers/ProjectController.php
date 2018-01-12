@@ -8,7 +8,7 @@
 
 namespace NVL\Controllers;
 use Interop\Container\ContainerInterface;
-use NVL\Data\ProjectWrapper;
+use NVL\Data\ProjectManager;
 use Slim\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -19,13 +19,6 @@ use Slim\Http\Response;
  */
 class ProjectController extends Controller
 {
-    private $prjManager;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->prjManager = null;
-        parent::__construct($container);
-    }
 
     public function allProjects(Request $request, Response $response, array $args)
     {
