@@ -39,6 +39,16 @@
    0. Image for Mendeley icon (no font-icon avaialble)
 ========================================================================== */
 
+.debug-panel
+{
+  overflow: auto;
+  color: #999;
+  background-color: #333;
+  visibility: hidden;
+  padding: 20px 20px 0;
+
+}
+
 .skip-content
 {
   position: absolute !important;
