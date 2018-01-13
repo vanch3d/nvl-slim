@@ -18,22 +18,44 @@ $container = $app->getContainer();
 // Service providers
 // -----------------------------------------------------------------------------
 // Twig
-$container['view'] = function (ContainerInterface $c) {
+$container['view'] = function (\Slim\Container  $c) {
     $settings = $c->get('settings');
     $view = new Twig($settings['view']['template_path'], $settings['view']['twig']);
     // Add extensions
     $view->addExtension(new TwigExtension($c->get('router'), $c->get('request')->getUri()));
     $view->addExtension(new Twig_Extension_Debug());
+    $view->addExtension(new NVL\Support\Twig\WidgetExtension());
+    $view->addExtension(new Twig_Extension_Profiler($c['twig_profile']));
     return $view;
+};
+
+// monolog
+$container['logger'] = function (\Slim\Container $c) {
+    $settings = $c->get('settings')['logger'];
+    $logger = new Monolog\Logger($settings['name']);
+    $logger->pushProcessor(new Monolog\Processor\UidProcessor());
+    $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
+    $logger->pushHandler(
+        new Monolog\Handler\RotatingFileHandler(
+            $settings['path'],
+            $settings['maxFiles'],
+            $settings['level']
+        )
+    );
+    return $logger;
 };
 
 
 // Flash messages
-$container['flash'] = function ($c) {
+$container['flash'] = function () {
     return new Messages;
 };
 
 // Session
-$container['session'] = function ($c) {
+$container['session'] = function () {
     return new Session();
+};
+
+$container['twig_profile'] = function () {
+    return new Twig_Profiler_Profile();
 };
