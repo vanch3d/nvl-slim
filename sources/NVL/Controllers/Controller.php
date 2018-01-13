@@ -9,6 +9,7 @@
 namespace NVL\Controllers;
 
 use Interop\Container\ContainerInterface;
+use Monolog\Logger;
 use NVL\Data\ProjectManager;
 use NVL\Data\ZoteroManager;
 use NVL\Support\Storage\Session;
@@ -21,8 +22,10 @@ abstract class Controller
     private $prjManager;
     private $pubManager;
 
+    private $c;
     private $view;
     private $session;
+    private $logger;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container) {
@@ -30,9 +33,10 @@ abstract class Controller
         $this->prjManager = new ProjectManager($container);
         $this->pubManager = new ZoteroManager($container);
 
-        //$this->container = $container;
+        $this->c = $container;
         $this->view = $container->get("view");
         $this->session = $container->get("session");
+        $this->logger = $container->get("logger");
     }
 
     /**
@@ -81,6 +85,20 @@ abstract class Controller
     public function getPublicationManager()
     {
         return $this->pubManager;
+    }
+
+    /**
+     * @return Logger
+     */
+    public function getLogger() : Logger
+    {
+        return $this->logger;
+    }
+
+    public function notFound(Request $request, Response $response, \Exception $e)
+    {
+        $notFoundHandler = $this->c->get('notFoundHandler');
+        return $notFoundHandler($request->withAttribute('message', $e->getMessage()), $response);
     }
 
 
