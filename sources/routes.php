@@ -6,6 +6,7 @@
  * Time: 18:20
  */
 
+use Tracy\Debugger;
 use NVL\Controllers\APIController;
 use NVL\Controllers\HomeController;
 use NVL\Controllers\ProjectController;
@@ -18,7 +19,7 @@ $mwHTML = function (Request $request, Response $response, $next) {
     /** @var Route $route */
     $route = $request->getAttribute("route");
     $pattern = $route->getPattern();
-    dump("this is the route for: $pattern");
+    Debugger::barDump("this is the route for: $pattern");
     $response = $next($request, $response);
     return $response;
 };
@@ -30,7 +31,7 @@ $mwJSON = function (Request $request, Response $response, $next) {
     $pattern = $route->getPattern();
     $response = $next($request, $response);
     $requestobject = json_decode($response->getBody()->__toString());
-    $requestobject->debug = "this is the route for: $pattern";
+    $requestobject->debug = array("route"=>"this is the route for: $pattern");
     return $response->withJson($requestobject);
 };
 
@@ -83,7 +84,7 @@ $app->group('/api',function() {
     $this->get('/projects/{name}/publications', APIController::class . ':getPublications')->setname('api.projects.pub');
     $this->get('/projects/{name}/slides', APIController::class . ':getSlides')->setname('api.projects.slide');
     $this->get('/projects/{name}/images', APIController::class . ':getImages')->setname('api.projects.image');
-    $this->get('/publications', APIController::class . ':getAllPublications')->setname('api.publicationss');
+    $this->get('/publications', APIController::class . ':getAllPublications')->setname('api.publications');
 })->add($mwJSON);
 
 
@@ -91,3 +92,4 @@ $app->group('/api',function() {
  * Global Middlewares
  */
 
+$app->add(new \RunTracy\Middlewares\TracyMiddleware($app));
