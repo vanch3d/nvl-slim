@@ -33,7 +33,8 @@
         "rmccue/requests": "1.7.0",
         "smalot/pdfparser": "v0.11.0",
         "nlp-tools/nlp-tools": "1.0.x-dev",
-        "phpunit/phpunit": "6.5.5"
+        "phpunit/phpunit": "6.5.5",
+        "runcmf/runtracy": "0.2.10"
     },
 
     "autoload": {
