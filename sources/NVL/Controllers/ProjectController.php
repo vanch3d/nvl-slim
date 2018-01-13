@@ -7,9 +7,7 @@
  */
 
 namespace NVL\Controllers;
-use Interop\Container\ContainerInterface;
-use NVL\Data\ProjectManager;
-use Slim\Container;
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -19,23 +17,58 @@ use Slim\Http\Response;
  */
 class ProjectController extends Controller
 {
-
     public function allProjects(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        $projects = [];
+        try {
+            $projects = $this->getProjectManager()->getData();
+        } catch (\Exception $e) {
+
+            debug($e);
+            $response = $response->withStatus(202,"Could not access list of projects");
+        }
+
+        return $this->getView()->render($response, 'projects/index.twig',array(
+            'projects' => $projects
+        ));
     }
 
     public function storyMap(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        $projects = [];
+        try {
+            $projects = $this->getProjectManager()->getData();
+        } catch (\Exception $e) {
+            $response = $response->withStatus(202,"Could not access list of projects");
+        }
+
+        return $this->getView()->render($response, 'projects/storymap.twig',array(
+            'projects' => $projects
+        ));
     }
 
     public function showProject(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        //$projIdx = $this->isProjectDefined($name);
+        $projIdx = $this->getProjectManager()->isDefined($args["name"]);
+        if ($projIdx === false) {
+            //$this->app->notFound();
+            return $this->notFound($request,$response,new \Exception("Project does not exists"));
+        }
+
+        $publications = [];
+        try {
+            $pubs = $this->getPublicationManager()->getData($args["name"]);
+            $publications = $pubs['publications'];
+
+        } catch (\Exception $e) {
+        }
+        return $this->getView()->render($response,'projects/content/'.$args['name'].'.twig',
+            array(
+                'tmpl_base' => 'template.html.twig',
+                'project' => $projIdx,
+                'publications' => $publications
+        ));
     }
 
     public function wordCloud(Request $request, Response $response, array $args)
