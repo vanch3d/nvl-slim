@@ -1,5 +1,12 @@
 {% extends 'projects/'~tmpl_base %} 
 
+{% set linkedIn = []
+%}
+{% set gitHub = [
+    "vanch3d/Calques3Dv2"
+] %}
+
+
 {% block project_title "Involving teachers in the design of ILEs" %} 
 
 {% block project_inst "LORIA" %}
@@ -40,8 +47,4 @@
     </p>
 
 </div>	
-{% endblock %}
-
-{% block project_links %}
-    {{ forms.github("vanch3d/Calques3Dv2") }}
 {% endblock %}

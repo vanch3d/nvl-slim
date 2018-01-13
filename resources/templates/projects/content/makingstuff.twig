@@ -1,5 +1,11 @@
 {% extends 'projects/'~tmpl_base %} 
 
+{% set linkedIn = [
+    "//uk.linkedin.com/pub/brock-craft/1/255/783"
+] %}
+{% set gitHub = [] %}
+
+
 {% block project_title "Making Stuff" %} 
 
 {% block project_inst "London Knowledge Lab" %}
@@ -10,8 +16,9 @@
 {% block project_end "2010" %}
 
 
-{% block project_people %}
-    {{ forms.linkedin("//uk.linkedin.com/pub/brock-craft/1/255/783",true) }}
+{% block
+    project_people %}
+    {{ forms.linkedin("",true) }}
 {% endblock %}
 
  
@@ -40,8 +47,4 @@
             (WiiMote IR camera & cap-mounted IR emitters, floor projection, interactive physical-digital
             game, specified but not implemented).</p>
     </div>
-{% endblock %}
-
-{% block project_links %}
-    {{ forms.github("vanch3d/Hemisphere-wii") }}
 {% endblock %}

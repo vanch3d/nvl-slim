@@ -1,5 +1,13 @@
 {% extends 'projects/'~tmpl_base %} 
 
+{% set linkedIn = [
+    "//www.linkedin.com/in/mike-sharples-1633153/"
+] %}
+{% set gitHub = [
+    "vanch3d/AuditoryGames.v2",
+    "vanch3d/AuditoryGames.js"
+] %}
+
 
 {% block project_title %}
     Game-based Auditory Learning Environments
@@ -45,8 +53,3 @@
     </div>
 {% endblock %}
 
-{% block project_links %}
-    {{ forms.github("vanch3d/Calques3Dv2") }}
-    {{ forms.github("vanch3d/AuditoryGames.v2") }}
-    {{ forms.github("vanch3d/AuditoryGames.js") }}
-{% endblock %}

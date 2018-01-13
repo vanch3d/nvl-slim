@@ -1,5 +1,14 @@
 {% extends 'projects/'~tmpl_base %}
 
+{% set linkedIn = [
+    "//uk.linkedin.com/pub/paul-brna/1/493/726",
+    "//mx.linkedin.com/pub/rafael-morales-gamboa/9/759/193"
+] %}
+{% set gitHub = [
+    "vanch3d/olmGUI.v2",
+    "vanch3d/OLMEventGenerator"
+] %}
+
 
 {% block project_title %}
     Open Learner Modelling
@@ -40,15 +49,4 @@
                 implementation of a dedicated user interface, to be deployed in the LeActiveMath system.
         </ol>
     </div>
-{% endblock %}
-
-
-{% block project_people %}
-    {{ forms.linkedin("//uk.linkedin.com/pub/paul-brna/1/493/726") }}
-    {{ forms.linkedin("//mx.linkedin.com/pub/rafael-morales-gamboa/9/759/193",true) }}
-{% endblock %}
-
-{% block project_links %}
-    {{ forms.github("vanch3d/olmGUI.v2") }}
-    {{ forms.github("vanch3d/OLMEventGenerator") }}
 {% endblock %}

@@ -1,5 +1,13 @@
 {% extends 'projects/'~tmpl_base %} 
 
+{% set linkedIn = []
+%}
+{% set gitHub = [
+    "vanch3d/DEMIST",
+    "vanch3d/DEMIST-Analyser"
+] %}
+
+
 {% block project_title "Multi-representational Instructional Simulations" %} 
 
 {% block project_inst "CREDIT" %}
@@ -34,7 +42,3 @@
     </div>
 {% endblock %}
 
-{% block project_links %}
-    {{ forms.github("vanch3d/DEMIST") }}
-    {{ forms.github("vanch3d/DEMIST-Analyser") }}
-{% endblock %}

@@ -1,5 +1,12 @@
 {% extends 'projects/'~tmpl_base %}
 
+{% set linkedIn = [
+] %}
+{% set gitHub = [
+    "vanch3d/slim-mypal"
+] %}
+
+
 {% block project_title "myPAL - Learning Analytics for personalised feedback" %}
 
 {% block project_inst "Leeds Institute of Medical Education" %}
@@ -25,7 +32,3 @@
     </div>
 {% endblock %}
 
-
-{% block project_links %}
-    {{ forms.github("vanch3d/slim-mypal") }}
-{% endblock %}

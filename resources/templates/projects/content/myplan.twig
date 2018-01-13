@@ -1,5 +1,12 @@
 {% extends 'projects/'~tmpl_base %} 
 
+{% set linkedIn = [
+] %}
+{% set gitHub = [
+    "vanch3d/l4all-v4"
+] %}
+
+
 {% block project_title %}
     Personalisation in Lifelong Learning Environments
 {% endblock %} 
@@ -29,9 +36,4 @@
             particular to support the visualisation of the pathways (using a timeline approach), their manipulation and
             comparison with those of other participants.</p>
     </div>
-{% endblock %}
-
-
-{% block project_links %}
-    {{ forms.github("vanch3d/l4all-v4") }}
 {% endblock %}

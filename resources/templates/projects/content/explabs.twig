@@ -1,5 +1,11 @@
 {% extends 'projects/'~tmpl_base %}
 
+{% set linkedIn = [] %}
+{% set gitHub = [
+    "vanch3d/woz-notify"
+] %}
+
+
 {% block project_title "Experience Labs for digital health and social care" %}
 
 {% block project_inst "Glasgow School of Art / Institute of Design Innovation" %}
@@ -40,6 +46,3 @@
     </div>
 {% endblock %}
 
-{% block project_links %}
-    {{ forms.github("vanch3d/woz-notify") }}
-{% endblock %}
