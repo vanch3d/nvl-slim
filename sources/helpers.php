@@ -6,9 +6,9 @@
  * Time: 18:20
  */
 
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Symfony\Component\VarDumper\VarDumper;
+//use Symfony\Component\VarDumper\Cloner\VarCloner;
+//use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+//use Symfony\Component\VarDumper\VarDumper;
 
 
 /**
@@ -21,7 +21,8 @@ function debug()
     die();
 }
 
-VarDumper::setHandler(function ($var) {
+/*
+ * VarDumper::setHandler(function ($var) {
     $cloner = new VarCloner;
     $htmlDumper = new HtmlDumper;
 
@@ -36,3 +37,4 @@ VarDumper::setHandler(function ($var) {
     ]);
     $htmlDumper->dump($cloner->cloneVar($var));
 });
+*/
