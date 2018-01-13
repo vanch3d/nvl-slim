@@ -5,6 +5,7 @@ namespace NVL\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Tracy\Debugger;
 
 /**
  * Class HomeController
@@ -29,7 +30,6 @@ class HomeController extends Controller
         } catch (\Exception $e) {
             $response = $response->withStatus(202,"Could not access list of publications or projects");
         }
-        dump($response);
         return $this->getView()->render($response, 'pages/home.twig',array(
             'projects' => $prjIdx,
             'publications' => $publications
