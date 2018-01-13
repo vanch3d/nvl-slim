@@ -6,7 +6,8 @@
     <script type="IN/MemberProfile" data-width="{{ width|default(250) }}" data-id="{{ name }}" data-related="false" data-format="inline"></script>
 {% endmacro %}
 {% macro github(name) %}
-    <div class="col-sm-6" data-repo="{{ name }}"></div>
+    <div class="col-sm-6" data-repo="{{ name }}"><i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+        <span class="sr-only">Loading...</span></div>
 {% endmacro %}
 
 {% block urltile %}{{ project.name}}{% endblock %}
@@ -231,6 +232,9 @@
                                     <h3>Links</h3>
                                 </div>
                                 <div class="widget-containt categories">
+                                    {% for git in gitHub %}
+                                        {{  forms.github(git) }}
+                                    {% endfor %}
                                     {% block project_links %}
                                     {% endblock %}
                                 </div>
@@ -257,7 +261,8 @@
                         </div>
                         <div class="widget-containt">
                             <ul class="project-details">
-                                <div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+                                <div class="loading"><i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+                                    <span class="sr-only">Loading...</span> </div>
                             </ul>
                         </div>
 
@@ -267,9 +272,10 @@
                         <div class="text-widget-title">
                             <h3>People</h3>
                         </div>
-                        {% block project_people %}
-                        {% endblock %}
-
+                        <div>{% for lnk in linkedIn %}
+                                {{  forms.linkedin(lnk) }}
+                            {% endfor %}
+                        </div>
                     </div>
 
                 </div>
@@ -292,6 +298,21 @@
 <script src="//cdn.jsdelivr.net/gh/zenorocha/jquery-github@0.4/dist/jquery.github.min.js"></script>
 <script src="//cdn.jsdelivr.net/gh/aino/galleria@1.3.5/src/galleria.js"></script>
 <script type="text/javascript">
+
+    Github.prototype.handleErrorRequest = function ( result_data) {
+        this.$container.remove();
+
+    };
+
+    Github.prototype.applyTemplate = function ( repo ) {
+        this.$container.html("");
+        var githubRepo = new GithubRepo( repo ),
+            $widget = githubRepo.toHTML();
+        $widget.appendTo( this.$container );
+        this.displayIcons();
+    };
+
+
     $(document).ready(function()
     {
         // Configure GitHub Plugin
@@ -302,7 +323,7 @@
         };
 
         // Load Project Images
-        $.getJSON("{{ path_for('api.images.project',{name: project.id})}}").done(function(data){
+        $.getJSON("{{ path_for('api.projects.image',{name: project.id})}}").done(function(data){
             var _dataSource = [];
             $.each( data, function( index, slide ){
                 _dataSource.push({
@@ -336,7 +357,7 @@
         }).fail(glOnFail);
 
         // Load Project Slides
-        $.getJSON("{{ path_for('api.slide.project',{name: project.id})}}")
+        $.getJSON("{{ path_for('api.projects.slide',{name: project.id})}}")
             .done(function(data){
                 data.Slideshow = data.Slideshow || {};
                 $(".project-details").empty();
@@ -369,6 +390,8 @@
                         embedMethod: 'fill'
                     });
                 });
+            }).fail(function(){
+                $(".project-details").empty();
             });
     });
 </script>
