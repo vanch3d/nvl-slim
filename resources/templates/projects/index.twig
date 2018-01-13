@@ -27,7 +27,7 @@
 				<ul class="timeline-graph">
 
 				{% for project in projects %}
-					<li id="{{ project.id }}" data-url="{{ path_for('api.project.named',{'name':project.id }   ) }}">
+					<li id="{{ project.id }}" data-url="{{ path_for('api.projects.named',{'name':project.id }   ) }}">
 						<div class="tm-dt">
 						<!-- date --> 
 							<time class="prj-start"><span>{{ project.start }}</span></time>
