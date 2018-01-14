@@ -1,9 +1,4 @@
 {# ... #}
-{% import _self as macros %}
-{% macro hrefDOI(name) %}{% spaceless %}
-    {# To make sure all DOI are stored as identifier only but URLs are consistent #}
-    <a href="//dx.doi.org/{{ name }}" title="Go to article through CrossRef's DOI">DOI</a>
-{% endspaceless %}{% endmacro %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
