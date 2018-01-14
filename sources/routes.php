@@ -20,18 +20,20 @@ $mwHTML = function (Request $request, Response $response, $next) {
     $route = $request->getAttribute("route");
     $pattern = $route->getPattern();
     Debugger::barDump("this is the route for: $pattern");
+
     $response = $next($request, $response);
     return $response;
 };
 
 // Middleware for adding debug information to all (json) output
 $mwJSON = function (Request $request, Response $response, $next) {
+    $response = $next($request, $response);
+
     /** @var Route $route */
     $route = $request->getAttribute("route");
     $pattern = $route->getPattern();
-    $response = $next($request, $response);
-    $requestobject = json_decode($response->getBody()->__toString());
-    $requestobject->debug = array("route"=>"this is the route for: $pattern");
+    $requestobject = json_decode($response->getBody()->__toString(),true);
+    $requestobject['meta']['debug']['route'] = "this is the route for: $pattern";
     return $response->withJson($requestobject);
 };
 
