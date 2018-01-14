@@ -40,7 +40,11 @@
     "autoload": {
         "psr-4": {
             "NVL\\": "sources/NVL"
-        }
+        },
+        "files": [
+            "sources/Zotero/libZoteroSingle.php",
+            "sources/Zotero/CiteProc.php"
+        ]
     },
     "scripts": {
         "post-update-cmd": [
