@@ -56,6 +56,11 @@ $container['session'] = function () {
     return new Session();
 };
 
+// Cache
+$container['cache'] = function () {
+    return new \Slim\HttpCache\CacheProvider();
+};
+
 $container['twig_profile'] = function () {
     return new Twig_Profiler_Profile();
 };

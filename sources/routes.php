@@ -95,3 +95,7 @@ $app->group('/api',function() {
  */
 
 $app->add(new \RunTracy\Middlewares\TracyMiddleware($app));
+$app->add(new \Slim\HttpCache\Cache('public', 86400));
+
+
+
