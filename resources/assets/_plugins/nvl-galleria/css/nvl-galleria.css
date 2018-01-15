@@ -1,4 +1,4 @@
-/* Galleria Twelve Theme 2012-04-04 | http://galleria.io/license/ | (c) Aino */
+/* Galleria NVL Twelve Theme 2012-04-04 | http://galleria.io/license/ | (c) Aino */
 
 #galleria-loader{height:1px!important}
 
@@ -29,14 +29,14 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    background: url(bar.png) repeat-x;
+    background: url(../images/bar.png) repeat-x;
     z-index: 3;
 }
 .galleria-s1,
 .galleria-s2,
 .galleria-s3,
 .galleria-s4 {
-    background: url(separator.png);
+    background: url(../images/separator.png);
     height: 29px;
     width: 2px;
     position: absolute;
@@ -73,24 +73,24 @@
     position: absolute;
     left: 0;
     bottom: 1px;
-    background: url(thumbs.png) no-repeat 50% 50%;
+    background: url(../images/thumbs.png) no-repeat 50% 50%;
     cursor: pointer;
 }
 .galleria-fullscreen,
 .galleria-popout {
     left: auto;
     right: 0;
-    background-image: url(fullscreen.png);
+    background-image: url(../images/fullscreen.png);
     background-position: 8px 7px;
 }
 .galleria-popout {
-    background-image: url(popout.png);
+    background-image: url(../images/popout.png);
     right: 30px;
     background-position: 50% 50%;
 }
 .galleria-play {
     left: 30px;
-    background-image: url(playpause.png);
+    background-image: url(../images/playpause.png);
     background-position: 10px 9px;
 }
 .galleria-play.playing { background-position: 10px -91px }
@@ -111,7 +111,7 @@
     left: 0;
     width: 0;
     height: 0;
-    background: url(bg.png);
+    background: url(../images/bg.png);
     z-index: 2;
 }
 .galleria-thumbnails-list {
@@ -156,7 +156,7 @@
 }
 .galleria-info-text { padding-left: 10px }
 .galleria-counter {
-    background: url(separator.png) no-repeat 100% 0;
+    background: url(../images/separator.png) no-repeat 100% 0;
     display: inline-block;
     *display: inline;
     padding-right: 10px;
@@ -172,7 +172,7 @@
     margin: -24px 0 0 -24px;
     z-index: 2;
     display: none;
-    background: #000 url(loader.gif) no-repeat 50% 50%;
+    background: #000 url(../images/loader.gif) no-repeat 50% 50%;
     opacity: .8;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
     filter: alpha(opacity=80);
@@ -196,7 +196,7 @@
     position: absolute;
     left: 20px;
     z-index: 2;
-    background: url(nav.png);
+    background: url(../images/nav.png);
 }
 .galleria-image-nav-right {
     left: auto;
@@ -242,5 +242,5 @@
 }
 .galleria-carousel .galleria-thumb-nav-left,
 .galleria-carousel .galleria-thumb-nav-right { display: block }
-.galleria-lightbox-content { background: url(loader_pos.gif) no-repeat 50% 50% }
+.galleria-lightbox-content { background: url(../images/loader_pos.gif) no-repeat 50% 50% }
 

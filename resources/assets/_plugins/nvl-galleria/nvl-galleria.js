@@ -10,10 +10,12 @@
 
 (function($) {
 
+console.log("nvl-galleria v1.5 loading...");
 Galleria.addTheme({
-    name: 'nvl-twelve',
+    name: 'nvl-galleria',
+    version: 1.50,
     author: 'Galleria & vanch3d',
-    css: 'galleria.nvl-twelve.css',
+    //css: 'css/nvl-galleria.css',
     defaults: {
         transition: "pulse",
         transitionSpeed: 500,
