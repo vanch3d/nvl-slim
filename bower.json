@@ -16,6 +16,8 @@
     "Snap.svg": "snap.svg#^0.5.1",
     "holderjs": "^2.9.4",
     "isotope-layout": "^3.0.5",
-    "i18next": "1.11.2"
+    "i18next": "1.11.2",
+    "galleria": "^1.5.7",
+    "Smartjax": "VoidCanvas/Smartjax#^2.2.0"
   }
 }

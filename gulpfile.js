@@ -31,6 +31,8 @@ var jsList = [
     config.bowerDir + '/Snap.svg/dist/snap.svg.js',
     config.bowerDir + '/holderjs/holder.js',
     config.bowerDir + '/isotope-layout/dist/isotope.pkgd.js',
+    config.bowerDir + '/galleria/dist/galleria.js',
+    config.bowerDir + '/Smartjax/smartjax.js',
     config.resDir   + '/scripts/app.js'
 ];
 
