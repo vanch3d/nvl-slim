@@ -129,8 +129,8 @@ class APIController extends Controller
     public function getSlides(Request $request, Response $response, array $args)
     {
         // set the cache for the request
-        //$this->app->etag('nvl-slim.slideshare'.$name);
-        //$this->app->expires('+1 week');
+        $response = $this->getCache()->withEtag($response,'nvl-slim.slideshare.'. $args["name"]);
+        $response = $this->getCache()->withExpires($response,'+1 week');
 
         $project = $this->getProjectManager()->isDefined($args["name"]);
         if (false === $project) {
@@ -154,7 +154,7 @@ class APIController extends Controller
                 'ts' => $ts,                        // timestamp
                 'api_key' => $cfg['api_key'],            // SlideShare API key
                 'hash' => sha1($cfg['secret'] . $ts),   // Secret hash
-                'username_for' => 'nicolasVL',                // Slides owner
+                'username_for' => $cfg['username'],                // Slides owner
                 'detailed' => '1'
             );// build the URL for Slideshare API
             $param = http_build_query($data);
@@ -173,11 +173,14 @@ class APIController extends Controller
             $slides = array();
             foreach ($json['Slideshow'] as $slideshow) {
                 if (in_array("@" . $args['name'], $slideshow['Tags']['Tag']))
+                {
                     $slideshow['type'] = 'slide';
                     $slides[] = $slideshow;
+                }
             }
             $json['Count'] = count($slides);
             unset($json['Slideshow']);
+
 
             return $response->withJson([ 'data' => $slides,'meta'=> $json]);
 
@@ -197,8 +200,8 @@ class APIController extends Controller
     public function getImages(Request $request, Response $response, array $args)
     {
         // set the cache for the request
-        //$this->app->etag($name.'gallery');
-        //$this->app->expires('+1 week');
+        $response = $this->getCache()->withEtag($response,'nvl-slim.gallery.'. $args["name"]);
+        $response = $this->getCache()->withExpires($response,'+1 week');
 
         $project = $this->getProjectManager()->isDefined($args["name"]);
         if (false === $project) {
@@ -269,8 +272,6 @@ class APIController extends Controller
                 $tmp['thumb'] = $img['derivatives']['thumb']['url'];
                 $imgs[] = $tmp;
             }
-            //$this->outputJSON($imgs);
-
             return $response->withJson([ 'data' => $imgs]);
         }
         catch (\Exception $e)
