@@ -56,9 +56,10 @@ class ProjectManager
                         "name"=>$projid)
                 ));
                 $data = json_decode($renderedTemplate,true);
+                $data['type']='project';
                 if ($short)
             {
-                    $filter = array("id","name","url","start");
+                    $filter = array("id","type","name","url","start");
                     $data = array_intersect_key($data, array_flip($filter));
                 }
                 $json[$projid] = $data;
