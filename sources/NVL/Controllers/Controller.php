@@ -25,6 +25,7 @@ abstract class Controller
     private $c;
     private $view;
     private $session;
+    private $cache;
     private $logger;
     private $settings;
 
@@ -37,6 +38,7 @@ abstract class Controller
         $this->c = $container;
         $this->view = $container->get("view");
         $this->session = $container->get("session");
+        $this->cache = $container->get("cache");
         $this->logger = $container->get("logger");
         $this->settings = $container->get("settings");
     }
@@ -93,6 +95,14 @@ abstract class Controller
     public function getSettings()
     {
         return $this->settings;
+    }
+
+    /**
+     * @return \Slim\HttpCache\CacheProvider
+     */
+    public function getCache()
+    {
+        return $this->cache;
     }
 
 
