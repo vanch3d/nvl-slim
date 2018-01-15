@@ -26,6 +26,7 @@ abstract class Controller
     private $view;
     private $session;
     private $logger;
+    private $settings;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container) {
@@ -37,23 +38,8 @@ abstract class Controller
         $this->view = $container->get("view");
         $this->session = $container->get("session");
         $this->logger = $container->get("logger");
+        $this->settings = $container->get("settings");
     }
-
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @param array    $args
-     *
-     * @todo[vanch3d] A temporary 'catch all' route. To be removed when all routes defined
-     */
-    public function _default(Request $request, Response $response, array $args)
-    {
-        /** @var Route $req */
-        $req = $request->getAttribute("route");
-        $pattern = $req->getPattern();
-        dump("this is the route for $pattern");
-    }
-
 
     /**
      * @return Twig
@@ -99,6 +85,14 @@ abstract class Controller
     {
         $notFoundHandler = $this->c->get('notFoundHandler');
         return $notFoundHandler($request->withAttribute('message', $e->getMessage()), $response);
+    }
+
+    /**
+     * @return mixed|settings
+     */
+    public function getSettings()
+    {
+        return $this->settings;
     }
 
 
