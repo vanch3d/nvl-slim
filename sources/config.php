@@ -10,7 +10,8 @@ use Tracy\Debugger;
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 define('DIR', realpath(__DIR__ . '/../') . DS);
-
+Debugger::$maxDepth = 5; // default: 3
+Debugger::$showLocation = true; // Shows all additional location information
 Debugger::enable(Debugger::DEVELOPMENT, DIR . '.logs');
 
 return [
@@ -21,13 +22,13 @@ return [
         'responseChunkSize' => 4096,
         'outputBuffering' => 'append',
         'determineRouteBeforeAppMiddleware' => true,
-        'displayErrorDetails' => true, //getenv('APP_DEBUG') === 'true',
+        'displayErrorDetails' => (getenv('APP_DEBUG') === 'true'),
         'addContentLengthHeader' => false,
 
         // LOGGER settings
         'logger' => [
-            'path' => __DIR__ . '/../.logs/bbbbblogs.log',
-            'name' => 'my-app',
+            'path' => __DIR__ . '/../.logs/slim-app.log',
+            'name' => getenv('APP_NAME'),
             'maxFiles' => 14,
             'timezone' => 'Europe/London',
             'level' => Monolog\Logger::DEBUG
@@ -37,9 +38,9 @@ return [
         'view' => [
             'template_path' =>  __DIR__ . '/../resources/templates/',
             'twig' => [
-                'debug' => true,//getenv('APP_DEBUG') === 'true',
+                'debug' => (getenv('APP_DEBUG') === 'true'),
                 'cache' => __DIR__ . '/../.cache/',
-                'auto_reload' => true, //getenv('APP_DEBUG') === 'true',
+                'auto_reload' => (getenv('APP_DEBUG') === 'true'),
             ],
         ],
 
@@ -89,7 +90,23 @@ return [
                     ]
                 ]
             ]
+        ],
+
+        'nvl-slim' => [
+            'slideshare' => [
+                'url'       =>  getenv('SLIDESHARE_URL'), // URL for the Slideshare API
+                'username'  =>  getenv('SLIDESHARE_USER'),  // username to retrieve slides from
+                'api_key'   =>  getenv('SLIDESHARE_APIKEY'),     // SlideShare Personal API key
+                'secret'    =>  getenv('SLIDESHARE_SECRET')      // SlideShare Shared Secret
+            ],
+            'zotero' => [
+                'url'       =>  getenv('ZOTERO_URL'),    // URL of the Zotero user API
+                'userID'    =>  getenv('ZOTERO_USERID'),                         // Zotero personal userID
+                'api_key'   =>  getenv('ZOTERO_APIKEY'),     // Zotero API key for access to lib
+                'collectID' =>  getenv('ZOTERO_COLLECTID')                      // Unique ID of the Zotero collection to access
+            ]
         ]
-    ],
+
+    ]
 
 ];
