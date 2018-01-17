@@ -38,7 +38,8 @@ var jsList = [
 
 // list of JS plugins to uglify but keep separate
 var jsPluginList = [
-    config.resDir + '/_plugins/nvl-galleria/nvl-galleria.js'
+    config.resDir + '/_plugins/nvl-galleria/nvl-galleria.js',
+    config.bowerDir + '/StoryMapJS/compiled/js//storymap.js'
 ];
 
 // list of CSS files to combine
@@ -48,6 +49,7 @@ var cssList = [
     config.bowerDir + '/academicons/css/academicons.css',
     config.bowerDir + '/multi-pushmenu/css/component.css',
     config.bowerDir + '/multi-pushmenu/css/icons.css',
+    config.bowerDir + '/StoryMapJS/compiled/css/storymap.css',
     config.resDir   + '/styles/app.scss',
     config.resDir   + '/_plugins/nvl-galleria/css/nvl-galleria.css',
 
@@ -58,6 +60,11 @@ var iconList = [
     config.bowerDir + '/font-awesome/fonts/**.*',
     config.bowerDir + '/academicons/fonts/**.*',
     config.bowerDir + '/multi-pushmenu/fonts/**/**/*.*'
+];
+
+// Hack for icons & fonts in css/icons folder
+var iconCSSList = [
+    config.bowerDir + '/StoryMapJS/compiled/css/icons/**.*'
 ];
 
 // list of images to process and copy
@@ -94,6 +101,9 @@ gulp.task('styles', function () {
 });
 
 gulp.task('icons', function() {
+    gulp.src(iconCSSList)
+        .pipe(debug({title: 'icons:'}))
+        .pipe(gulp.dest('./public/css/icons'));
     return gulp.src(iconList)
         .pipe(debug({title: 'icons:'}))
         .pipe(gulp.dest('./public/fonts'));
