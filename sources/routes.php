@@ -25,16 +25,15 @@ $mwHTML = function (Request $request, Response $response, $next) {
     return $response;
 };
 
-// Middleware for adding debug information to all (json) output
-$mwJSON = function (Request $request, Response $response, $next) {
-    $response = $next($request, $response);
-
+// Middleware for adding debug information to all (json/xml) output
+$mwAPI = function (Request $request, Response $response, $next) {
     /** @var Route $route */
     $route = $request->getAttribute("route");
     $pattern = $route->getPattern();
-    $requestobject = json_decode($response->getBody()->__toString(),true);
-    $requestobject['meta']['debug']['route'] = "this is the route for: $pattern";
-    return $response->withJson($requestobject);
+    $request = $request->withAttribute('meta', ['debug'=>['route' => $pattern]]);
+
+    $response = $next($request, $response);
+    return $response;
 };
 
 /**
@@ -51,7 +50,7 @@ $app->group('/',function() {
     // Project-related routes
     $this->group('projects',function() {
         $this->get('', ProjectController::class . ':allProjects')->setname('project.all');
-        $this->get('/map', ProjectController::class . ':storyMap')->setname('project.story');
+        $this->get('/storymap', ProjectController::class . ':storyMap')->setname('project.story');
         $this->get('/{name}', ProjectController::class . ':showProject')->setname('project.named');
         $this->get('/{name}/cloud', ProjectController::class . ':wordCloud')->setname('project.named.cloud');
     });
@@ -87,7 +86,7 @@ $app->group('/api',function() {
     $this->get('/projects/{name}/slides', APIController::class . ':getSlides')->setname('api.projects.slide');
     $this->get('/projects/{name}/images', APIController::class . ':getImages')->setname('api.projects.image');
     $this->get('/publications', APIController::class . ':getAllPublications')->setname('api.publications');
-})->add($mwJSON);
+})->add($mwAPI);
 
 
 /**
