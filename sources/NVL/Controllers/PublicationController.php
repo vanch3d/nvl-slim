@@ -16,8 +16,24 @@ class PublicationController extends Controller
 
     public function allPublications(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        try {
+            $pubs = $this->getPublicationManager()->getData("all", 100);
+            $publications = $pubs['publications'] ?? [];
+            $uniqueYears = array_unique(array_map(function($v){
+                return $v['issued']['date-parts'][0][0];
+            },$publications));
+            $uniqueTypes = array_unique(array_map(function($v){
+                return $v['type'];
+            },$publications));
+
+        } catch (\Exception $e) {
+        }
+
+        return $this->getView()->render($response, 'publications/showall.twig',array(
+            'publications' => $publications ?? [],
+            'years' => $uniqueYears ?? [],
+            'types' => $uniqueTypes ?? []
+        ));
     }
 
     public function pubNetwork(Request $request, Response $response, array $args)
