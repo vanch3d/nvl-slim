@@ -132,8 +132,7 @@ class APIController extends Controller
                     ->withHeader('Content-Type', APIController::API_XML.';charset=utf-8');
 
             case APIController::API_JSON:
-                return $this->render($request,$response,$data,$status);
-                //return $response->withJson($data, $status);
+                return $response->withJson($data, $status);
 
             default:
                 throw new \Exception("Unknown media type $mediaType");
