@@ -32,7 +32,6 @@
 {% endblock %}
 
 {% block injectCSS %}
-    <link rel="stylesheet" href="//cdn.knightlab.com/libs/storymapjs/latest/css/storymap.css">
     <style>
         .vco-slide-content
         {
@@ -60,7 +59,7 @@
 {% endblock %}
 
 {% block injectJS %}
-<script type="text/javascript" src="//cdn.knightlab.com/libs/storymapjs/latest/js/storymap.js"></script>
+<script type="text/javascript" src="/js/storymap.min.js"></script>
 <script>
     /*
      *  Define my own version of media type to deal with API-based media gallery
@@ -84,8 +83,8 @@
 
             // API Call
             $.getJSON(api_url, function(d) {
-                if (d) {
-                    self.createMedia(d);
+                if (d.data && d.data[0]) {
+                    self.createMedia(d.data);
                 } else {
                     self.loadErrorDisplay("Photo not found or private.");
                 }
@@ -125,7 +124,8 @@
         }
     })();
 
-    $.getJSON("{{ path_for('api.projects') }}").done(function(data){
+    $.getJSON("{{ path_for('api.projects') }}").done(function(src){
+        console.log(src);
         // storymap_data can be an URL or a Javascript object
         //var storymap_data = '/plugins/demo.json';
         var mapdata= {
@@ -144,7 +144,7 @@
                     }]
             }
         };
-        $.each(data.projects.reverse(), function(i, item) {
+        $.each(src.data.reverse(), function(i, item) {
             mapdata.storymap.slides.push({
                 date: item.start,
                 text: {
