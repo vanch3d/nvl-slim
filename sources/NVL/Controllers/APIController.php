@@ -7,28 +7,162 @@
  */
 
 namespace NVL\Controllers;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use NVL\Support\ArrayToXml;
 use Requests;
 use SimpleXMLElement;
+use Slim\Http\Body;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Tracy\Debugger;
 
 /**
  * Class APIController
  * @package NVL\Controllers
+ *
+ * @todo[vanch3d] Look at 'akrabat/rka-content-type-renderer' for a better alternative?
  */
 class APIController extends Controller
 {
-    public function apiHome(Request $request, Response $response, array $args)
+    const
+        API_JSON = 'application/json',
+        API_XML = 'application/xml';
+
+    const
+        ERR_NOTIMPLEMENTED = "not yet implement",
+        ERR_INTERNALERROR = "internal error",
+        ERR_NOTFOUND = "not found";
+
+    private   $checkHeader = true;
+    private   $outputParam = 'format';
+    private   $defaultMediaType = APIController::API_JSON;
+    private   $knownMediaTypes = [
+        APIController::API_JSON,
+        APIController::API_XML,
+        'text/xml'
+    ];
+
+    /**
+     * Getter for defaultMediaType
+     *
+     * @return string
+     */
+    protected function getDefaultMediaType()
+    {
+        return $this->defaultMediaType;
+    }
+
+    /**
+     * Setter for defaultMediaType
+     *
+     * @param string $defaultMediaType Value to set
+     * @return self
+     */
+    protected function setDefaultMediaType(string $defaultMediaType)
+    {
+        $this->defaultMediaType = $defaultMediaType;
+        return $this;
+    }
+
+    /**
+     * Read the output parameter or accept header and determine which media type we know about
+     * is wanted.
+     *
+     * @param Request $request
+     * @return string
+     */
+    protected function determineMediaType(Request $request)
+    {
+        $output = $request->getQueryParam($this->outputParam);
+        if ($output !== null) {
+            if (mb_strtolower($output) == 'xml') {
+                return APIController::API_XML;
+            }
+            return APIController::API_JSON;
+        }
+        if ($this->checkHeader) {
+            $acceptHeader = $request->getHeaderLine('Accept');
+            if (!empty($acceptHeader)) {
+                $selectedMediaTypes = array_intersect(explode(',', $acceptHeader), $this->knownMediaTypes);
+                if (count($selectedMediaTypes)) {
+                    return current($selectedMediaTypes);
+                }
+                // handle +json and +xml specially
+                if (preg_match('/\+(json|xml)/', $acceptHeader, $matches)) {
+                    $mediaType = 'application/' . $matches[1];
+                    if (in_array($mediaType, $this->knownMediaTypes)) {
+                        return $mediaType;
+                    }
+                }
+            }
+        }
+        return $this->getDefaultMediaType();
+    }
+
+    /**
+     * Render the data using the format determined by request header or parameter
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $data
+     * @param string   $forceFormat
+     * @return Response
+     * @throws \Exception
+     */
+    protected function render(Request $request, Response $response, array $data,int $status=200,string $forceFormat = null)
+    {
+        $mediaType = ($forceFormat) ?? $this->determineMediaType($request);
+        //$status = $data['meta']['status'] ?? 200;
+
+        // add debug information from middleware
+        $meta = $request->getAttribute('meta');
+        $acceptHeader = $request->getHeaderLine('Accept');
+        $meta['debug']['Accept']= $acceptHeader;
+        $meta['debug']['status']= $status;
+
+        // merge meta from both data and middleware
+        $data['meta'] = array_merge($data['meta']??[],$meta??[]);
+
+        switch ($mediaType) {
+            case APIController::API_XML:
+            case 'text/xml':
+                $xml = ArrayToXml::convert($data);
+                $body = new Body(fopen('php://temp', 'r+'));
+                $body->write($xml);
+                return $response->withBody($body)
+                    ->withStatus($status)
+                    ->withHeader('Content-Type', APIController::API_XML.';charset=utf-8');
+
+            case APIController::API_JSON:
+                return $this->render($request,$response,$data,$status);
+                //return $response->withJson($data, $status);
+
+            default:
+                throw new \Exception("Unknown media type $mediaType");
+        }
+    }
+
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param string   $title
+     * @param string   $details
+     * @param int       $status
+     * @return Response
+     * @throws \Exception
+     * 
+     * @todo[vanch3d] Too restrictive. check Crell/ApiProblem
+     */
+    protected function renderError(Request $request, Response $response, string $title, string $details, $status=500)
     {
         $err = [
-            'status'    => 400,
-            'title'     => 'not implemented',
-            'details'   => 'Nothing to see here'
+            'status'    => $status,
+            'title'     => $title,
+            'details'   => $details
         ];
-        $errs[]=$err;
-        return $response->withJson(['errors' => $errs], 400);
+        $ret= [
+            'errors' => [$err]
+        ];
+
+        return $this->render($request,$response,$ret,$status);
     }
 
     /**
@@ -36,17 +170,29 @@ class APIController extends Controller
      * @param Response $response
      * @param array    $args
      * @return Response
+     * @throws \Exception
+     */
+    public function apiHome(Request $request, Response $response, array $args)
+    {
+        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
+            'Nothing to see here',400);
+    }
+
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return Response
+     * @throws \Exception
      */
     public function unAPI(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        $err = [
-            'status'    => 400,
-            'title'     => 'not implemented',
-            'details'   => 'Nothing to see here'
-        ];
-        $errs[]=$err;
-        return $response->withJson(['errors' => $errs], 400);
+        $r = $this->determineMediaType($request);
+        $this->getLogger()->notice("UNAPI : " . $r);
+
+        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
+            'Nothing to see here',400);
+
     }
 
     /**
@@ -54,78 +200,80 @@ class APIController extends Controller
      * @param Response $response
      * @param array    $args
      * @return Response
+     * @throws \Exception
      */
     public function getAllProjects(Request $request, Response $response, array $args)
     {
         try {
             $projects = $this->getProjectManager()->getData(false);
-            return $response->withJson(['data' => $projects]);
+            return $this->render($request,$response,['data' => $projects]);
 
         } catch (\Exception $e) {
-            $err = [
-                'status'    => 500,
-                'title'     => 'internal error',
-                'details'   => 'could not access the list of projects'
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], 500);
+            return $this->renderError($request,$response,APIController::ERR_INTERNALERROR,
+                'could not access the list of projects',500);
         }
-    }
-
-    public function getAllPublications(Request $request, Response $response, array $args)
-    {
-        // @todo[vanch3d] Build the proper response
-        $err = [
-            'status'    => 400,
-            'title'     => 'not implemented',
-            'details'   => 'Nothing to see here'
-        ];
-        $errs[]=$err;
-        return $response->withJson(['errors' => $errs], 400);
     }
 
     /**
      * @param Request  $request
      * @param Response $response
      * @param array    $args
+     * @return Response
+     * @throws \Exception
+     */
+    public function getAllPublications(Request $request, Response $response, array $args)
+    {
+        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
+            'Nothing to see here',400);
+    }
+
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @throws \Exception
      * @return Response
      */
     public function getProject(Request $request, Response $response, array $args)
     {
         $project = $this->getProjectManager()->isDefined($args["name"]);
         if (false === $project) {
-            $err = [
-                'status'    => 404,
-                'title'     => 'not found',
-                'details'   => 'The project does not exist'
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], $err['status']);
-        }
-        return $response->withJson(['data' => $project], 200);
+            return $this->renderError($request,$response,APIController::ERR_NOTFOUND,
+                'The project does not exist',404);
 
+        }
+        return $this->render($request,$response,['data' => $project]);
     }
 
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return Response|static
+     * @throws \Exception
+     */
     public function getPublications(Request $request, Response $response, array $args)
     {
         $project = $this->getProjectManager()->isDefined($args["name"]);
         if (false === $project) {
-            $err = [
-                'status'    => 404,
-                'title'     => 'not found',
-                'details'   => 'The project does not exist'
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], $err['status']);
+            return $this->renderError($request,$response,APIController::ERR_NOTFOUND,
+                'The project does not exist',404);
         }
 
         $res = $this->getPublicationManager()->getData($args["name"]);
         $pubs = $res['publications'];
         unset($res['publications']);
-        return $response->withJson([ 'data' => $pubs,'meta'=>$res]);
+        return $this->render($request,$response,[ 'data' => $pubs,'meta'=>$res]);
 
     }
 
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return Response
+     * @throws \Exception
+     */
     public function getSlides(Request $request, Response $response, array $args)
     {
         // set the cache for the request
@@ -134,13 +282,8 @@ class APIController extends Controller
 
         $project = $this->getProjectManager()->isDefined($args["name"]);
         if (false === $project) {
-            $err = [
-                'status'    => 404,
-                'title'     => 'not found',
-                'details'   => 'The project does not exist'
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], $err['status']);
+            return $this->renderError($request,$response,APIController::ERR_NOTFOUND,
+                'The project does not exist',404);
         }
 
         try {
@@ -159,10 +302,10 @@ class APIController extends Controller
             );// build the URL for Slideshare API
             $param = http_build_query($data);
             $url2 = 'https://www.slideshare.net/api/2/get_slideshows_by_user?' . $param;
-            $request = Requests::get($url2);
-            if (!$request->success)
+            $slsReq = Requests::get($url2);
+            if (!$slsReq->success)
                 throw new \Exception('Cannot access the SlideShare API.', 500);
-            $xml = new SimpleXMLElement($request->body);
+            $xml = new SimpleXMLElement($slsReq->body);
             if ("SlideShareServiceError" == $xml->getName()) {
                 $node = $xml->children();
                 $attr = $node->attributes();
@@ -181,22 +324,24 @@ class APIController extends Controller
             $json['Count'] = count($slides);
             unset($json['Slideshow']);
 
+            //return $response->withJson([ 'data' => $slides,'meta'=> $json]);
+            return $this->render($request,$response,[ 'data' => $slides,'meta'=>$json]);
 
-            return $response->withJson([ 'data' => $slides,'meta'=> $json]);
 
         } catch (\Exception $e) {
-
-            $err = [
-                'status'    => $e->getCode(),
-                'title'     => 'internal error',
-                'details'   => $e->getMessage()
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], $e->getCode());
+            return $this->renderError($request,$response,APIController::ERR_INTERNALERROR,
+                $e->getMessage(),$e->getCode());
 
         }
     }
 
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return Response
+     * @throws \Exception
+     */
     public function getImages(Request $request, Response $response, array $args)
     {
         // set the cache for the request
@@ -205,13 +350,8 @@ class APIController extends Controller
 
         $project = $this->getProjectManager()->isDefined($args["name"]);
         if (false === $project) {
-            $err = [
-                'status'    => 404,
-                'title'     => 'not found',
-                'details'   => 'The project does not exist'
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], $err['status']);
+            return $this->renderError($request,$response,APIController::ERR_NOTFOUND,
+                'The project does not exist',404);
         }
 
         $data = array(
@@ -225,8 +365,8 @@ class APIController extends Controller
 
         try {
 
-            $request = Requests::get($url2);
-            $data = json_decode($request->body, true);
+            $reqGalUser = Requests::get($url2);
+            $data = json_decode($reqGalUser->body, true);
 
             if (isset($data['err'])) {
                 throw new \Exception($data['message'], $data['err']);
@@ -240,7 +380,9 @@ class APIController extends Controller
 
             if (!$cat) {
                 //throw new \Exception('No images for this project', 501);
-                return $response->withJson([ 'data' => []]);
+                //return $response->withJson([ 'data' => []]);
+                return $this->render($request,$response,[ 'data' => []]);
+
             }
 
 
@@ -254,8 +396,8 @@ class APIController extends Controller
             $param = http_build_query($data);
             $url2 = 'http://gallery.calques3d.org/ws.php?' . $param;
 
-            $request = Requests::get($url2);
-            $data = json_decode($request->body, true);
+            $reqGalImg = Requests::get($url2);
+            $data = json_decode($reqGalImg->body, true);
 
             if (isset($data['err'])) {
                 throw new \Exception($data['message'], $data['err']);
@@ -272,17 +414,14 @@ class APIController extends Controller
                 $tmp['thumb'] = $img['derivatives']['thumb']['url'];
                 $imgs[] = $tmp;
             }
-            return $response->withJson([ 'data' => $imgs]);
+            //return $response->withJson([ 'data' => $imgs]);
+            return $this->render($request,$response,[ 'data' => $imgs]);
+
         }
         catch (\Exception $e)
         {
-            $err = [
-                'status'    => $e->getCode(),
-                'title'     => 'internal error',
-                'details'   => $e->getMessage()
-            ];
-            $errs[]=$err;
-            return $response->withJson(['errors' => $errs], $e->getCode());
+            return $this->renderError($request,$response,APIController::ERR_INTERNALERROR,
+                $e->getMessage(),$e->getCode());
         }
     }
 
