@@ -11,7 +11,7 @@
 
 {% block breadcrumb %}
  <ol class="breadcrumb">
-	<li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
+	<li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
     <li class="active">Publications</li>
 </ol>
 {% endblock %}   
@@ -253,9 +253,9 @@
                         </div>
                         <div class="widget-containt">
                             <ul>
-                                <li><a href="{{ urlFor('publications.all.map') }}">Co-authorship Network</a><br>
+                                <li><a href="{{ path_for('publications.all.network') }}">Co-authorship Network</a><br>
                                 Visualising networks of research activities
-                                <li><a href="{{ urlFor('publications.all.narrative') }}">Research Narrative</a><br>
+                                <li><a href="{{ path_for('publications.all.narrative') }}">Research Narrative</a><br>
                                 Visualising evolution of key concepts throughout research activities
 
                             </ul>
@@ -282,11 +282,11 @@
                                     {% endif %}</p>
                                 </div>
                                 <div class="meta">
-                                    <span class="project"><a href="{{pub.project.url}}" title="Go to project page">{{pub.project.name}}</a></span>
+                                    <span class="project"><a href="{{pub.project.url}}" title="Go to project page">{{pub.project.id}}</a></span>
                                     {% if pub.PubReader %}
                                         <span class="pubreader"><a href="{{pub.PubReader}}" title="Go to full text">PubReader</a></span>
                                     {% endif %}
-                                    {% if pub.DOI %}<span class="doi">{{ macros.hrefDOI(pub.DOI) }}</span>{% endif %}
+                                    {% if pub.DOI %}<span class="doi">{{ doi(pub.DOI)|raw }}</span>{% endif %}
                                     {% if pub.PDF %}<span class="pdf"><a href="{{pub.PDF}}" title="Download the PDF">PDF</a></span> {% endif %}
                                     {% if pub.output.bibtex %}
                                         <span class="bib"><a class="bib-copy" data-bib="{{ pub.output.bibtex }}" href="#" title="Copy bibtex to clipboard">Bibtex</a></span>
@@ -306,8 +306,8 @@
 {% endblock %}
 
 {% block injectJS %}
-    <script src="//cdn.jsdelivr.net/handlebarsjs/1.3.0/handlebars.js"></script>
     <script type="text/javascript">
+
         //extend Isotope hide/show to update coins/unapi
         var oldIsotopeReveal = Isotope.Item.prototype.reveal;
         Isotope.Item.prototype.reveal = function() {
@@ -333,9 +333,6 @@
 
         $(document).ready(function()
         {
-            // Progressive template ready for processing
-            console.debug("starting templating ...");
-
             // add identifier to the coins markup.
             $(".Z3988").toggleClass("coins");
 
