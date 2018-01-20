@@ -47,13 +47,7 @@ class ZoteroManager
      */
     public function getData($project_id="all", $limit = 20, $csl_file="umuai-nvl.csl")
     {
-        // storage for publications data
-        $pubs = array();
-
         $ff = $this->getZoteroRecord($project_id,$limit);
-        Debugger::barDump($ff);
-        //throw new \Exception("TODO");
-
         return $ff;
     }
 
@@ -65,12 +59,22 @@ class ZoteroManager
     public function isDefined(string $id)
     {
         if (empty($id)) return false;
+        try {
+            $items = $this->getData("all", 100);
+            $pubs = $items['publications'];
 
-        // storage for publications data
-        $pubs = array();
+            $item=array_filter($pubs,function($v) use($id){
+                return($v['archive_location']===$id);
+            });
 
-        throw new \Exception("TODO");
-        return $pubs;
+
+            if (!isset($item) || empty($item))
+                return false;
+            return reset($item);
+
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
