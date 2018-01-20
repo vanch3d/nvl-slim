@@ -15,8 +15,8 @@
             class of data that can give us insights into deeper learning and higher order qualities such as critical
             thinking, argumentation and mastery of complex ideas. These skills are indeed difficult to master as
             illustrated in the revision of Bloom’s Taxonomy of Educational Objectives
-            ({{ forms.cite("Pickard 2007","B11") }}) and are a distinct requirement for assessment in higher education.
-            Assessment is an important component of learning and in fact ({{ forms.cite("Rowntree 1987","B12") }})
+            ({{  cite("Pickard 2007","B11") }}) and are a distinct requirement for assessment in higher education.
+            Assessment is an important component of learning and in fact ({{  cite("Rowntree 1987","B12") }})
             argues that it is the main driver for learning and so the challenge is to provide an effective automated
             interactive feedback system that yields an acceptable level of support for university students writing
             essays.</p>
@@ -27,10 +27,10 @@
         <p>Our research involves using state-of-the-art techniques for analyzing essays and developing a set of feedback
             models which will initiate a set of reflective dialogic practices. The main pedagogical thrust of
             e-Assessment of free-text projects is how to provide meaningful “advice for action”
-            ({{ forms.cite("Whitelock 2010","B17") }}) in order to support students writing their summative assessments.
+            ({{  cite("Whitelock 2010","B17") }}) in order to support students writing their summative assessments.
             It is the combination of incisive learning analytics and meaningful feedback to students which is central to
             the planning of our empirical studies. Specifically, we are investigating whether summarization techniques
-            ({{ forms.cite("Lloret & Palomar 2012","B7") }}) could be used to generate formative feedback on free-text
+            ({{  cite("Lloret & Palomar 2012","B7") }}) could be used to generate formative feedback on free-text
             essays submitted by students.</p>
 
         <p>This paper is organized as follows. We briefly describe the context and research questions that are informing
@@ -48,21 +48,21 @@
 
         <p>Writing summaries has been a long-standing educational activity and has received some serious attention in
             delivering computer-based support. For example, systems such as SummaryStreet
-            ({{ forms.cite("Wade-Stein & Kintsch 2004","B16") }}) or Pensum
-            ({{ forms.cite("Villiot-Leclercq et al. 2010","B15") }}) aim to help students write summaries as a learning,
+            ({{  cite("Wade-Stein & Kintsch 2004","B16") }}) or Pensum
+            ({{  cite("Villiot-Leclercq et al. 2010","B15") }}) aim to help students write summaries as a learning,
             skills-based, task.</p>
 
         <p>But using summaries as a source of reflection on your own writing seems to be a more open issue. Recent
             research on formative feedback suggests indeed that essay summarization, understood to comprise both a short
             summary of the essay and a simple list of its main topics, could be useful for students, e.g. "to help
             determine whether the actual performance was the same as the intended performance”
-            ({{ forms.cite("Nelson & Schunn 2009, p.378","B9") }}).</p>
+            ({{  cite("Nelson & Schunn 2009, p.378","B9") }}).</p>
 
         <p>With this in mind, one of our research questions is how to use advances in Natural Language Processing to
             design an automated summarization engine that would provide a good foundation for a dedicated model of
             formative feedback. Can we use summarization elements to help students identify or visualize patterns in
-            their essays, as explored by ({{ forms.cite("O’Rourke & Calvo 2009","B10") }})? Or to trigger questions and
-            reflective activities, as implemented in Glosser ({{ forms.cite("Villalon et al. 2008","B14") }})?</p>
+            their essays, as explored by ({{  cite("O’Rourke & Calvo 2009","B10") }})? Or to trigger questions and
+            reflective activities, as implemented in Glosser ({{  cite("Villalon et al. 2008","B14") }})?</p>
 
         <h3>Supporting Essay Writing in Distance Learning</h3>
 
@@ -84,13 +84,13 @@
                 'id': 'T1',
                 'ref': 'Table 1',
                 'leg': 'Examples of assignment tasks.' }
-        only %}
+        %}
 
         <p>The questions we are considering, given this context, is how we can support these students as they write
             essays and what the implications are for the design of a computer- and summarization-based approach. </p>
 
         <p>In the initial phase of the project, we ran a couple of focus groups with OU students that helped to identify
-            many aspects of the students’ personal approach to essay writing ({{ forms.cite("Alden et al. 2013","B1") }}). </p>
+            many aspects of the students’ personal approach to essay writing ({{  cite("Alden et al. 2013","B1") }}). </p>
 
         <p>Writing an essay is a task that can involve several stages: preparation of material, drafting of essay,
             reflecting on feedback, summative evaluation by tutors. But not all of them are suitable, or even desirable,
@@ -102,7 +102,7 @@
             prefer to write their text with paper-and-pencil before typing for the final submission. </p>
 
         <p>Relying on embedded text editors or on cloud-based solutions such as Google Docs – as done by
-            ({{ forms.cite("Southavilay et al. 2013","B13") }}) for collaborative writing – is therefore not a viable
+            ({{  cite("Southavilay et al. 2013","B13") }}) for collaborative writing – is therefore not a viable
             solution in our context. The system will have to accept texts written with whatever platform students are
             using to organize, draft and revise their essay. Ultimately, the system will have to be seen and used as a
             resource, the way forums, online textbooks and other digital tools are used by OU students. </p>
@@ -125,7 +125,7 @@
 
         <p>OpenEssayist is developed as a web application and is composed primarily of two components (Figure 1, see
             appendix). The first component, EssayAnalyser, is the summarization engine, implemented in Python with NLTK
-            ({{ forms.cite("Bird et al. 2009","B2") }}) and other toolkits. It is being designed as a stand-alone
+            ({{  cite("Bird et al. 2009","B2") }}) and other toolkits. It is being designed as a stand-alone
             RESTful web service, delivering the basic summarization techniques that will be consumed by the main system.
             The second component is OpenEssayist itself, implemented on a PHP framework. The core system consists of the
             operational back-end (user identification, database management, service brokers, feedback orchestrator) and
@@ -135,7 +135,7 @@
             'id': 'F1',
             'ref': 'Figure 1',
             'leg': 'Architecture of OpenEssayist.' }
-        only %}
+        %}
 
 
         <p>The intended flow of activities within the system can be summarized as follows. Students are registered users
@@ -159,7 +159,7 @@
 
         <p>We decided to start experimenting with two simpler summarization strategies that could be implemented fairly
             quickly: key phrase extraction and extractive summarization, following the TextRank approach proposed and
-            evaluated in ({{ forms.cite("Mihalcea & Tarau 2004","B8") }}). Key phrase extraction aims at identifying
+            evaluated in ({{  cite("Mihalcea & Tarau 2004","B8") }}). Key phrase extraction aims at identifying
             which individual words or short phrases are the most suggestive of the content of a discourse, while
             extractive summarization is essentially the identification of whole key sentences. Our hypothesis is that
             the quality and position of key phrases and key sentences within an essay (i.e., relative to the position of
@@ -192,7 +192,7 @@
         <p>To compute this key-ness value, each unique word in the essay is represented by a node in a graph, and
             co-occurrence relations (specifically, within-sentence word adjacency) are represented by edges in the
             graph. A centrality algorithm – we have experimented with betweenness centrality
-            ({{ forms.cite("Freeman 1977","B6") }}) and PageRank ({{ forms.cite("Brin & Page 1998","B3") }}) – is used
+            ({{  cite("Freeman 1977","B6") }}) and PageRank ({{  cite("Brin & Page 1998","B3") }}) – is used
             to calculate the significance of each word. Roughly speaking, a word with a high centrality score is a word
             that sits adjacent to many other unique words which sit adjacent to many other unique words which…, and so
             on. The words with high centrality scores are the key words . </p>
@@ -200,7 +200,7 @@
         <p>Since a centrality score is attributed to every unique word in the essay, a decision needs to be made as to
             what proportion of the essay's unique words qualify as key words. The distribution of key word scores
             follows the same shape for all essays, an acute "elbow" and then a very long tail, observed for word
-            adjacency graphs by ({{ forms.cite("Ferrer i Cancho & Solé 2001","B4") }}). We therefore currently take the
+            adjacency graphs by ({{  cite("Ferrer i Cancho & Solé 2001","B4") }}). We therefore currently take the
             key-ness threshold to be the place where the elbow bend appears to be sharpest. </p>
 
         <p>Once key words have been identified, the system matches sequences of these against the surface text to
@@ -300,7 +300,7 @@
         'ref': 'Figure 2',
         'leg': 'Key words, phrases and sentences visualized in the essay context.',
         'ext' : 'Sentences in light-grey (green) background are key sentences as extracted by the EssayAnalyser (the number indicates its key-ness ranking). Key words and key phrases are indicated in bold (red) and boxed.'}
-        only %}
+        %}
 
 
 
@@ -314,7 +314,7 @@
         'ref': 'Figure 3',
         'leg': 'Key words, phrases and sentences visualized in the essay context.',
         'ext' : 'The structural elements of the essay can be used jointly with the key word extraction to highlight relevant information within specific parts of the essay, here in both introduction and conclusion (and the assignment question).'}
-        only %}
+        %}
 
         <p>The intended purpose of this dynamic essay representation is to attract the attention of the student away
             from
@@ -355,7 +355,7 @@
         'id': 'F4',
         'ref': 'Figure 4',
         'leg': 'Key words and phrases as separate lists.'}
-        only %}
+        %}
 
 
 
@@ -386,7 +386,7 @@
         'id': 'F5',
         'ref': 'Figure 5',
         'leg': 'Dispersion of key words across the essay.'}
-        only %}
+        %}
 
 
         <p>On a more experimental approach, we are also exploring the possibility of visually exploiting the networks
@@ -443,7 +443,7 @@
         'id': 'F6',
         'ref': 'Figure 6',
         'leg': 'Key words extracted by the systems are re-organized by the students, using their own categories.'}
-        only %}
+        %}
 
         <p>Another key-word-related activity relies on the fact that a decision is made by the system on what
             constitutes a
@@ -494,9 +494,9 @@
             <li>improve the different aspects of the summarization engine;
             <li>experiment with it on various corpora of essays to identify trends and markers that could be used as
                 progress
-                and/or performance indicators ({{ forms.cite("Field et al. 2013","B5") }});
+                and/or performance indicators ({{  cite("Field et al. 2013","B5") }});
             <li>refine the educational aspect of the system, identify possible usage scenarios
-                ({{ forms.cite("Alden et al. 2013","B1") }}), test
+                ({{  cite("Alden et al. 2013","B1") }}), test
                 pedagogical hypotheses and models of feedback.
         </ol>
         <p>At the time of writing, several usability/desirability inspection sessions are underway, using both

@@ -20,10 +20,10 @@
     educational organisations. This new trend to educational services has led to research
     and development that involves the provision of new learner-centred models of
     organising and delivering educational resources (see for example the integrated
-    framework proposed in [{{forms.cite("1","B1")}}, {{forms.cite("2","B2")}}]).
+    framework proposed in [{{ cite("1","B1")}}, {{ cite("2","B2")}}]).
     </p>
 
-    <p>The L4All system [{{forms.cite("3","B3")}}, {{forms.cite("4","B4")}}] provides an environment for the lifelong learner to access
+    <p>The L4All system [{{ cite("3","B3")}}, {{ cite("4","B4")}}] provides an environment for the lifelong learner to access
     information about courses, personal development plans, recommendation of
     learning pathways, personalised support for planning of learning, and reflecting
     on learning. The MyPlan project follows on from the initial L4All pilot project
@@ -39,7 +39,7 @@
     </p>
 
     <p>At the core of L4All is the specification of a User Model that addresses the
-    specificities of lifelong learners and is based on the notion of learning "trails" {{ forms.cite("[5]","B5") }}.
+    specificities of lifelong learners and is based on the notion of learning "trails" {{  cite("[5]","B5") }}.
     In the context of L4All, a "trail" is a timeline-based representation of learners'
     work, learning and other life experiences that provides a holistic approach and
     continuity between their learning episodes and work experiences.
@@ -50,7 +50,7 @@
     'ref': 'Figure 1',
     'leg': "The main page of L4All with the user's timeline (centre), access to the various
     functionalities (left) and a bookmarks section for networking (right)." }
-    only %}
+    %}
 
     <p>One requirement for offering such personalised services is to provide learners
     with the possibility to search for "people like me", i.e. to exploit the full structure
@@ -83,7 +83,7 @@
 <section class="sec">
 <h2 id="__sec2">2 User Model and Timelines</h2>
 
-    <p>The L4All User Model {{ forms.cite("[6]","B6") }} is comprised of three parts:
+    <p>The L4All User Model {{  cite("[6]","B6") }} is comprised of three parts:
     </p>
 
     <ol>
@@ -116,7 +116,7 @@
     subject and a qualification level; work episodes by an industry sector and a position;
     and business episodes by an industry sector. These additional attributes
     are populated by a specific tree-like taxonomy of values selected form relevant
-    British standards {{ forms.note("[1]","N1") }}. The structure and identifiers of these taxonomies have been
+    British standards {{  note("[1]","N1") }}. The structure and identifiers of these taxonomies have been
     maintained but, for usability purposes, their depth is limited to four levels.
     Elements in each taxonomy can therefore be represented by four-digit identifier,
     each digit uniquely identifying its precise position in the tree.
@@ -130,7 +130,7 @@
 
     <p>The initial prototype of the L4All system supported several search functionalities
     over users and their timelines. Two limitations of this approach were
-    identified during the first piloting phase {{ forms.cite("[4]","B4") }}. First, all the search functionalities
+    identified during the first piloting phase {{  cite("[4]","B4") }}. First, all the search functionalities
     were keyword-based, targeting the various fields of the User Profile, Learning
     Profile and Timelines, and therefore limited in their scope. In particular, searching
     on timelines returns matches based solely on the occurrence of the keywords
@@ -144,9 +144,9 @@
 
     <p>String metrics offer such a possibility. String metrics (also referred to as similarity
     metrics) have been widely used in information integration and in several
-    fields of applied computer science [{{forms.cite("7","B7")}}, {{forms.cite("8","B8")}}].
+    fields of applied computer science [{{ cite("7","B7")}}, {{ cite("8","B8")}}].
     In the context of Intelligent Tutoring
-    Systems, similarity metrics have been used in the REDEEM system {{ forms.cite("[9]","B9") }} to compare
+    Systems, similarity metrics have been used in the REDEEM system {{  cite("[9]","B9") }} to compare
     alternative sequences of instructional activities as produced by authors. In
     the context for the L4All timelines, the main requirement for using similarity
     metrics is to encode a time-based sequence of records into a token-based string.
@@ -210,7 +210,7 @@
     </p>
 
     <p>Combining the two first assumptions above means that no time information
-    is used to encode episodes, only their relative position matters {{ forms.note("[2]","N2") }}. Filters are
+    is used to encode episodes, only their relative position matters {{  note("[2]","N2") }}. Filters are
     then applied to the string of tokens to remove the episodes that should not
     be considered in the current similarity search, as well as for limiting the depth
     of their classification. In the latter case, the use of the coding system for the
@@ -223,7 +223,7 @@
 <section class="sec">
 <h2 id="__sec4">4 Comparison of Similarity Measures</h2>
 
-    <p>The metrics used in this study are part of the SimMetrics {{ forms.note("[3]","N3") }} JAVA package,
+    <p>The metrics used in this study are part of the SimMetrics {{  note("[3]","N3") }} JAVA package,
     an open source extensible library of metrics that provides real number-based
     similarity measures between strings, allowing both normalised and un-normalised
     output. The SimMetrics package contains about 20 different metrics, some of
@@ -244,7 +244,7 @@
     'id': 'T1',
     'ref': 'Table 1',
     'leg': "List of encoded timelines used for the metrics comparison." }
-    only %}
+    %}
 
     <p>The Source timeline is a string of four episodes of different type: college
     (<span class="code">Cl00</span>), university (<span class="code">Un00</span>),
@@ -283,7 +283,7 @@
     'id': 'T2',
     'ref': 'Table 2',
     'leg': "Normalised similarity between the source and the target timelines." }
-    only %}
+    %}
 
     <p>The first group includes transformation-based metrics like Levenshtein, Jaro
     and Needleman-Wunsch that are able to discriminate between the basic operations
