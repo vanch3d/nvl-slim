@@ -12,7 +12,7 @@
 <nav id="jr-head">
     <div class="flexh tb">
         <div id="jr-tb1">
-            <a id="jr-pmc-sw" href="{{ urlFor('home') }}" class="btn wsprkl" title="NVL Home Page"><span>NVL</span></a>
+            <a id="jr-pmc-sw" href="{{ path_for('home') }}" class="btn wsprkl" title="NVL Home Page"><span>NVL</span></a>
             <a id="jr-links-sw" class="btn wsprkl hidden " title="Links">
                 <svg viewbox="0 0 100 100" preserveaspectratio="none">
                     <path fill="#999"
@@ -114,10 +114,10 @@
         <div class="title-text f1"> Links</div>
     </div>
     <div class="cnt lol f1">
-        <a href="{{ urlFor('publications.all') }}"
+        <a href="{{ path_for('publications.all') }}"
            class="navlink">NVL Publications</a>
         <a class="navlink"
-           href="{{ urlFor('project.named',{'name': item.project.id} ) }}">Project: {{ item.project.name }}</a>
+           href="{{ path_for('project.named',{'name': item.project.id} ) }}">Project: {{ item.project.id }}</a>
         {% if paper_links %}
             {{ paper_links|raw }}
         {% endif %}
@@ -130,7 +130,7 @@
         <div class="title-text f1"> Alternative formats</div>
     </div>
     <div class="cnt lol f1">
-        <a href="{{ urlFor('publications.named.pdf',{'name': item.archive_location} ) }}" class="">PDF</a>
+        <a href="{{ path_for('publications.named.pdf',{'name': item.archive_location} ) }}" class="">PDF</a>
         <a href="{{ item.URL }}"
            class="">Original Article</a>
     </div>
