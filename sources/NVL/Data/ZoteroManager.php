@@ -202,7 +202,7 @@ class ZoteroManager
             $pubs['count'] = count($fetchedItems);
 
             // Initialise the CSL generator
-            $csl_data ='../app/utils/styles/'.$csl_file;
+            $csl_data ='../sources/Zotero/styles/'.$csl_file;
             $csl_data = file_get_contents($csl_data);
             $citeproc = new citeproc($csl_data);
 
