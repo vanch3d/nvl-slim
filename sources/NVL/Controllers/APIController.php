@@ -222,8 +222,10 @@ class APIController extends Controller
      */
     public function getAllPublications(Request $request, Response $response, array $args)
     {
-        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
-            'Nothing to see here',400);
+        $res = $this->getPublicationManager()->getData("all",100);
+        $pubs = $res['publications'];
+        unset($res['publications']);
+        return $this->render($request,$response,[ 'data' => $pubs,'meta'=>$res]);
     }
 
     /**
