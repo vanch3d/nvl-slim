@@ -19,6 +19,8 @@
     "i18next": "1.11.2",
     "galleria": "^1.5.7",
     "Smartjax": "VoidCanvas/Smartjax#^2.2.0",
-    "StoryMapJS": "NUKnightLab/StoryMapJS#^0.6.7"
+    "StoryMapJS": "NUKnightLab/StoryMapJS#^0.6.7",
+    "PubReader": "vanch3d/PubReader#v1.4",
+    "MathJax": "^2.7.2"
   }
 }
