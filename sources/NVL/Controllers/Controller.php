@@ -16,6 +16,7 @@ use NVL\Support\Storage\Session;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
+use Tracy\Debugger;
 
 abstract class Controller
 {
@@ -103,6 +104,14 @@ abstract class Controller
     public function getCache()
     {
         return $this->cache;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->c;
     }
 
 
