@@ -8,8 +8,8 @@
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
-        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
-        <li><a title="Home" href="{{ urlFor('publications.all') }}">Publications</a></li>
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Home" href="{{ path_for('publications.all') }}">Publications</a></li>
         <li class="active">{{ publication.archive_location }}</li>
     </ol>
 {% endblock %}

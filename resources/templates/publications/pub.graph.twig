@@ -8,8 +8,8 @@
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
-        <li><a title="Home" href="{{ urlFor('home') }}">Home</a></li>
-        <li><a title="Publications" href="{{ urlFor('publications.all') }}">Publications</a></li>
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Publications" href="{{ path_for('publications.all') }}">Publications</a></li>
         <li class="active">Graph</li>
     </ol>
 {% endblock %}
@@ -63,7 +63,7 @@
                     .attr("width", 700)
                     .attr("height", 500);
 
-            d3.json("{{ urlFor('api.pub.project',{name: 'all'})}}", function(error, data) {
+            d3.json("{{ path_for('api.publications')}}", function(error, data) {
                 var graph = {
                     'nodes' : [],
                     'links' : []
