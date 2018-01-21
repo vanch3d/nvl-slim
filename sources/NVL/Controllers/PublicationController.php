@@ -9,11 +9,19 @@
 namespace NVL\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Tracy\Debugger;
 
 
 class PublicationController extends Controller
 {
 
+    /**
+     * Handler for rendering all publications
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function allPublications(Request $request, Response $response, array $args)
     {
         try {
@@ -36,22 +44,139 @@ class PublicationController extends Controller
         ));
     }
 
+    /**
+     * Handler for the co-authorship network
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function pubNetwork(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        return $this->getView()->render($response, 'publications/pub.network.twig');
     }
 
+    /**
+     * Handler for the research narrative graph
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Exception
+     */
     public function pubNarrative(Request $request, Response $response, array $args)
     {
+        set_time_limit(100);
+        // @var array $narrative
+        $narrative = array(
+            "characters" => [],
+            "scenes" => [],
+            "errors" => []
+        );
+
+        $pubs = $this->getPublicationManager()->getData("all", 100);
+        while ($pub = array_pop($pubs['publications'])) {
+
+            // Do not incorporate non-english publications
+            if (isset($pub['language']) && strcasecmp($pub['language'],'English')) {
+                $narrative['errors'][]= "Unable to process ". $pub['archive_location'] . ", not an English source";
+                continue;
+            }
+
+            // compute Freq Dist
+            $tags = $this->getPublicationManager()->getPublicationAnalytics($pub['archive_location']);
+
+            if (!empty($tags->errors)) {
+                $narrative['errors'][]=$tags->errors;
+                continue;
+            }
+
+            // only take the top X n-grams
+            $shortList = array_slice($tags->freq,0,10);
+            foreach ($shortList as $tag)
+            {
+                $count = $tag['value'];
+                $enum = 1;
+                $affiliation = "other";
+                if (isset($narrative['characters'][$tag['key']]['count']))
+                {
+                    $count += $narrative['characters'][$tag['key']]['count'];
+                    $enum += $narrative['characters'][$tag['key']]['enum'];
+                }
+                if ($enum >=2 ) $affiliation = "light";
+                if ($enum >=5 ) $affiliation = "dark";
+                // reformat the output to match the narrative plugin
+                // @todo[vanch3d] the plugin also wrangles the data - check for redundancy
+                $narrative['characters'][$tag['key']] = array(
+                    "id" => $tag['key'],
+                    "name" => $tag['key'],
+                    "affiliation" => $affiliation,
+                    "count" => $count,
+                    "enum" => $enum
+                );
+                $narrative['scenes'][$pub['archive_location']][] = $tag['key'];
+            }
+
+        }
+
+        // remove the keys
+        //$narrative['scenes'] = array_values($narrative['scenes']);
+        $narrative['characters'] = array_values($narrative['characters']);
+
         // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        return $this->getView()->render($response, 'publications/pub.narrative.twig',array(
+            'narrative'=> json_encode($narrative)
+        ));
     }
 
+    /**
+     * Handler for the PubReader version of a publication
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args    The attribute "name" contains the id of the publication
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Exception
+     *
+     * @todo[vanch3d] Check the Highwire meta tags for bugs and completion
+     */
     public function pubReader(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        $publications = $this->getPublicationManager()->isDefined($args["name"]);
+        $item = json_decode(json_encode($publications));
+
+        // build the Highwire Press tags
+        $meta = array();
+        $meta[] = array('citation_title',$item->title);
+        $meta[] = array('citation_publication_date',$item->issued->{'date-parts'}[0][0]);
+        foreach ($item->author as $author)
+        {
+            $meta[] = array('citation_author', $author->family . ", " . $author->given);
+        }
+        if ($item->type=='paper-conference' || $item->type=='article-journal')
+        {
+            if ($item->type=='paper-conference')
+                $meta[] = array('citation_conference_title',$item->{'container-title'});
+            else
+            {
+                $meta[] = array('citation_journal_title',$item->title);
+                $meta[] = array('citation_volume',$item->volume);
+                $meta[] = array('citation_issue',$item->issue);
+            }
+            if (isset($item->pagr))
+            {
+                $pages = explode("-", $item->page);
+                if ($pages[0]) $meta[] = array('citation_firstpage',$pages[0]);
+                if ($pages[1]) $meta[] = array('citation_lastpage',$pages[1]);
+            }
+            if (isset($item->DOI)) $meta[] = array('citation_doi',$item->DOI);
+        }
+        //$item = json_decode($fullitem['csljson'],true);
+
+        return $this->getView()->render($response,'publications/papers/'.$args['name'].'.twig',array(
+                'meta' => $meta,
+                'item'=> $item
+            ));
+
     }
 
     public function pubExportPDF(Request $request, Response $response, array $args)
@@ -60,10 +185,18 @@ class PublicationController extends Controller
         return $this->getView()->render($response, 'site.twig');
     }
 
+    /**
+     * Handler for the plain text version of the publication
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return static
+     */
     public function pubExportTXT(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        return $this->getView()->render($response,'publications/papers/'.$args['name'].'.twig',array(
+            'template_base' => 'publications/template.txt.twig'
+        ))->withHeader('Content-Type', 'text/plain');
     }
 
     public function pubShow(Request $request, Response $response, array $args)
@@ -72,16 +205,42 @@ class PublicationController extends Controller
         return $this->getView()->render($response, 'site.twig');
     }
 
-    public function pubDistrib(Request $request, Response $response, array $args)
+    public function pubDistribution(Request $request, Response $response, array $args)
     {
         // @todo[vanch3d] Build the proper response
         return $this->getView()->render($response, 'site.twig');
     }
 
+    /**
+     * Handler for the assets (figures) of a given publication
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args    The attribute "name" contains the id of the paper
+     *                          The attribute "fig" contains the full name (fig.ext) of the figure
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function pubAssets(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        try {
+            $publications = $this->getPublicationManager()->isDefined($args["name"]);
+            if (false === $publications)
+                throw new \Exception("not found");
+
+            $name = $args['name'];
+            $fig = $args['fig'];
+            $filename = realpath(DIR . "resources/docs/$name/$fig");
+            if (false === $filename)
+                throw new \Exception("not found");
+
+            $image = @file_get_contents($filename);
+            if (false === $image)
+                throw new \Exception("not found");
+
+            $response->write($image);
+            return $response->withHeader('Content-Type', FILEINFO_MIME_TYPE);
+        } catch (\Exception $e) {
+            $this->notFound($request,$response,$e);
+        }
     }
 
     public function redirectLegacy(Request $request, Response $response, array $args)
