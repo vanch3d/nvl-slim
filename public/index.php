@@ -23,6 +23,7 @@ require_once __DIR__ . './../sources/helpers.php';
 // Initiate the app with configuration
 $config = require_once __DIR__.'./../sources/config.php';
 $app = new \NVL\App($config);
+Tracy\Debugger::barDump($config);
 
 // set up containers
 require_once __DIR__.'./../sources/dependencies.php';
