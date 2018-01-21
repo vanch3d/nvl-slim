@@ -7,9 +7,13 @@
  */
 
 namespace NVL\Controllers;
+use PHPUnit\Runner\Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
+use Symfony\Component\VarDumper\VarDumper;
 use Tracy\Debugger;
 
 
@@ -131,7 +135,7 @@ class PublicationController extends Controller
     }
 
     /**
-     * Handler for the PubReader version of a publication
+     * Handler for the PubReader version of a given publication
      * @param Request  $request
      * @param Response $response
      * @param array    $args    The attribute "name" contains the id of the publication
@@ -183,6 +187,13 @@ class PublicationController extends Controller
 
     }
 
+    /**
+     * Handler for the PDF version of a given publication
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args    The attribute "name" contains the id of the publication
+     * @return Response
+     */
     public function pubExportPDF(Request $request, Response $response, array $args)
     {
         $filename = $args['name'];
@@ -200,11 +211,11 @@ class PublicationController extends Controller
     }
 
     /**
-     * Handler for the plain text version of the publication
+     * Handler for the plain text version of a given publication
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
-     * @return static
+     * @param array    $args    The attribute "name" contains the id of the publication
+     * @return Response
      */
     public function pubExportTXT(Request $request, Response $response, array $args)
     {
@@ -213,14 +224,6 @@ class PublicationController extends Controller
         ))->withHeader('Content-Type', 'text/plain');
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @param array    $args
-     * @return \Psr\Http\Message\ResponseInterface
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
     public function pubShow(Request $request, Response $response, array $args)
     {
         // @todo[vanch3d] Build the proper response
@@ -265,10 +268,52 @@ class PublicationController extends Controller
         }
     }
 
+    /**
+     * Handler for the old version of the papers (redirect to Slim-based route)
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return Response
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function redirectLegacy(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        $oldarchive=array(
+            '1998_Calques_3D,_a_microworld_for_spatial_geometry_learning_(ITS_WS)'=>'1998.ITS.Calques3D',
+            '1998_Influence_of_Didactic_and_Computational_Constraints_on_ILE_Design_(ITS)'=>'1998.ITS.Influence',
+            '1999_Developpement_logiciel_(PNF)'=>'1999.PNF.Calques3D',
+            '1999_Prise_en_compte_usager_enseignant_(THESIS)'=>'1999.Thesis.Calques3D',
+            '2001_Applying_DeFT_Framework_(AIED)'=>'2001.AIED.Applying',
+            '2001_MERs_in_Dynamic_Geometry_(AIEDWS)'=>'2001.ERAIED.DynGeom',
+            '2002_Representational_Decisions_(ITS)'=>'2002.ITS.Decisions',
+            '2002_Using_Multi_Representational_Design_Framework_(DIVWS)'=>'2002.DynVis.Framework',
+            '2004_Multiple_forms_of_dynamic_representation_(LI)'=>'2004.LI.Multiple',
+            '2006_Approximate_Modelling_(ITS)'=>'2006.ITS.Approximate',
+            '2006_Contingency_Analysis_LM_(MICAI)'=>'2006.MICAI.Contingency',
+            '2006_Towards_LM_Engine_(SWEL)'=>'2006.SWEL.Towards',
+            '2007_Opening_up_the_Interpretation_Process_(IJAIED)'=>'2007.IJAIED.Interpretation',
+            '2008_Kinaesthetic_and_Collaborative_Activities_(Shareit)'=>'2008.Shareit.Kinaesthetic',
+            '2008_L4All_Web_Service_Based_System_(LGH)'=>'2008.LGH.L4all',
+            '2008_Open_Learner_Modelling_(IUI)'=>'2008.IUI.Keystone',
+            '2008_Using_Similarity_Metrics_(ITS)'=>'2008.ITS.Similarity',
+            '2009_Connecting_C3D_Maple_(MCS)'=>'2010.MatCom.Connecting',
+            '2009_Intrinsic_Integration_(ITeG)'=>'2009.ITAG.Intrinsic',
+            '2009_Searching_people_like_me_(ECTEL)'=>'2009.ECTEL.Searching'
+        );
+
+
+
+        if (!isset($oldarchive[$args['file']]))
+            return $this->notFound($request,$response,new \Exception("Not found"));
+
+        $path = $this->getRouter()->pathFor('publications.named.pdf',
+                ['name' => $oldarchive[$args['file']]]);
+        $uri = $request->getUri()->withPath($path);
+
+        return $response->withHeader("Location",$path)
+            ->withRedirect($uri,301);
+
     }
 
 }
