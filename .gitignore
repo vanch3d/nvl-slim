@@ -1,9 +1,9 @@
-
 # Created by https://www.gitignore.io/api/node,bower,composer,phpstorm
 
 ### Slim specifics ###
 .cache/
 .logs/
+apidoc/
 /app/config.php
 
 ### Bower ###

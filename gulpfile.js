@@ -71,9 +71,21 @@ var iconCSSList = [
 var imgList = [
     config.resDir + '/images/**/**/*.*',
     config.resDir + '/_plugins/nvl-galleria/images/**/**/*.*',
+    config.bowerDir + '/PubReader/img/**/**/*.*'
+
 ];
 
 gulp.task('scripts', function () {
+    // pubreader scripts
+    gulp.src([
+        config.bowerDir + '/PubReader/js/jr.boots.js',
+        config.bowerDir + '/PubReader/dist/pubreader.min.js',
+        config.bowerDir + '/PubReader/dist/pubreader-lib.min.js',
+    ])
+        .pipe(debug({title: 'pubreader:'}))
+        .pipe(gulp.dest('./public/js'));
+
+    // individual plugins
     gulp.src(jsPluginList)
         .pipe(debug({title: 'plugin:'}))
         .pipe(gulp.dest('./public/js'))
@@ -81,6 +93,7 @@ gulp.task('scripts', function () {
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest('./public/js'));
 
+    // core application scripts
 	return gulp.src(jsList)
         .pipe(debug({title: 'script:'}))
 		.pipe(concat('app.js'))
@@ -91,6 +104,16 @@ gulp.task('scripts', function () {
 });
 
 gulp.task('styles', function () {
+    // pubreader styles
+    gulp.src([
+        config.bowerDir + '/font-awesome/css/font-awesome.min.css',
+        config.bowerDir + '/PubReader/dist/pubreader.min.css'
+    ])
+        .pipe(debug({title: 'pubreader:'}))
+        .pipe(concat('pubreader-nvl.min.css'))
+        .pipe(gulp.dest('./public/css'));
+
+    // core application styles
     return gulp.src(cssList)
         .pipe(debug({title: 'stylesheet:'}))
         .pipe(sass())
