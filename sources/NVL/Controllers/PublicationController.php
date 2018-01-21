@@ -9,6 +9,7 @@
 namespace NVL\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 use Tracy\Debugger;
 
 
@@ -142,6 +143,9 @@ class PublicationController extends Controller
     public function pubReader(Request $request, Response $response, array $args)
     {
         $publications = $this->getPublicationManager()->isDefined($args["name"]);
+        If (false === $publications)
+            return $this->notFound($request,$response,new \Exception("The publication does not exist"));
+
         $item = json_decode(json_encode($publications));
 
         // build the Highwire Press tags
@@ -181,8 +185,18 @@ class PublicationController extends Controller
 
     public function pubExportPDF(Request $request, Response $response, array $args)
     {
-        // @todo[vanch3d] Build the proper response
-        return $this->getView()->render($response, 'site.twig');
+        $filename = $args['name'];
+        $file = DIR . "resources/docs/$filename.pdf";
+        if (!file_exists($file))
+        {
+            throw new Exception("file not there", 500);
+
+        }
+
+        $response = $response
+            ->withHeader("Content-Type","application/pdf");
+
+        return $response->write(@file_get_contents($file));
     }
 
     /**
@@ -199,6 +213,14 @@ class PublicationController extends Controller
         ))->withHeader('Content-Type', 'text/plain');
     }
 
+    /**
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function pubShow(Request $request, Response $response, array $args)
     {
         // @todo[vanch3d] Build the proper response
