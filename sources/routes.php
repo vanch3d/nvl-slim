@@ -65,7 +65,7 @@ $app->group('/',function() {
         $this->get('/{name}.txt', PublicationController::class . ':pubExportTXT')->setname('publications.named.txt');
         $this->get('/{name}', PublicationController::class . ':pubReader')->setname('publications.named.pubReader');     // @todo[vanch3d] CHANGED NAME
         $this->get('/{name}/show', PublicationController::class . ':pubShow')->setname('publications.named.show');
-        $this->get('/{name}/cloud', PublicationController::class . ':pubDistrib')->setname('publications.named.cloud');    // @todo[vanch3d] CHANGED NAME
+        $this->get('/{name}/cloud', PublicationController::class . ':pubDistribution')->setname('publications.named.cloud');    // @todo[vanch3d] CHANGED NAME
         $this->get('/{name}/assets/{fig}', PublicationController::class . ':pubAssets')->setname('publications.named.assets');
     });
 
