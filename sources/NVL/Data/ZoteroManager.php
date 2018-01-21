@@ -11,7 +11,17 @@ namespace NVL\Data;
 use citeproc;
 use Interop\Container\ContainerInterface;
 use Monolog\Logger;
+use NlpTools\Analysis\FreqDist;
+use NlpTools\Documents\RawDocument;
+use NlpTools\Documents\TokensDocument;
+use NlpTools\Tokenizers\PennTreeBankTokenizer;
+use NVL\Support\NLP\DummyLemmatizer;
+use NVL\Support\NLP\SimpleNormaliser;
+use NVL\Support\NLP\SlimStopWords;
 use Requests;
+use Slim\Http\Response;
+use Slim\Views\Twig;
+use Smalot\PdfParser\Parser;
 use Tracy\Debugger;
 use Zotero_Feed;
 use Zotero_Library;
@@ -298,6 +308,127 @@ class ZoteroManager
 
         return $pubs;
     }
+
+    /**
+     * @param array $files
+     * @return object
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    private function getFrequencyDistribution(array $files)
+    {
+        $stopwords = array_merge(
+            //array("#","-","...",">","=","&","'s",",","(",")",":",";","'",".","%","a","”","''","“","[","]","|"),
+            array("pp.","i.e.","e.g.","j","j.","p","amp","quot","etc."),
+            file(DIR . "sources/NVL/Support/NLP/stopwords.data", FILE_IGNORE_NEW_LINES)
+        );
+
+        $data= (object)[
+            'text' => null,
+            'freq' => [],
+            'errors' => [],
+            'files' => []
+        ];
+
+        /** @var Twig $view */
+        $view = $this->container->get("view");
+
+        foreach ($files as $file) {
+
+            try {
+                // first, try to get the TWIG template rendered in TXT
+                $renderedTemplate = $view->fetch("publications/papers/$file.twig", array(
+                    'template_base' => 'publications/template.txt.twig'
+                ));
+                $data->text .= $renderedTemplate;
+                $data->files[] = "$file.twig";
+
+            } catch (\Exception $e) {
+
+                // If not, try to get the PDF
+                $filename = DIR . "resources/docs/$file.pdf";
+                if (file_exists($filename)) {
+
+                    $parser = new Parser();
+                    $pdf    = $parser->parseFile($filename);
+
+                    $txt = $pdf->getText();
+                    $json = json_encode($txt);
+                    if (false === $json)
+                    {
+                        //Debugger::barDump(json_last_error_msg());
+                        $data->errors[] = $e->getMessage();
+                        continue;
+                    }
+
+                    $data->text .= $txt;
+                    $data->files[] = "$file.pdf";
+
+                }
+                else {
+                    // to do, get the online publication (curl)
+                    $data->errors[] = $e->getMessage();
+                }
+            }
+        }
+        if (!isset($data->text))
+        {
+            return $data;
+        }
+
+        try {
+            // @todo[vanch3d] Define a classifier-based tokeniser to deal with n-grams such as "learner model"
+            $tok = new PennTreeBankTokenizer();
+            $norm = new SimpleNormaliser();
+            $stop = new SlimStopWords($stopwords);
+            $stemmer = new DummyLemmatizer();
+
+            // normalise the raw text
+            $d1 = new RawDocument(json_encode($data->text));
+            $d1->applyTransformation($norm);
+
+            // tokenise the text
+            $d = new TokensDocument($tok->tokenize($d1->getDocumentData()));
+            $d->applyTransformation($stop);
+            $d->applyTransformation($stemmer);
+
+            // compute the frequency distribution
+            $freqDist = new FreqDist($d->getDocumentData());
+
+            // reformat output as paired key/value attributes
+            foreach ($freqDist->getKeyValues() as $key => $val) {
+                $data->freq[] = array('key' => $key, 'value' => $val);
+            }
+
+        } catch (\Exception $e) {
+            $data->errors[] = $e->getMessage();
+        }
+        unset($data->text);
+        return $data;
+    }
+
+    public function getPublicationAnalytics($name)
+    {
+        return $this->getFrequencyDistribution([$name]);
+    }
+
+    public function getProjectAnalytics($name)
+    {
+        $pubs = $this->getZoteroRecord($name);
+        $files = [];
+        foreach ($pubs['publications'] as $pub) {
+
+            // Do not incorporate non-english publications
+            if (isset($pub['language']) && strcasecmp($pub['language'],'English')) {
+                continue;
+            }
+
+            $files[] = $pub['archive_location'];
+        }
+
+        return $this->getFrequencyDistribution($files);
+    }
+
 
 
 }
