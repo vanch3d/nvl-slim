@@ -15,6 +15,7 @@ use NVL\Data\ZoteroManager;
 use NVL\Support\Storage\Session;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Router;
 use Slim\Views\Twig;
 use Tracy\Debugger;
 
@@ -24,11 +25,6 @@ abstract class Controller
     private $pubManager;
 
     private $c;
-    private $view;
-    private $session;
-    private $cache;
-    private $logger;
-    private $settings;
 
     // constructor receives container instance
     public function __construct(ContainerInterface $container) {
@@ -37,27 +33,6 @@ abstract class Controller
         $this->pubManager = new ZoteroManager($container);
 
         $this->c = $container;
-        $this->view = $container->get("view");
-        $this->session = $container->get("session");
-        $this->cache = $container->get("cache");
-        $this->logger = $container->get("logger");
-        $this->settings = $container->get("settings");
-    }
-
-    /**
-     * @return Twig
-     */
-    public function getView()
-    {
-        return $this->view;
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
     }
 
     /**
@@ -77,36 +52,6 @@ abstract class Controller
     }
 
     /**
-     * @return Logger
-     */
-    public function getLogger() : Logger
-    {
-        return $this->logger;
-    }
-
-    public function notFound(Request $request, Response $response, \Exception $e)
-    {
-        $notFoundHandler = $this->c->get('notFoundHandler');
-        return $notFoundHandler($request->withAttribute('message', $e->getMessage()), $response);
-    }
-
-    /**
-     * @return mixed|settings
-     */
-    public function getSettings()
-    {
-        return $this->settings;
-    }
-
-    /**
-     * @return \Slim\HttpCache\CacheProvider
-     */
-    public function getCache()
-    {
-        return $this->cache;
-    }
-
-    /**
      * @return ContainerInterface
      */
     public function getContainer(): ContainerInterface
@@ -114,5 +59,71 @@ abstract class Controller
         return $this->c;
     }
 
+
+    /**
+     * @return Twig
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getView()
+    {
+        return $this->c->get("view");
+    }
+
+    /**
+     * @return Session
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getSession() : Session
+    {
+        return $this->c->get("session");
+    }
+
+    /**
+     * @return Logger
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getLogger() : Logger
+    {
+        return $this->c->get("logger");
+    }
+
+    /**
+     * @return array
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getSettings()
+    {
+        return $this->c->get("settings");
+    }
+
+    /**
+     * @return \Slim\HttpCache\CacheProvider
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getCache()
+    {
+        return $this->c->get("cache");
+    }
+
+    /**
+     * @return Router
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function getRouter()
+    {
+        return $this->c->get("routerXXXX");
+    }
+
+    public function notFound(Request $request, Response $response, \Exception $e)
+    {
+        $notFoundHandler = $this->c->get('notFoundHandler');
+        return $notFoundHandler($request->withAttribute('message', $e->getMessage()), $response);
+    }
 
 }
