@@ -1,0 +1,93 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}{{ project.name}}{% endblock %}
+{% block pagetile %}{{ project.name}}{% endblock %}
+
+{% block injectCSS %}
+{% endblock %}
+
+{% block pagedescription %}
+    <h2>{% block project_title %}{% endblock %}</h2>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Projects" href="{{ path_for('project.all') }}">Projects</a></li>
+        <li class="active">{{ project.name}}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="white-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="map"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block injectJS %}
+    <script src="//cdn.jsdelivr.net/d3js/3.4.3/d3.min.js"></script>
+    <script src="/plugins/d3js/d3.layout.cloud.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function()
+        {   var gg = ['aa','bb'];
+
+            var width = $(".map").width(),
+                    aspect = 500 / 950;
+
+
+            var fill = d3.scale.category20b();
+
+            var w = 950,
+                h = 500;
+
+            var words = [],
+                max,
+                scale = 1,
+                complete = 0,
+                keyword = "",
+                tags,
+                fontSize,
+                maxLength = 30,
+                fetcher,
+                statusText = d3.select("#status");
+
+            var layout = d3.layout.cloud()
+                    .timeInterval(10)
+                    .size([w, h])
+                    .fontSize(function(d) { return fontSize(+d.value); })
+                    .text(function(d) { return d.key; })
+                    .on("word", progress)
+                    .on("end", draw);
+
+            var svg = d3.select(".map").append("svg")
+                    .attr("preserveAspectRatio", "xMidYMid")
+                    .attr("viewBox", "0 0 950 500")
+                    .attr("width", width)
+                    .attr("height", width * aspect);
+
+            var background = svg.append("g"),
+                    vis = svg.append("g")
+                            .attr("transform", "translate(" + [w >> 1, h >> 1] + ")");
+
+            function progress(d) {
+                console.log(d);
+            }
+
+            function draw(data, bounds) {
+                console.log(data);
+            }
+
+            $(window).resize(function() {
+                var width = $(".map").width();
+                if (svg) svg.attr("width", width);
+                if (svg) svg.attr("height", width * aspect);
+            });
+        });
+    </script>
+{% endblock %}

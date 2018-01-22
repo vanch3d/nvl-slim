@@ -1,0 +1,503 @@
+{% extends template_base ?: "publications/papers/default.twig"  %}
+
+{% block links %}{% endblock %}
+
+{% block article %}
+    <section class="sec">
+    <h2 id="__sec1">Introduction</h2>
+    <p>The L4All “LifeLong Learning in London for All” project{{  note("[2]","N2") }} was funded under the JISC
+    Distributed e-Learning Programme{{  note("[3]","N3") }} and focussed on supporting the lifelong learner,
+    particularly those 16+ learners who traditionally have not participated in higher
+    education.
+    </p>
+    <p>We believe, on the basis of research into life course choices, that there are two
+    closely related issues that contribute to this non-participation: firstly, a lack of
+    information about education opportunities, and secondly a perception that such options
+    are ‘not for me’, leading to self-exclusion from such opportunities. The situation
+    appears to be particularly acute for those who identify themselves as being from ethnic
+    minorities or as having an impairment that may affect their participation.
+    </p>
+    <p>L4All aimed to provide lifelong learners in the London region with access to
+    information and resources facilitating their progression from Secondary Education,
+    through to Further Education (FE) and on into Higher Education (HE). To achieve its
+    aims, the L4All project brought together a diverse group of people from different
+    disciplines and a range of institutions all of whom are committed to providing learning
+    opportunities which enhance career development and widen participation across the
+    London region. The L4All project was informed by other recent projects undertaken by
+    researchers from Birkbeck and the Institute of Education at the London Knowledge Lab,
+    including the EU SeLeNe project {{  cite("[Keenoy et al. 2005]","B4") }} and the EU Kaleidoscope
+    project ({{  cite("Keenoy et al. 2004a","B2") }}, {{  cite("2004b","B3") }}) as well as research reported in
+    ({{  cite("Papanikolaou et al. 2003","B8") }}, {{  cite("Peterson and Levene, 2003","B9") }},
+        {{  cite("Magoulas et al. 2005","B5") }}).
+    </p>
+    <p>The L4All pilot system allows learners to record their past learning, and more
+    generally life, experiences as well as their planned future learning experiences along
+    their “timeline”, which is managed by the system. As an aid to constructing their
+    timeline, learners are able to search through learning opportunities registered with the
+    system by their providers. Learners are able to access the timelines of other learners (if
+    these have been made public by their owners) and also to access recommended learning
+    pathways through courses and modules, as provided by tutors. This gives learners a
+    repertoire of learning possibilities that they may not have otherwise considered,
+    allowing sharing of successful learning pathways and presenting successful learners as
+    role models to inspire confidence and a sense of opportunity amongst those previously
+    excluded.
+    </p>
+    <p>The follow-on project MyPlan{{  note("[4]","N4") }} “Personal Planning for Learning Throughout Life”
+    is aiming to increase the value of the L4All pilot by researching, developing, deploying
+    and evaluating user models for lifelong learners, and personalised functionalities for
+    creation and search of timelines and recommended learning pathways. The following
+    sections of the paper address the aims and objectives of the L4All and MyPlan projects
+    to date, methodology, development approach and technologies used, results, outcomes
+    and finally conclusions and directions of future work.</p>
+    </section>
+    <section class="sec">
+    <h2 id="__sec2">1. Aims and Objectives</h2>
+
+    <p>The L4All project had as its aim the development of a pilot system that provides an
+    environment for the lifelong learner to access quality-assured learning materials,
+    personal development plans, recommended learning pathways, personalised support for
+    planning of learning, and reflecting on learning.
+    </p>
+    <p>The system aims to offer: (i) interaction with a Web Portal that provides
+    information on work-based, FE and HE courses and modules available to learners in
+    the London region; (ii) personalised support in planning and reflecting on personal
+    development and lifelong learning activities; (iii) advice on learning and personal
+    development; (iv) support in designing and maintaining personal learning and
+    development plans; (v) support for learners to share information and collaborate with
+    peers and tutors. The following objectives were identified at the outset of the L4All
+    project in order to achieve these aims:
+    </p>
+    <ul>
+        <li>Definition of User Requirements, Usage Scenarios and Technical
+        Requirements;
+        <li>Metadata Generation and Provision;
+        <li>Development of the Pilot;
+        <li>Employment of a User-centred Evaluation Process that uses usability
+        inspection methods, including user testing and heuristic evaluation, to improve
+        the system so that the needs of learners and providers can be met.
+
+    </ul>
+    <p>The follow-on MyPlan system includes the following additional objectives:</p>
+    <ul>
+        <li>Development of User Models and a User Modelling Ontology for planning of
+        lifelong learning;
+        <li>Specification, development, deployment and evaluation of personalised
+        functionalities for planning of lifelong learning.
+    </ul>
+    </section>
+    <section class="sec">
+    <h2 id="__sec3">2. Methodology</h2>
+
+    <p>The L4All project was structured around a number of work packages. First, the User
+    and Technical Requirements were produced, in early 2005. For the former, we first
+    considered previous models of learner choices in career and education. These previous
+    models were rational and economic choice based and therefore a poor match with the
+    target learner community.
+    </p>
+    <p>We therefore proposed an alternative model based upon learning trails ({{  cite("Bush, 1945","B1") }};
+        {{  cite("Peterson and Levene, 2003","B9") }}). In our context, a “trail” is a sequence of learning
+    opportunities, experienced over time by a learner. We believed at the outset of the
+    L4All project that a timeline-based representation of learners’ work, learning and other
+    life experiences could provide a holistic approach to learners’ life experiences and
+    continuity between their learning episodes and work experiences.
+    </p>
+    <p>We conducted a series of user studies which aimed to define the users’ needs and
+    requirements of the L4All system, including the main functionality required, how this
+    functionality should be provided to the user, information to be solicited from users, the
+    information to be returned by the system, and the interaction between different
+    components of the system.
+    </p>
+    <p>Usage scenarios for the L4All system were formulated by consultations with
+    relevant stakeholders, including widening participation officers of the institutions and
+    colleges of the consortium, groups of learners, tutors, student liaison committee
+    members, and content providers. Among the main aims of this consultation process
+    was to identify learners’ individual educational goals and objectives, articulate
+    expectations for the learner's performance in general education activities, and
+    accommodate different user needs and individual differences. The outputs of these
+    sessions provided the basis of the user requirements and specification of the system.
+    </p>
+    <p>The L4All project was funded by the JISC Distributed e-Learning Programme{{  note("[5]","N5") }},
+    which mandated that (i) systems developed under the programme should use, as much
+    as possible, existing e-tools and services provided by other JISC-funded projects, and
+    (ii) systems should be compliant with the JISC E-Learning Framework and service oriented
+    architecture{{  note("[6]","N6") }}.
+    </p>
+    <p>In our case, the detailed Technical Requirements were elicited by: (i) undertaking a
+    study of candidate portal technologies and a critical evaluation of them that identified
+    uPortal {{  note("[7]","N7") }} as the most appropriate choice; (ii) undertaking a
+    study of existing e-tools and
+    services provided by other JISC-funded projects that could provide relevant
+    functionality to L4All; (iii) specifying a system architecture that used a selection of
+    these tools as well as uPortal, Apache Tomcat and Apache AXIS SOAP; (iv)
+    undertaking a study of e-learning metadata standards relevant to the L4All application
+    domain that identified IMS Metadata {{  note("[8]","N8") }} , IMS-LIP {{  note("[9]","N9") }}
+        and eduPerson {{  note("[10]","N10") }} as the most
+    appropriate standards to be used as the basis for describing the L4All learning resources
+    (IMS Metadata) and the L4All users (IMS-LIP and eduPerson); and (v) identifying
+    RDF and the Jena framework{{  note("[11]","N11") }} as providing a flexible, portable solution
+    for storing the L4All metadata.
+    </p>
+    <p>The Development of the Pilot, and the Metadata Provision and Generation phases
+    followed the specification of the User and Technical requirements. A number of
+    extensions to the standard metadata schemas were first designed in order to fully
+    support the L4All functionality, namely metadata describing learners’ timelines and
+    additional metadata for the login details, contact details and learning preferences of
+    users.
+    </p>
+    <p>The pilot system was developed in two phases, resulting in two versions during the
+    lifetime of the L4All project. This was in order to allow an early first phase of
+    evaluation that would allow the user requirements and usage scenarios to be validated
+    by a range of user stakeholders. This would demonstrate the benefits of a large subset
+    of the envisaged functionality of the pilot, detect non-compliant situations and identify
+    possibilities for improvement. The outcomes of this first evaluation phase served as
+    input into the development of the second, functionally complete, version of the pilot.
+    The outcomes of the second evaluation phase were then used to make further minor
+    adjustments to the system and also led into the follow-on MyPlan project.
+    </p>
+    <p>The first version was produced in July 2005 and incorporated the user
+    requirements identified earlier relating to search over courses (provided by the DELTA
+    service{{  note("[12]","N12") }}), creation and management of learners’ timelines, searching on timelines, and
+    user profile creation and management. Further improvements were made to this first
+    version in parallel with the first evaluation phase during July – September 2005,
+    relating mainly to timeline management. The second version of the pilot incorporated
+    also a visual front-end and an automatic course sequencing service, using the ISIS
+    sequencing engine{{  note("[13]","N13") }}, and was completed in February 2006.
+    </p>
+    <p>The Metadata Provision and Generation work package took as input the L4All
+    metadata specification produced earlier. Staff with responsibility for managing the
+    information required for the L4All metadata fields were identified within the
+    participating institutions, and they provided the necessary metadata for loading into the
+    pilot’s metadata repository via a simple loading tool.
+    </p>
+    <p>As mentioned earlier, the Evaluation work package was organised in two phases.
+    The first phase involved consultation with student representatives, tutors, widening
+    participation officers and content providers, and conventional Human-Computer
+    Interaction methods were adopted.
+    </p>
+    <p>The second phase adopted heuristic evaluation methods focusing upon usability
+    issues, as defined by {{  cite("Nielsen (2006)","B6") }} and {{  cite("Nielsen and Loranger (2006)","B7") }}. This second
+    evaluation round took the form of remote usage of the system in conjunction with an
+    online survey, face-to-face interviews with learners, and discussions held using the
+    Blackboard virtual learning environment.
+    </p>
+    <p>The evaluation centred upon three main user groups: FE learners from Community
+    College Hackney (6 users), professional learners on the Certificate/Diploma in IT
+    Applications at Birkbeck (16 users), and Teacher Education learners from the Institute
+    of Education (12 users). The evaluation activities were designed to inform both design
+    parameters (are these the right tools to develop?) and usability issues and concerns,
+    including accessibility (can learners use these tools?). The feedback from this second
+    phase was used as the basis for undertaking further minor improvements to the pilot,
+    and also led into the follow-on MyPlan project.
+    </p>
+    <p>On the basis of the original user requirements from the L4All project, from its
+    evaluation, and from other lifelong learning applications, we have now conducted
+    initial work within the MyPlan project to produce a first version of user models,
+    covering user preferences and characteristics in planning their lifelong learning, and a
+    first version of a user modelling ontology.
+    </p>
+    <p>We have also produced a specification of the personalised functionalities for
+    planning of lifelong learning, which are currently under development within a new
+    “personalisation engine”. Τhe personalisation engine is providing personalised search
+    of timelines from “people like me”, personalised recommendation of which course(s)
+    to study next; and customisation of the delivery and presentation of content. Its
+    development is currently reaching completion and it is under internal testing before
+    being transferred to the server that will be used for the online evaluation and user
+    testing towards the end of 2007/early 2008.
+    </p>
+    <p>The personalisation engine incorporates a set of similarity measures for comparing
+    learners’ timelines, based on converting timelines into strings of comparable tokens
+    and using string metrics for ranking them. For the recommendation functionality, we
+    are planning that tutors’ recommended learning pathways entered into the system will
+    be encoded similarly and will be compared with learners’ timelines to propose matches.
+    Several customisation features have also been developed to date (colour/shapes used in
+    the timeline visualisation, bookmarks for interesting timelines, etc.).
+    </p>
+    <p>The MyPlan project has also redesigned the original Flash-based user interface of
+    the L4All pilot system using DHTML and javascript-powered widgets to deploy users’
+    timelines. This decision is allowing us to improve the possibilities of learners'
+    interaction with their timeline (such as maintenance of their own timeline and also
+    comparison between their timeline and someone else's) and therefore to better support
+    personalisation of timeline-based functionalities.</p>
+    </section>
+    <section class="sec">
+    <h2 id="__sec4">3. Development approach and technologies</h2>
+
+    <p>The L4All system consists of a set of components and services. The architecture
+    comprises two parts: (a) the backend and (b) the user interface. In the current version of
+    the system, the user interface is a Web portal deploying several DHTML pages that
+    interact with the backend and present to the user the L4All functionality relating to the
+    creation of personal timelines, searching the available courses metadata, searching for
+    other users and other timelines, and obtaining recommendations regarding future
+    learning. The backend connects with the underlying RDF repositories for storing,
+    retrieving and modifying metadata describing users, courses and timelines. It also
+    integrates three external services: DELTA, ISIS (see Section 2) and a service for
+    search and retrieving information about courses in the LearnDirect database{{  note("[14]","N14") }}.
+    </p>
+    <p>Figure 1 illustrates the overall architecture and its major components. The Web
+    Services component consists of a set of web services which we have developed in order
+    to wrap the backend functionality into a set of services that can be called by the user
+    interface. These web services are implemented as Java servlets over Apache Tomcat.
+    They accept GET and POST requests from the user interface components and dispatch
+    them to the appropriate Java Bean for processing. The results of processing are passed
+    from the Java Beans back to the called service where they are formatted into XML and
+    passed back to the calling user interface component. The Java Beans are a set of Java
+    classes providing the core backend functionality. This is where the three external
+    services are integrated with the system and where communication with the metadata
+    repositories is handled, including all actions relating to storing, retrieving and
+    modifying the course and user metadata.</p>
+
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F1',
+    'ref': 'Figure 1',
+    'leg': "L4All system components." }
+    %}
+    </section>
+    <section class="sec">
+    <h2 id="__sec5">4. Results to Date</h2>
+
+    <p>The L4All pilot has achieved almost all of the user requirements identified in the early
+    part of the L4All project, successfully integrating a set of external services, tools and
+    resources exhibiting high heterogeneity. The user interface provides screens for: user
+    registration and login; a home page providing links to the main L4All functionality; a
+    screen for entering personal details relating to past and present occupation, skills,
+    qualifications, interests, future learning goals and preferred study type (full-time or
+    part-time); screens for creating personal timelines incorporating past and future
+    episodes of learning and work; and screens for searching over courses, timelines and
+    other users based on a variety of search criteria.</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F2',
+    'ref': 'Figure 2',
+    'leg': "The main interface of the L4All web portal." }
+    %}
+
+
+    <p>Figure 2 shows the main screen for the creation and visualisation of timelines, the
+    central access point of the portal. In the top right-hand box appears a brief description
+    of the user’s details. On the left-hand side of the screen is where the various
+    functionalities of L4All are available: modifying the user’s profile and preferences,
+    searching for courses, people or timelines, exploring learning pathway
+    recommendations, etc. In the middle of the screen, the user timeline is accessible
+    through a dynamic multi-stripe. On top of it, a popup menu ("Add Episodes") provides
+    a rich set of predefined episodes (e.g. courses, university, work, travel, marriage) that
+    can be chosen to be placed within the user’s timeline. The user can choose from this set
+    of episodes, create a new custom episode, or include courses resulting from his/her
+    searches.
+    </p>
+    <p>The visualisation of the timeline is currently provided by a DHTML widget (the
+    SIMILE timeline{{  note("[15]","N15") }}) which displays time-based events in a scalable and scrollable
+    fashion. Each event in the timeline is materialised by a rectangular shape spreading
+    from the start date to the end date of the event. Clicking on an event displays popup
+    balloon dialog which presents a short summary of the event (see Figure 2). By clicking
+    on the edit button in that balloon, the user accesses a new dialog box (see Figure 4) for
+    the user to modify the details of the episode. Saving the episode in the timeline initiates
+    (transparently to the user) a synchronisation of the visual front-end with the databases
+    at the backend.</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F3',
+    'ref': 'Figure 3',
+    'leg': "Synchronised visualisation of two timelines, the current user's one (top and middle) and that of a
+        second user (bottom).",
+    'ext': "dsfgfsddsfdfswdfsdfsdfsf sddsf sdf ds sdff ds fddsf;kf dsmjsdlkfj sddlf jf dkljfdsk "}
+    %}
+
+
+    <p>The middle stripe (labelled A in Figure 3) is the user's timeline, presenting
+    episodes that have been added over the user’s repeated usage of L4All. The top stripe
+    (labelled B) is a reduced version of the main stripe, with a different time scale (usually
+    a decade), allowing an overview of the whole timeline and a quicker scroll-across time.
+    Both timelines can be dragged forward and backward in time and remain synchronised
+    (the time frame visible in the user main timeline is indicated in the summary by a
+    lighter zone).</p>
+    <p>The bottom stripe (labelled C) is an optional timeline that is activated on demand
+    by the user, usually by searching for other people in the L4All system and displaying
+    their timelines. This timeline only displays episodes that have been made public by the
+    owner. Both timelines (the user's and the friend's) can be synchronised by date
+    (scrolling the user's timeline will modify the friend's accordingly) or allowed to be
+    independent, hence allowing the user to explore the friend's timeline and extract
+    information, inspiration or examples of learning activities to plan.
+    </p>
+    <p>The user can search for courses by clicking on the SEARCH COURSES link in
+    Figure 2. A search dialog pops up that allows the user to specify the search parameters,
+    ranging from a general keyword, to the distance the user is willing to travel in order to
+    attend a course, the postcode of the course, the level of the course, the institution
+    providing it, the subject covered and the type of the course (full-time or part-time).
+    The search mode can be chosen so as to set matching to all of the specified criteria
+    (AND) or any of the specified criteria (OR). The search results appear in a pop-up
+    window, from where they can be explored in detail and added to the timeline.</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F4',
+    'ref': 'Figure 4',
+    'leg': "Editing an episode of the timeline." }
+    %}
+
+    <p>Clicking on SEARCH TIMELINES in Figure 2 opens a new window for searching
+    for timelines by providing a keyword or the title of an episode within a timeline. The
+    results are presented in a list, from which a timeline can be selected to be viewed in
+    more detail. Clicking on SEARCH PEOPLE in Figure 2 again opens a window for
+    search for users via a set of search criteria including skills, qualifications, interests, age
+    and occupation.
+    </p>
+    <p>More interestingly, clicking on SEARCH SIMILAR TIMELINES allows users to
+    perform a personalised search in the L4All system by looking for ‘people like me’. The
+    definition of ‘people like me’ being a highly subjective concept, users are presented
+    with an interface for specifying their own criteria (see Figure 6).</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F5',
+    'ref': 'Figure 5',
+    'leg': "Searching for courses in L4All." }
+    %}
+
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F6',
+    'ref': 'Figure 6',
+    'leg': "Searching for similar timelines." }
+    %}
+
+    <p>By specifying matching criteria on their user profile (e.g. age within a certain
+    range, gender, current occupation, etc.) and matching patterns on their timelines (e.g.
+    considering all episodes, considering only educational or professional episodes,
+    considering only the last 5 professional episodes, etc.), users can define a personalised
+    search space that is matched against all the timelines and users stored in the system.
+    The results, ranked according to their relevance by using string-based similarity
+    measure techniques, are presented to the user, who has the possibility to display
+    appropriate timelines in the main visualisation screen and explore them.
+    </p>
+    <p>Finally, Figure 7 illustrates the screen for entering or modifying the user’s profile
+    and learning preferences while Figure 8 illustrates the screen for customising the
+    display of a user’s timeline.</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F7',
+    'ref': 'Figure 7',
+    'leg': "Editing the user’s profile." }
+    %}
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'F8',
+    'ref': 'Figure 8',
+    'leg': "Customisation of the timeline visualisation." }
+    %}
+    </section>
+    <section class="sec">
+    <h2 id="__sec6">5. Outcomes and Conclusions</h2>
+
+    <p>The second evaluation phase (of version 2 of the L4All system) centred upon usage of
+    the functionality provided by the system. Users were invited to complete a range of
+    tasks and after completing these tasks to reflect upon these activities in an online
+    survey structured around (i) aesthetics, navigation and general user experience, (ii)
+    timeline creation, (iii) search and expectations, and (iv) quality of user support. The
+    main finding of the second evaluation phase has been the overall endorsement of the
+    L4All pilot. There was agreement across all user groups of the potential of the
+    approach to support otherwise excluded learners. Particularly positive was the response
+    of FE learners suggesting that this might be a group that will benefit particularly from
+    L4All. The evaluation study was also useful in identifying areas of further technical
+    refinement and development that are required in the future e.g. differentiating the needs
+    of different learner groups and developing strategies for differentiated interaction with
+    the system; extension with e-portfolio and online journal capabilities; and extension
+    with a ‘live chat’ facility. Another interesting observation was the way in which
+    visualisation of learning and work choices prompted users to rethink their own identity
+    as a learner and potential employee.
+    </p>
+    <p>A key conclusion of the project centres upon the methodology adopted, including
+    the use of the trails concept and the adoption of a user-centred approach to
+    development. The provision of a system based specifically upon usage scenarios has
+    proved popular with its intended users. The methodology enables a significant input
+    into the development of the system from major stakeholders throughout the lifetime of
+    the project (learners, instructors, institutional representatives and others).
+    </p>
+    <p>To our knowledge, the holistic approach to life and learning experiences provided
+    by L4All is novel and unique. The services-oriented approach has allowed several
+    existing services to be incorporated into the system’s functionality to date, with the
+    possibility of further extensions in the future, for example with e-portfolio and social
+    networking services, and this is part of ongoing research within the follow-on MyPlan
+    project. This is the chief advantage of a services-oriented as opposed to a monolithic
+    development approach, namely the possibility of reuse, aggregation and extension of
+    existing services within the broader sphere of lifelong-learning support.
+    </p>
+    <p>The potential educational significance of the system is a long-term one, involving
+    the identification and sharing of successful educational experiences and the impact of
+    this on learner choice. Such impact can only be studied longitudinally, and our
+    evaluative studies will continue in the coming years in the context of the HEFCEfunded
+    Linking London Lifelong Learning Network (L4N) led by Birkbeck, in order to
+    provide more longitudinal findings as to the impact of the system upon career choices
+    and education decisions. Our objectives for the next phases of the ongoing MyPlan
+    project include:</p>
+    <ul>
+        <li>validating the design of the first version of the personalisation engine through
+        its evaluation with small groups of lifelong learners selected via partner
+        institutions in the L4N;
+        <li>investigating the possibilities of integrating a game-based tutorial for lifelong
+        learners with the system.
+    </ul>
+    <p>The L4N has created new drivers for change to accommodate the needs of learners
+    moving between various groups and institutions. A MyPlan project workshop took
+    place in May 2007 and brought together several key stakeholders in lifelong learning.
+    The workshop identified, in confirmation of previous outputs of the L4All user
+    evaluation, the need for supporting user engagement and participation in lifelong
+    learning, and stressed the importance of facilitating collaboration among lifelong
+    learners for community building. So lifelong learners require support not only at the
+    level of the individual user but also at the level of a group or team, and of the
+    community. The results of deploying the system within the L4N and of its evaluation
+    with different groups of users will in the longer term be able to inform the formulation
+    of policies for engaging the interest of lifelong learners.</p>
+    </section>
+    <section class="sec">
+    <h2 id="__sec7">References</h2>
+    <div id="reference-list" class="ref-list-sec sec">
+        <ul class="first-line-outdent">
+            <li id="B1"> Bush, V. (1945). As we may think. Atlantic Monthly, 176, 101-108.
+            <li id="B2"> Keenoy, K., Levene, M., de Freitas, S., Montandon, L., Pernin, J-P., Eyssautier, C., Jones, A., Brasher,
+            A. and Waycott, J. (2004a). Personalised trails and learner profiling in an e-learning environment. EU
+            Kaleidoscope Trails Deliverable 22.4.1. See: http://www-kaleidoscope.imag.fr/pub/trails/ .
+            <li id="B3"> Keenoy, K., Levene, M., de Freitas, S., Montandon, L., Emans, B., Schoonenboom, J., Pernin, J-P.,
+            Eyssautier, C., Jones, A., Brasher, A., Waycott, J., Turcsanyi-Szabo, M. and Bodnar, E. (2004b).
+            Collaborative trails and group profiling within an e-learning environment. EU Kaleidoscope Trails
+            Deliverable 22.4.2. See: http://www-kaleidoscope.imag.fr/pub/trails/
+            <li id="B4"> Keenoy , K., Poulovassilis A., Christophides V., Rigaux P., Papamarkos G., Magkanaraki A., Stratakis
+            M., Spyratos N., Wood P., (2005). Adaptive Personalisation in Self e-Learning Networks, 1st
+            International Workshop on Distributed e-Learning Environments (held in conjunction with the 1st
+            International ELeGI Conference on Advanced Technology for Enhanced Learning), Naples, March 14,
+            2005.
+            <li id="B5"> Magoulas G.D. and Dimakopoulos D.N. (2005) Designing Personalised Information Access to
+            Structured Information Spaces, Proceedings of the Workshop on New Technologies for Personalized
+            Information Access, 10th International conference on User Modeling, July 24-29, 2005, Edinburgh,
+            Scotland, UK, 64-73.
+            <li id="B6"> Nielsen, J. (2006) .Ten usability points. Last accessed10th March 2006 online at: http://www.useit.com/.
+            <li id="B7"> Nielsen, J and Loranger , H. (2006) Prioritizing Web Usability. New Riders Press, Berkeley.
+            <li id="B8"> Papanikolaou, K., Grigoriadou, M., Kornilakis, H., and Magoulas, G.D., (2003). Personalising the
+            Interaction in a Web-based Educational Hypermedia System: the case of INSPIRE, User-Modeling and
+            User-Adapted Interaction, vol. 13, 213-267.
+            <li id="B9"> Peterson, D. and Levene, M. (2003). Trail records and navigational learning. London Review of
+            Education, 1, 207-216.
+            </ul>
+    </div>
+    </section>
+    <section class="sec">
+    <h2 id="__sec8">Notes</h2>
+    <div id="note-list" class="ref-list-sec sec">
+        <ol>
+            <li id="N1">Corresponding Autor: London Knowledge Lab, Birkbeck, University of London, 23-29 Emerald
+            Street, London WC1N 3QS, United Kingdom; E-mail: ap@dcs.bbk.ac.uk
+            <li id="N2">http://www.lkl.ac.uk/research/l4all/
+            <li id="N3">http://www.jisc.ac.uk/programme_edistributed.html
+            <li id="N4">http://www.lkl ac uk/research/myplan/
+            <li id="N5">http://www.jisc.ac.uk/programme_edistributed.html
+            <li id="N6">http://www.jisc.ac.uk/index.cfm?name=elearning_framework
+            <li id="N7">www.uportal.org
+            <li id="N8">http://www.imsglobal.org/metadata/
+            <li id="N9">http://www.imsglobal.org/profiles/
+            <li id="N10">http://www.educause.edu/eduperson/
+            <li id="N11">http://jena.sourceforge.org
+            <li id="N12">http://www.essex.ac.uk/chimera/delta/index.html
+            <li id="N13">http://www.hull.ac.uk/esig/isis.html
+            <li id="N14">http://www.learndirect.co.uk/
+            <li id="N15">http://simile.mit.edu/timeline/
+        </ol></div>    </section>
+
+{% endblock %}

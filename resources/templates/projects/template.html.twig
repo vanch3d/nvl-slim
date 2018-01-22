@@ -1,0 +1,401 @@
+{% extends 'site.twig' %} 
+
+
+{% import _self as forms %}
+{% macro linkedin(name,last,width) %}
+    <script type="IN/MemberProfile" data-width="{{ width|default(250) }}" data-id="{{ name }}" data-related="false" data-format="inline"></script>
+{% endmacro %}
+{% macro github(name) %}
+    <div class="col-sm-6" data-repo="{{ name }}"><i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+        <span class="sr-only">Loading...</span></div>
+{% endmacro %}
+
+{% block urltile %}{{ project.name}}{% endblock %}
+{% block pagetile %}{{ project.name}}{% endblock %} 
+
+{% block injectCSS %}
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/zenorocha/jquery-github@0.4/assets/base.css">
+    <style>
+        .galleria-thumbnails-container {
+            background: none repeat scroll 0 0 #0b0b0b;
+            opacity: 0.85;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .galleria-stage
+        {
+            background: none repeat scroll 0 0 #FFF;
+            border: 1px solid #e4e4e4;
+        }
+        .github-box .github-box-download {
+            height: auto;
+        }
+
+        .cite .csl-entry {
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .csl-bib-body a, .cite .csl-entry
+        {
+            color: #b70606;
+        }
+        #publist > li
+        {
+            margin-bottom: 12px;
+            margin-left: -16px;
+        }
+        .popover
+        {
+            background: none repeat scroll 0 0 #fffef1;
+        }
+
+        {# https://codepen.io/littlesnippets/pen/yaAYKa #}
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans:600;);
+        .snip1573 {
+            background-color: #000;
+            display: inline-block;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            margin: 10px 7px;
+            max-width: 315px;
+            min-width: 230px;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            width: 100%;
+        }
+
+        .snip1573 * {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-transition: all 0.35s ease;
+            transition: all 0.35s ease;
+        }
+
+        .snip1573:before,
+        .snip1573:after {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            -webkit-transition: all 0.35s ease;
+            transition: all 0.35s ease;
+            background-color: #ff0000;
+            border-left: 3px solid #fff;
+            border-right: 3px solid #fff;
+            content: '';
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        .snip1573:before {
+            -webkit-transform: skew(45deg) translateX(-155%);
+            transform: skew(45deg) translateX(-155%);
+        }
+
+        .snip1573:after {
+            -webkit-transform: skew(45deg) translateX(155%);
+            transform: skew(45deg) translateX(155%);
+        }
+
+        .snip1573 img {
+            backface-visibility: hidden;
+            max-width: 100%;
+            vertical-align: top;
+        }
+
+        .snip1573 figcaption {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            z-index: 2;
+            -webkit-transform: translate(-50%, -50%) scale(0.5);
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            -webkit-box-shadow: 0 0 10px #000000;
+            box-shadow: 0 0 10px #000000;
+        }
+
+        .snip1573 p {
+            background-color: #000000;
+            border: 2px solid #fff;
+            color: #fff;
+            font-size: 1em;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin: 0;
+            padding: 5px 10px;
+            text-transform: uppercase;
+        }
+
+        .snip1573 a {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 3;
+        }
+
+        .snip1573:hover > img,
+        .snip1573.hover > img {
+            opacity: 0.5;
+        }
+
+        .snip1573:hover:before,
+        .snip1573.hover:before {
+            -webkit-transform: skew(45deg) translateX(-55%);
+            transform: skew(45deg) translateX(-55%);
+        }
+
+        .snip1573:hover:after,
+        .snip1573.hover:after {
+            -webkit-transform: skew(45deg) translateX(55%);
+            transform: skew(45deg) translateX(55%);
+        }
+
+        .snip1573:hover figcaption,
+        .snip1573.hover figcaption {
+            -webkit-transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+
+
+    </style>
+{% endblock %}
+
+{% block pagedescription %}
+    <h2>{% block project_title %}{% endblock %}</h2>
+    <div class="subtitle">
+        <span id="prj-inst">{% block project_inst %}{% endblock %}</span> -
+        <span id="prj-loc">{% block project_loc %}{% endblock %}</span> (
+        <time id="prj-start" datetime="{{ block('project_start') }}"><span>{% block project_start %}{% endblock %}</span></time> -
+        <time id="prj-end" datetime="{{ block('project_end') }}"><span>{% block project_end %}{% endblock %}</span></time>)
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Projects" href="{{ path_for('project.all') }}">Projects</a></li>
+        <li class="active">{{ project.name}}</li>
+    </ol>
+{% endblock %}   
+
+{% block content %}
+    <section class="white-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-7 col-md-8">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="text-widget">
+                                <div class="text-widget-title">
+                                    <h3>Project Overview</h3>
+                                </div>
+
+                                {% block project_overview %}
+                                {% endblock %}
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="text-widget">
+                                <div class="text-widget-title">
+                                    <h3>Selected Publications</h3>
+                                </div>
+                                <ul class="pub-tag" id="publist">
+                                    {% for pub in publications %}
+                                        <li id="{{ pub.id }}" {{ pub.PubReader ? "data-reader="~pub.PubReader }} data-type="{{ pub.type }}">{{ pub.output.ref | raw }}
+                                            {% if (pub.PDF) %}
+                                                [<a href="{{ pub.PDF }}" title="Download the PDF version" download>PDF</a>]
+                                            {% endif %}
+                                            {% if (pub.DOI) %}
+                                                [{{ doi(pub.DOI)|raw }}]
+                                            {% endif %}
+                                            <abbr class="unapi-id" title="{{ pub.id }}"></abbr>
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="text-widget">
+                                <div class="text-widget-title">
+                                    <h3>Links</h3>
+                                </div>
+                                <div class="widget-containt categories">
+                                    {% for git in gitHub %}
+                                        {{  forms.github(git) }}
+                                    {% endfor %}
+                                    {% block project_links %}
+                                    {% endblock %}
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-5 col-md-4">
+
+                    <div class="text-widget">
+                        <div class="galleria" id="galleria" style="min-height: 350px; ">
+
+                        </div>
+                    </div>
+
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>Slides</h3>
+                        </div>
+                        <div class="widget-containt">
+                            <ul class="project-details">
+                                <div class="loading"><i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+                                    <span class="sr-only">Loading...</span> </div>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="text-widget">
+                        <div class="text-widget-title">
+                            <h3>People</h3>
+                        </div>
+                        <div>{% for lnk in linkedIn %}
+                                {{  forms.linkedin(lnk) }}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+    </section>
+
+
+
+
+{% endblock %} 
+
+{% block injectJS %}
+<script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+<script src="//cdn.jsdelivr.net/gh/zenorocha/jquery-github@0.4/dist/jquery.github.min.js"></script>
+<script type="text/javascript">
+
+    Github.prototype.handleErrorRequest = function ( result_data) {
+        this.$container.remove();
+    };
+
+    Github.prototype.applyTemplate = function ( repo ) {
+        this.$container.html("");
+        var githubRepo = new GithubRepo( repo ),
+            $widget = githubRepo.toHTML();
+        $widget.appendTo( this.$container );
+        this.displayIcons();
+    };
+
+
+    $(document).ready(function()
+    {
+        // Configure Galleria Plugin
+        Galleria.configure({
+            debug: true,
+            showInfo: true,
+            transition: "pulse",
+            transitionSpeed: 500,
+            imageCrop: false,
+            thumbCrop: false,
+            carousel: false,
+            autoplay: 4000
+        });
+        Galleria.loadTheme('/js/nvl-galleria.min.js');
+
+        var glOnFail = function(){
+            console.log("no picture");
+            Holder.addImage("holder.js/100px250?theme=gray&text=No picture", "#galleria").run();
+        };
+
+        // Load Project Images
+        $.getJSON("{{ path_for('api.projects.image',{name: project.id})}}").done(function(json){
+            var _dataSource = [];
+            $.each( json.data, function( index, slide ){
+                _dataSource.push({
+                    image:slide.url,
+                    thumb:slide.thumb,
+                    title: slide.title,
+                    description: slide.comment
+                });
+            });
+
+            if (!_dataSource.length) {
+                glOnFail();
+                return;
+            }
+
+            Galleria.run('#galleria', {
+                dataSource: _dataSource
+            });
+
+        }).fail(glOnFail);
+
+        // Load Project Slides
+        $.getJSON("{{ path_for('api.projects.slide',{name: project.id})}}")
+            .done(function(src){
+                console.log(src);
+                var slideshows = src.data || {};
+                $(".project-details").empty();
+                $.each( slideshows, function( index, slide ){
+                    console.log(slide);
+
+                    var $figure = $("<figure/>").addClass("snip1573");
+                    var $img = $('<img/>').attr('src',slide.ThumbnailXLargeURL);
+                    var $figcaption = $('<figcaption/>').append($('<p/>').text('Launch Slide'));
+                    var $link = $('<a/>').addClass("embed").attr('href','#').data("embed",slide.SlideshowEmbedUrl);
+
+
+                    $img.appendTo($figure);
+                    $figcaption.appendTo($figure);
+                    $link.appendTo($figure);
+
+                    $figure.appendTo($(".project-details"));
+
+                });
+
+                $("a.embed").click(function()
+                {
+                    console.log("Slideshare Loading ...");
+                    $url = $(this).data("embed");
+                    //$(this).unbind( "click" );
+                    $(this).parent().toggleClass("snip1573").oembed($url,{
+                        afterEmbed: function(){
+                            //$("#slides").fitVids({ customSelector: "iframe[src^='//www.slideshare.net'], iframe[src^='http://myviiids.com']"});
+                        },
+                        embedMethod: 'fill'
+                    });
+                });
+            }).fail(function(){
+                $(".project-details").empty();
+            });
+
+        // Configure GitHub Plugin
+        $("[data-repo]").github();
+
+    });
+</script>
+{% endblock %}

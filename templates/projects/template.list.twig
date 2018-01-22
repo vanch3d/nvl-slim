@@ -1,6 +1,0 @@
-<li>
-    {% spaceless %}<a href="{{ urlFor("project.named",{'name':project.id}) }}" title="Go to the '{{ project.name }}' project page">
-        {% block project_title %}{% endblock %}</a>{% endspaceless %}
-    <p>{{ block('project_overview')|striptags|split(" ") |
-            slice(0, highlight? 400 : 40 ) | join(" ") }} [...]</p>
-</li>

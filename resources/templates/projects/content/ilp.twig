@@ -1,0 +1,37 @@
+{% extends 'projects/'~tmpl_base %} 
+
+{% set linkedIn = [] %}
+{% set gitHub = [] %}
+
+
+{% block project_title "Inductive Logic Programning and Learner Model" %} 
+
+{% block project_inst "LORIA" %}
+{% block project_loc "Nancy, France"%}
+{% block project_lat "48.665732"%}
+{% block project_lon "6.158171"%}
+
+{% block project_start "1995"%}
+{% block project_end "1996"%}
+ 
+{% block project_overview %}
+<div class="p">
+	When learners make errors when constructing a planar geometrical figure according to 
+	a teacher's formal specification, provide relevant explanation is a difficult 
+	task for an ITS (Intelligent Tutoring System) diagnosing their behaviour. 
+	I based my approach to solving this problem on the assumption that learners' productions 
+	are consistent with their reasoning. Then by using induction on the domain theory and 
+	learners' examples, it was possible to construct a theory that could explain these 
+	productions, i.e. building a model of learners' misconceptions. 
+</div><div class="p">
+	Because of the knowledge representation formalism used in the ITS (i.e. First-Order Logic), 
+	Inductive Logic Programming offered interesting possibilities for this work. 
+	The method I followed during this short project was to reuse existing ILP systems, 
+	following a black-box paradigm. Although this method gave some encouraging results, 
+	my research illustrated that the lack of counter-examples of students' conceptions 
+	limits the induction process supplied by the systems. 
+	More interactions between the system and learners will be required in order to generate
+	 and classify the examples that are missing to prune the induction process.
+</div>	
+{% endblock %}
+

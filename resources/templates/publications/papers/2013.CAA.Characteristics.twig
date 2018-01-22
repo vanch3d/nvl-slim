@@ -1,0 +1,567 @@
+{% extends template_base ?: "publications/papers/default.twig"  %}
+
+{% block links %}
+    <a href="http://caaconference.co.uk/for-authors/proceedings/" target="_blank"
+       class="navlink">CAA'13 Conference (Archive)</a>
+
+{% endblock %}
+
+{% block article %}
+<section class="sec">
+    <h2 id="__sec1">Introduction</h2>
+    <p>The SAFeSEA project (Supported Automated Feedback for Short Essay Answers) aims to develop an automated system to provide students with helpful and constructive feedback on their draft essays. Educational research suggests that one particular type of feedback that falls within the scope of natural language processing – essay summarisation – is among the most useful for students ({{  cite("Nelson & Schunn, 2009","B7") }}). “Summarisation" includes both the traditional notion of a short précis and also simpler representations such as a list of an essay's key topics. As part of a larger prototype application, we have implemented essay structure recognition and key word and key sentence extraction procedures in a module that we call “EssayAnalyser”. We have used the module to explore the attributes of a corpus of 135 essays that were produced by students taking a postgraduate course. This paper describes the results of that exploration and discusses the module's design.</p>
+
+</section>
+<section class="sec">
+    <h2 id="__sec2">Graph-based ranking methods</h2>
+    <p>Our procedures are based on graph theory, which has been used in a wide variety of disciplinary contexts. The following account is based on that provided by {{  cite("Newman (2008)","B8") }}. A graph consists of a set of nodes or vertices and a set of links or edges connecting them. (Some writers describe such a system as a network, but others restrict the latter to refer to graphs in which the edges are both directed and labelled.) A graph can be represented by an adjacency matrix in which the cells represent the connections between all pairs of nodes. In the simplest case, the cells take the value 1 if there is an edge between the relevant nodes and 0 otherwise.</p>
+    <p>Measures of centrality identify the most important or central nodes in a graph. They can therefore be used to measure how central (or key) a word, phrase, or sentence is in a natural language text of arbitrary length. The simplest such measure is degree, which is simply the number of edges attached to a node. Some other centrality measures take into account how strongly connected each node in the graph is to the whole graph, rather than just to its neighbouring nodes. We have used two of the latter centrality measures: eigenvector centrality ({{  cite("Brin & Page, 1998","B2") }}) and betweenness centrality ({{  cite("Freeman, 1977","B5") }}).</p>
+
+</section>
+<section class="sec">
+    <h2 id="__sec3">Text pre-processing and essay structure recognition</h2>
+    <p>Before extracting key words and sentences from the text, the text is automatically preprocessed using modules from the Natural Language Processing Toolkit ({{  cite("Bird, Klein, & Loper, 2009","B1") }}). We also remove so-called “stop words” (articles, prepositions, auxiliary verbs, pronouns, etc.), which are the most frequently occurring in natural language but for our purposes the least interesting. We refer to the remaining meaning-rich words as “tidy” words and to the sentences without stop words as “tidied” sentences.</p>
+    <p>Structural components present in the essay are also automatically recognised and labelled (currently including preface, summary, abstract, introduction, discussion, conclusion, table of contents, quoted assignment question sentences, title, references, and appendices). This enables us to choose the sections of the essay that we wish to analyse for the presence of key sentences and key words. Currently only the prose of the body of the essay (introduction, discussion and conclusion) is considered.</p>
+    <p>As there are very few requirements in the assessment task and the assessment criteria concerning essay structure (only a word limit and referenced arguments and evidence from the literature), the essays in the corpus vary greatly in structure. They also vary in terms of text formatting choices that impact on structure. It was therefore decided that structure recognition would be best achieved without referring to a high-level formatting mark-up, and so the essays are converted to plain text files in UTF-8 encoding before they are processed by EssayAnalyser. The structure recognition rules have been handcrafted from extensive experimentation with the corpus.</p>
+
+</section>
+<section class="sec">
+    <h2 id="__sec4">Key word extraction</h2>
+    <p>Next, graph-based ranking methods are used to ascribe a “key-ness” rank to the lemma of each word in an essay. This follows {{  cite("Mihalcea and Tarau (2004)","B6") }}, except that we use betweenness centrality to measure the centrality of a lemma in a text rather than eigenvector centrality. Key lemmas are defined as those in the top 20% of the ranked nodes that have betweenness centrality scores of .03 or more. (This threshold is where visual inspection identifies the sharpest bend in the “elbow” of the distribution curve in the key word centrality scores across all the essays.) The essay's key words are the inflections or base forms of the key lemmas that occur in the essay's original text. Key phrases are within-sentence sequences of key words that occur in the original text.</p>
+
+
+</section>
+<section class="sec">
+    <h2 id="__sec5">Key sentence extraction</h2>
+    <p>Key sentences are also extracted using a graph-based ranking method. Instead of the lemmas, every true sentence in the essay is represented by a node in the graph. Each true sentence is then compared with every other true sentence, and a value is derived representing the semantic similarity of that pair. That similarity value becomes a weight that attaches to the edge that links the corresponding nodes in the key sentence graph. We are currently using cosine similarity as the similarity measure. The nodes are ranked using {{  cite("Mihalcea and Tarau's (2004)","B6") }} TextRank algorithm, and key sentences are defined as the top 30 ranked sentences. Note that no domain knowledge or other expert knowledge or “gold standard” model specific to a particular domain is used in the module's extraction of key words and key sentences.</p>
+
+
+</section>
+<section class="sec">
+    <h2 id="__sec6">Context</h2>
+    <p>The essays were written by students taking a module entitled Accessible online learning: Supporting disabled students. This postgraduate module is presented annually over 20 weeks between September and January, it is worth 30 credit points (and thus equates to one quarter of a year’s full-time study). The module is supported by a textbook (Seale, 2006) and by online resources, including links to a large number of external websites. Students are assigned to online tutorial groups and communicate with their tutors and one another by online forums. They are assessed by two assignments that are marked by their tutors and an end-of-module assignment that is marked by their tutor and an independent marker. All assignments are marked using a percentage scale on which the pass mark is 40%.</p>
+
+
+</section>
+<section class="sec">
+    <h2 id="__sec7">Assessment task</h2>
+    <p>The first assignment is submitted online at the end of the first block, six weeks after the beginning of the module. The task requires that students discuss accessibility challenges for disabled learners in the student's own work context. Many students are professionals with extensive work experience in a wide variety of areas. This means that, although there is a set module textbook, student essays vary greatly in subject matter. A total of 135 students submitted the first assignment in 2010, 2011 and 2012. The EssayAnalyser program generated 27 characteristics of these 135 essays. These 27 attributes are listed in Table 1 together with brief explanations.</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'T1',
+    'ref': 'Table 1',
+    'leg': "Definitions of 27 attributes of students' essays (in alphabetical order)." }
+    %}
+
+</section>
+<section class="sec">
+    <h2 id="__sec8">Exploratory factor analysis</h2>
+    <p>An exploratory factor analysis was carried out on the values of these attributes for the 135 essays. A sample size of 135 is lower than the minima recommended by traditional texts (e.g. {{  cite("Comrey, 1973","B4") }}). However, more recent simulations have shown that robust results can be obtained from factor analyses with samples of 50–100 ({{  cite("Sapnas & Zeller, 2002","B10") }}) or even fewer ({{  cite("de Winter, Dodou, & Wieringa, 2009","B11") }}). First, a principal components analysis was used to determine the number of factors to extract. This identified nine components with eigenvalues greater than 1, and these explained 83.5% of the variance in the data. Nevertheless, the eigenvalues-greater-than-one rule is known to overestimate the true number of components in a data set because of sampling effects ({{  cite("Cliff, 1988","B3") }}). The bias is worse when the number of variables is large and the number of cases is small (both of which apply in the present case). Nowadays, it is generally acknowledged that the most reliable way to identify the number of factors in a data set is the parallel analysis of random correlation matrices. The analysis of 1,000 random correlation matrices was carried out using the program written by {{  cite("O’Connor (2000)","B9") }}. The first seven components in the actual data set had eigenvalues greater than would be expected from a random data set, but the eighth and subsequent components did not. These seven components explained 74.7% of the variance in the data.</p>
+    <p>Principal axis factoring was therefore used to extract seven factors with squared multiple correlations as the initial estimates of community, and the extracted factor matrix was submitted to oblique rotation using a quartimin method. A cut-off of ±.50 was used to identify those loadings that were salient for the purposes of interpretation. In Table 2, the variables with salient loadings on each factor are listed in descending order of the loadings in question. The resulting solution exemplified “simple structure” in that most of the variables loaded on one factor and only one variable loaded on more than one factor. The use of oblique rotation allowed for the possibility that the factors were correlated with one another. The correlation coefficient between Factor 2 and Factor 7 was .29. Otherwise, the correlation coefficients among the factors were all less than .20 in magnitude, implying that they were relatively orthogonal. It was therefore sensible to consider the variance explained by each factor.</p>
+
+    {% include('publications/papers/tmpl.fig.twig') with {
+    'id': 'T2',
+    'ref': 'Table 2',
+    'leg': "Loadings of 27 variables on seven factors (with salient loadings in bold)." }
+    %}
+
+    <p>Factor 1 explained 17.8% of the variance in the data set. Essays scored highly on this factor if (a) the frequency counts of the essay's top five most frequent lemmas were high compared to other essays; (b) the number of edges in the sentence graph relative to the number of true sentences was high; (c) there were relatively few key lemmas; (d) there were relatively few key words; (e) the number of edges in the sentence graph was high; and (f) there were relatively few key lemmas that also occurred in the module textbook index. This pattern would arise in essays with high average pair-wise sentence similarity but with low variation in word adjacency. We interpret this factor as reflecting the students’ phrase structure creativity.</p>
+    <p>Factor 2 explained 13.4% of the variance in the data set. Essays scored highly on this factor if (a) the key lemmas in the short version of the assignment question occurred frequently in the essay compared to other essays; (b) the bigrams in the long version of the assignment question occurred frequently in the essay; (c) many key lemmas in the short version of the assignment question occurred in the essay; (d) the essay had many bigrams; and (e) the key lemmas in the long version of the assignment question occurred frequently in the essay. We interpret this factor as reflecting the students’ attention to the terminology in the assignment question.</p>
+    <p>Factor 3 explained 9.5% of the variance in the data set. Essays scored highly on this factor if (a) there were many paragraphs; (b) there were many headings; (c) there were many true sentences; and (d) the tidied sentences tended to be short. We interpret this factor as reflecting the students’ use of fundamental essay components. (Students who used more paragraphs and sentences would have to write shorter sentences to remain within the word limit.)</p>
+    <p>Factor 4 explained 10.7% of the variance in the data set. Essays scored highly on this factor if (a) the number of lemmas was relatively high; (b) the total number of words (including repeats) was relatively high; and (c) the number of tidy words (words after the removal of stop words) was high. We interpret this factor as reflecting established properties of natural language (the average number of inflections per lemma occurring in English prose, and Zipf's law).</p>
+    <p>Factor 5 explained 7.6% of the variance in the data set. Essays scored highly on this factor if (a) a high proportion of the essay’s true sentences occurred in the introduction; and (b) many of the top 30 key sentences occurred in the introduction. We interpret this factor as reflecting the quality of the introduction section.</p>
+    <p>Factor 6 explained 6.4% of the variance in the data set. Essays scored highly on this factor if (a) many of the top 30 key sentences occurred in the conclusion; and (b) a high proportion of the essay’s true sentences occurred in the conclusion. We interpret this factor as reflecting the quality of the conclusion section.</p>
+    <p>Factor 7 explained 8.6% of the variance in the data set. Essays scored highly on this factor if the key lemmas in the textbook index occurred frequently in the essay; and (b) many of the key lemmas in the textbook index occurred in the essay. We interpret this factor as reflecting the students’ attention to the terminology in the module textbook.</p>
+    <p>Finally, the regression method was used to estimate the scores obtained by the 135 essays on each of the seven factors. These factor scores are akin to standard scores (i.e. they have a mean of 0 and a standard deviation of approximately 1).</p>
+
+
+</section>
+<section class="sec">
+    <h2 id="__sec9">Analysis of covariance</h2>
+
+
+    <p>An analysis of covariance was carried out to investigate whether these factor scores predicted the marks that the tutors had awarded the essays. The actual marks that were awarded to the 135 essays ranged from 24% to 88% with a mean of 63.7%. The analysis employed the students’ gender as an independent variable and the seven factor scores as covariates. We noted that the number of references in the reference list had not shown a salient loading on any of the factors (see Table 2). Nevertheless, we considered that it might be an important predictor of the overall essay mark, and we therefore included it as an additional covariate.</p>
+    <p>The main effect of gender was not statistically significant, F(1, 125) = 0.71, p = .40, which indicated that there was no difference in the marks obtained by men and women when the effects of the covariates had been taken into account. There was a highly significant effect of the number of references, B = .35, F(1, 125) = 11.09, p = .001, which indicated that the students who cited more references tended to obtain higher marks. More specifically, for citing three extra references students would be expected to achieve an increase of 1 percentage point (i.e. .35 × 3) in their overall mark. There was also a significant relationship with the scores on Factor 1, B = 2.20, F(1, 125) = 4.78, p = .03, which indicated that students who obtained higher scores on this factor also tended to obtain higher marks. Bearing in mind that most scores on this factor would fall within ±2 standard deviations of the mean (i.e. between +2 and −2), the students with the highest scores would be expected to obtain marks 8.8 percentage points (i.e. 2.20 × [2 − (−2)]) higher than the students with the lowest scores. None of the other factor scores showed a significant relationship with the students’ marks.</p>
+
+</section>
+<section class="sec">
+        <h2 id="__sec10">Conclusions</h2>
+
+    <p>Our EssayAnalyser program uses state-of-the-art techniques in natural language processing to generate a rich description of the formal structure of students’ essays without any domain-specific knowledge. The various attributes that it generates can be reduced to a set of seven relatively independent constructs that explain a high proportion of the variance in the data set. Some of these constructs, especially Factors 4–7, can be explained by properties of mathematics, linguistics or program design. However, Factors 1–3 do not seem to be mere artefacts but reflect important aspects of how students go about writing essays, and one of these factors is a statistically significant predictor of the marks that their essays receive. We think they are worthy of serious consideration in future research.</p>
+
+
+</section>
+<section class="sec">
+    <h2 id="__sec11">References</h2>
+
+    <div id="reference-list" class="ref-list-sec sec">
+        <ul class="first-line-outdent">
+            <li id="B1">Bird, S., Klein, E., & Loper, E. (2009). Natural language processing with Python: Analyzing text with the Natural Language Toolkit. Beijing: O’Reilly.
+            <li id="B2">Brin, S., & Page, L. (1998). The anatomy of a large-scale hypertextual Web search engine. Computer Networks and ISDN Systems, 30(1–7), 107–117.
+            <li id="B3">Cliff, N. (1988). The eigenvalues-greater-than-one rule and the reliability of components. Psychological Bulletin, 103(2), 276–279.
+            <li id="B4">Comrey, A. L. (1973). A first course in factor analysis. New York: Academic Press.
+            <li id="B11">De Winter, J. C. F., Dodou, D., & Wieringa, P. A. (2009). Exploratory factor analysis with small sample sizes. Multivariate Behavioral Research, 44(2), 147–181.
+            <li id="B5">Freeman, L. (1977). A set of measures of centrality based on betweenness. Sociology, 40(1), 35–41.
+            <li id="B6">Mihalcea, R., & Tarau, P. (2004). TextRank: Bringing order into texts. In D. Lin & D. Wu (Eds.), Proceedings of the 2004 conference on empirical methods in natural language processing (pp. 404–411). Stroudsburg, PA: Association for Computational Linguistics.
+            <li id="B7">Nelson, M. M., & Schunn, C. D. (2009). The nature of feedback: How different types of peer feedback affect writing performance. Instructional Science, 37(4), 375–401.
+            <li id="B8">Newman, M. E. J. (2008). Mathematics of networks. In S. N. Durlauf & L. E. Blume (Eds.), The new Palgrave dictionary of economics (2nd ed., Vol. 5, pp. 465–470). Houndmills: Palgrave Macmillan.
+            <li id="B9">O’Connor, B. P. (2000). SPSS and SAS programs for determining the number of components using parallel analysis and Velicer’s MAP test. Behavior Research Methods, Instruments, and Computers, 32(3), 396–402.
+            <li id="B10">Sapnas, K. G., & Zeller, R. A. (2002). Minimizing sample size when using exploratory factor analysis for measurement. Journal of Nursing Measurement, 10(2), 135–154. Seale, J. K. (2006). E-learning and disability in higher education: Accessibility research and practice. London: Routledge.
+        </ul>
+
+</div></section>
+{% endblock %}
+
+
+
+
+{% block figures %}
+
+    <article data-type="table-wrap" id="ob-T1">
+        <div class="table-wrap table anchored whole_rhythm" id="T1">
+            <h3>Table 1</h3>
+            <div class="caption">Definitions of 27 attributes of students' essays (in alphabetical order).</div>
+            <div class="large_tbl">
+                <table class="rendered small default_table">
+                    <thead>
+                    <tr>
+                        <th>Attribute name</th>
+                        <th>Definition</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td> % body == c </td>
+                        <td> Percentage of the essay body (true sentences only) devoted to the conclusion
+                                section </td>
+                    </tr>
+                    <tr>
+                        <td> % body == i </td>
+                        <td> Percentage of the essay body (true sentences) devoted to the introduction section
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> all bigrams </td>
+                        <td> Number of bigrams (made from key words) </td>
+                    </tr>
+                    <tr>
+                        <td> all lemmas </td>
+                        <td> Number of lemmas </td>
+                    </tr>
+                    <tr>
+                        <td> all words </td>
+                        <td> Number of words in the essay (occurring before the reference list or bibliography)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> avfreq top5freq </td>
+                        <td> Mean average frequency of the top five most frequent lemmas </td>
+                    </tr>
+                    <tr>
+                        <td> avlen tidysent </td>
+                        <td> Mean average length of a tidied sentence (a sentence without stop words in it) </td>
+                    </tr>
+                    <tr>
+                        <td> bigrams in ass_q </td>
+                        <td> Number of the essay's distinct bigrams that occur in the entire assignment question
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> c &amp; toprank </td>
+                        <td> Number of the top 30 key sentences that are in the conclusion section </td>
+                    </tr>
+                    <tr>
+                        <td> distinct bigrams </td>
+                        <td> Number of distinct bigrams </td>
+                    </tr>
+                    <tr>
+                        <td> edges </td>
+                        <td> Number of edges in the key sentence graph </td>
+                    </tr>
+                    <tr>
+                        <td> edges/sents </td>
+                        <td> Number of sentence graph edges divided by the number of true sentences </td>
+                    </tr>
+                    <tr>
+                        <td> heads </td>
+                        <td> Number of headings </td>
+                    </tr>
+                    <tr>
+                        <td> i &amp; toprank </td>
+                        <td> Number of the top 30 key sentences that are in the introduction section </td>
+                    </tr>
+                    <tr>
+                        <td> key lemmas </td>
+                        <td> Number of key lemmas </td>
+                    </tr>
+                    <tr>
+                        <td> key words </td>
+                        <td> Number of key words </td>
+                    </tr>
+                    <tr>
+                        <td> kls in ass_q_long </td>
+                        <td> Number of essay's key lemmas occurring in whole assignment question </td>
+                    </tr>
+                    <tr>
+                        <td> kls in ass_q_short </td>
+                        <td> Number of essay's key lemmas occurring in assignment question’s first sentence </td>
+                    </tr>
+                    <tr>
+                        <td> kls in tb index </td>
+                        <td> Number of essay's key lemmas occurring in module textbook index </td>
+                    </tr>
+                    <tr>
+                        <td> len refs </td>
+                        <td> Number of references in the references section </td>
+                    </tr>
+                    <tr>
+                        <td> paras </td>
+                        <td> Number of paragraphs </td>
+                    </tr>
+                    <tr>
+                        <td> q sents </td>
+                        <td> Number of sentences in whole assignment question quoted in the essay </td>
+                    </tr>
+                    <tr>
+                        <td> sum freq <br/> kl_in_ass_q_long </td>
+                        <td> Sum of the frequency counts (in the essay) for the essay's key lemmas that also occur in
+                                whole assignment question </td>
+                    </tr>
+                    <tr>
+                        <td> sum freq <br/> kl_in_ass_q_short </td>
+                        <td> Sum of the frequency counts for the essay's key lemmas that also occur in first sentence
+                                of assignment question </td>
+                    </tr>
+                    <tr>
+                        <td> sum freq <br/> kls_in_tb_index </td>
+                        <td> Sum of the frequency count`s for the essay's key lemmas that also occur in the module
+                                textbook index </td>
+                    </tr>
+                    <tr>
+                        <td> tidy words </td>
+                        <td> Number of words in the essay ('all words') minus the stop words </td>
+                    </tr>
+                    <tr>
+                        <td> true sents </td>
+                        <td> Number of true sentences (excludes headings, captions, table of contents, title,
+                                etc.) </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
+
+
+    <article data-type="table-wrap" id="ob-T2">
+
+        <div class="table-wrap table anchored whole_rhythm" id="T1">
+            <style scoped="scoped">
+                th,td
+                {
+                    padding: 2px 15px;
+                    text-align: left;
+                }
+
+                thead
+                {
+                    border-bottom: 1px solid black;
+                }
+
+
+            </style>
+            <h3>Table 2</h3>
+            <div class="caption">Loadings of 27 variables on seven factors (with salient loadings in bold).</div>
+            <div class="large_tbl">
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="attr">Attribute</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>avfreq top5freq</td>
+                        <td><strong>.89</strong></td>
+                        <td>.06</td>
+                        <td>.04</td>
+                        <td>-.02</td>
+                        <td>.01</td>
+                        <td>-.03</td>
+                        <td>.09</td>
+                    </tr>
+                    <tr>
+                        <td>edges/sents</td>
+                        <td><strong>.89</strong></td>
+                        <td>.05</td>
+                        <td>-.18</td>
+                        <td>.04</td>
+                        <td>.04</td>
+                        <td>-.04</td>
+                        <td>.18</td>
+                    </tr>
+                    <tr>
+                        <td>key lemmas</td>
+                        <td><strong>-.88</strong></td>
+                        <td>.04</td>
+                        <td>.03</td>
+                        <td>.01</td>
+                        <td>.00</td>
+                        <td>.01</td>
+                        <td>.08</td>
+                    </tr>
+                    <tr>
+                        <td>key words</td>
+                        <td><strong>-.85</strong></td>
+                        <td>.09</td>
+                        <td>.03</td>
+                        <td>.10</td>
+                        <td>.07</td>
+                        <td>.01</td>
+                        <td>.05</td>
+                    </tr>
+                    <tr>
+                        <td>edges</td>
+                        <td><strong>.74</strong></td>
+                        <td>.04</td>
+                        <td>.27</td>
+                        <td>.36</td>
+                        <td>.01</td>
+                        <td>-.04</td>
+                        <td>.11</td>
+                    </tr>
+                    <tr>
+                        <td>kls in tb index</td>
+                        <td><strong>-.64</strong></td>
+                        <td>-.01</td>
+                        <td>.10</td>
+                        <td>-.02</td>
+                        <td>-.08</td>
+                        <td>-.01</td>
+                        <td><strong>.61</strong></td>
+                    </tr>
+                    <tr>
+                        <td>sum freq kls_in_ass_q_short.</td>
+                        <td>24</td>
+                        <td><strong>.95</strong></td>
+                        <td>.06</td>
+                        <td>.00</td>
+                        <td>-.01</td>
+                        <td>.10</td>
+                        <td>-.14</td>
+                    </tr>
+                    <tr>
+                        <td>bigrams in ass_q</td>
+                        <td>.07</td>
+                        <td><strong>.78</strong></td>
+                        <td>-.01</td>
+                        <td>-.08</td>
+                        <td>-.01</td>
+                        <td>.01</td>
+                        <td>-.05</td>
+                    </tr>
+                    <tr>
+                        <td>kls in ass_q_short</td>
+                        <td>-.12</td>
+                        <td><strong>.72</strong></td>
+                        <td>-.04</td>
+                        <td>.06</td>
+                        <td>-.04</td>
+                        <td>-.03</td>
+                        <td>-.08</td>
+                    </tr>
+                    <tr>
+                        <td>all bigrams</td>
+                        <td>.02</td>
+                        <td><strong>.59</strong></td>
+                        <td>-.02</td>
+                        <td>-.14</td>
+                        <td>.01</td>
+                        <td>-.02</td>
+                        <td>.27</td>
+                    </tr>
+                    <tr>
+                        <td>sum freq kls_in_ass_q_long</td>
+                        <td>.46</td>
+                        <td><strong>.50</strong></td>
+                        <td>-.03</td>
+                        <td>.05</td>
+                        <td>.00</td>
+                        <td>.00</td>
+                        <td>.41</td>
+                    </tr>
+                    <tr>
+                        <td>kls in ass_q_long</td>
+                        <td>-.25</td>
+                        <td>.44</td>
+                        <td>-.06</td>
+                        <td>.03</td>
+                        <td>-.06</td>
+                        <td>-.02</td>
+                        <td>.36</td>
+                    </tr>
+                    <tr>
+                        <td>distinct bigrams</td>
+                        <td>-.25</td>
+                        <td>.40</td>
+                        <td>-.09</td>
+                        <td>-.01</td>
+                        <td>.07</td>
+                        <td>-.03</td>
+                        <td>.27</td>
+                    </tr>
+                    <tr>
+                        <td>q sents</td>
+                        <td>-.09</td>
+                        <td>.30</td>
+                        <td>.06</td>
+                        <td>.14</td>
+                        <td>-.01</td>
+                        <td>-.06</td>
+                        <td>-.07</td>
+                    </tr>
+                    <tr>
+                        <td>paras</td>
+                        <td>-.08</td>
+                        <td>-.02</td>
+                        <td><strong>.89</strong></td>
+                        <td>-.01</td>
+                        <td>.03</td>
+                        <td>-.02</td>
+                        <td>.17</td>
+                    </tr>
+                    <tr>
+                        <td>heads</td>
+                        <td>-.07</td>
+                        <td>.02</td>
+                        <td><strong>.72</strong></td>
+                        <td>-.10</td>
+                        <td>.05</td>
+                        <td>.01</td>
+                        <td>.13</td>
+                    </tr>
+                    <tr>
+                        <td>true sents</td>
+                        <td>.11</td>
+                        <td>.01</td>
+                        <td><strong>.70</strong></td>
+                        <td>.40</td>
+                        <td>-.05</td>
+                        <td>-.01</td>
+                        <td>-.07</td>
+                    </tr>
+                    <tr>
+                        <td>avlen tidysent</td>
+                        <td>-.02</td>
+                        <td>.02</td>
+                        <td><strong>-.56</strong></td>
+                        <td>.08</td>
+                        <td>.01</td>
+                        <td>.06</td>
+                        <td>.19</td>
+                    </tr>
+                    <tr>
+                        <td>all lemmas</td>
+                        <td>-.29</td>
+                        <td>-.06</td>
+                        <td>-.11</td>
+                        <td><strong>.86</strong></td>
+                        <td>-.04</td>
+                        <td>.00</td>
+                        <td>-.12</td>
+                    </tr>
+                    <tr>
+                        <td>all words</td>
+                        <td>.27</td>
+                        <td>-.06</td>
+                        <td>-.11</td>
+                        <td><strong>.84</strong></td>
+                        <td>.05</td>
+                        <td>-.01</td>
+                        <td>.08</td>
+                    </tr>
+                    <tr>
+                        <td>tidy words</td>
+                        <td>.19</td>
+                        <td>.08</td>
+                        <td>.21</td>
+                        <td><strong>.80</strong></td>
+                        <td>.00</td>
+                        <td>.03</td>
+                        <td>.19</td>
+                    </tr>
+                    <tr>
+                        <td>len refs</td>
+                        <td>-.10</td>
+                        <td>.12</td>
+                        <td>.06</td>
+                        <td>.28</td>
+                        <td>-.14</td>
+                        <td>.02</td>
+                        <td>-.01</td>
+                    </tr>
+                    <tr>
+                        <td>% body == i</td>
+                        <td>-.04</td>
+                        <td>-.01</td>
+                        <td>.02</td>
+                        <td>.05</td>
+                        <td><strong>.98</strong></td>
+                        <td>.02</td>
+                        <td>-.02</td>
+                    </tr>
+                    <tr>
+                        <td>i &amp; toprank</td>
+                        <td>-.06</td>
+                        <td>.06</td>
+                        <td>.05</td>
+                        <td>.03</td>
+                        <td><strong>.96</strong></td>
+                        <td>.00</td>
+                        <td>-.03</td>
+                    </tr>
+                    <tr>
+                        <td>c &amp; toprank</td>
+                        <td>-.05</td>
+                        <td>.03</td>
+                        <td>.01</td>
+                        <td>.03</td>
+                        <td>.04</td>
+                        <td><strong>.90</strong></td>
+                        <td>.01</td>
+                    </tr>
+                    <tr>
+                        <td>% body == c</td>
+                        <td>-.01</td>
+                        <td>.00</td>
+                        <td>-.01</td>
+                        <td>.00</td>
+                        <td>-.03</td>
+                        <td><strong>.89</strong></td>
+                        <td>-.01</td>
+                    </tr>
+                    <tr>
+                        <td>sum freq kls_in_tb_index</td>
+                        <td>.22</td>
+                        <td>-.07</td>
+                        <td>.07</td>
+                        <td>.07</td>
+                        <td>-.02</td>
+                        <td>.00</td>
+                        <td><strong>.88</strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </article>
+
+
+{% endblock %}

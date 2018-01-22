@@ -1,0 +1,50 @@
+{% extends 'projects/'~tmpl_base %} 
+
+{% set linkedIn = []
+%}
+{% set gitHub = [
+    "vanch3d/Calques3Dv2"
+] %}
+
+
+{% block project_title "Involving teachers in the design of ILEs" %} 
+
+{% block project_inst "LORIA" %}
+{% block project_loc "Nancy, France"%}
+{% block project_lat "48.665732"%}
+{% block project_lon "6.158171"%}
+
+{% block project_start "1996"%}
+{% block project_end "1999"%}
+
+{% block project_people %}
+    {{ forms.linkedin("//fr.linkedin.com/pub/monique-grandbastien/3/118/b54",true) }}
+{% endblock %}
+ 
+{% block project_overview %}
+
+<div class="p">
+    </p>My PhD thesis addressed the problem of how to design Interactive
+	Learning Environments (ILEs) that could be more adapted and adaptable
+	to teachers' needs. 
+    </p>
+    <p>My approach was to propose a participatory design
+	process that involved teachers at every step of the production cycle.
+	This process was made possible by incremental prototyping and by
+	redefining teachers' role in a multi-disciplinary development team and
+	their integration as actors in the process. I also proposed a framework
+	for extracting teachers' implicit knowledge about the teaching domain 
+	<span class="cite" data-pubidx="MHF2ZRXV"></span>. Presented as forms
+	that teachers used to describe pedagogical activities around the
+	software, their purpose was also to support the negotiation between
+	software engineers and teachers about the implementation of the
+	teaching domain (i.e. pedagogical content but also interface and
+	human-computer interaction issues).
+    </p>
+    <p>This work was applied to the design
+	of Calques 3D, a three-dimensional Dynamic Geometry microworld 
+	<span class="cite" data-pubidx="HDBWVJMU"></span>.
+    </p>
+
+</div>	
+{% endblock %}

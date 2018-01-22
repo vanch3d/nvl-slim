@@ -1,0 +1,96 @@
+{% extends 'site.twig' %}
+
+{% block injectMETA %}
+    {% for item in meta %}
+        <meta name="{{ item[0] }}" content="{{ item[1] }}">
+    {% endfor %}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Home" href="{{ path_for('publications.all') }}">Publications</a></li>
+        <li class="active">{{ publication.archive_location }}</li>
+    </ol>
+{% endblock %}
+
+
+
+
+{% block injectCSS %}
+{% endblock %}
+
+{% block content %}
+
+
+    <section class="blog-section">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <article class="single-post">
+                        <div class="post-wrapper quote-post">
+                            <div class="post-thumbnail">
+                                <h2>{{ publication.title }}</h2>
+                                <p class="quoter">
+                                    {% if publication.type == 'report' or publication.type == 'thesis'  %}
+                                        {{ publication.genre}}
+                                    {% elseif publication.type == 'article-journal' %}
+                                        {{ attribute( publication, 'container-title') }}
+                                        {{ attribute( publication, 'volume')}}/{{ attribute( publication, 'issue')}}
+                                    {% elseif publication.type == 'chapter' %}
+                                        {{ attribute( publication, 'container-title') }}
+                                    {% elseif publication.type == 'paper-conference' %}
+                                        {{ attribute( publication, 'event') }}
+                                    {% else %}
+                                        {{ attribute( publication, 'event') }}
+                                    {% endif %}
+
+                                </p>
+                            </div>
+
+                            <div class="post-title">
+                                {% for people in publication.author %}
+                                    {{ people.given }} {{ people.family }}<br>
+                                {% endfor %}
+                            </div>
+
+                            <div class="post-containt">
+                                <blockquote>
+                                    <p>{{ publication.abstract }}</p>
+                                </blockquote>
+                            </div>
+
+                            <div class="post-meta">
+
+                            </div>
+                        </div>
+
+                        <div class="post-tags">
+                            <ul>
+                                {% for item in publication.keyword %}
+                                    <li><a title="tag" href="javascript:void(0)">{{ item }}</a></li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article class="single-post">
+                    {% block article %}{% endblock %}
+                    </article>
+
+                    <div class="post-author-box">
+
+                        <div class="author-box-content">
+                            {{ publication.output.ref|raw }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}Research Projects (Map){% endblock %}
+{% block pagetile %}Research Projects{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Home" href="{{ path_for('project.all') }}">Projects</a></li>
+        <li class="active">Story Map</li>
+    </ol>
+{% endblock %}
+
+{% block pagedescription %}
+    <h2>Research Projects - Story Map</h2>
+
+{% endblock %}
+
+
+{% block content %}
+    <section class="section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="mapdiv" style="width: 100%; height: 680px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}
+
+{% block injectCSS %}
+    <style>
+        .vco-slide-content
+        {
+            width: 100% !important;
+        }
+
+        section .container-fluid
+        {
+            padding-left: 0px;
+        }
+
+        .vco-storymap a:hover {
+            text-decoration: none;
+        }
+
+        .vco-menubar {
+            border-bottom: 1px solid #e6e6e6;
+            bottom: -1px;
+            left: 0;
+            right: auto;
+            position: absolute;
+        }
+
+    </style>
+{% endblock %}
+
+{% block injectJS %}
+<script type="text/javascript" src="/js/storymap.min.js"></script>
+<script>
+    /*
+     *  Define my own version of media type to deal with API-based media gallery
+     *  @todo check for consistency with current/future version of storymap
+     */
+    VCO.Media.NVLJSON = VCO.Media.extend({
+
+        includes: [VCO.Events],
+
+        _loadMedia: function() {
+            var api_url,
+                self = this;
+            // Loading Message
+            this.message.updateMessage(VCO.Language.messages.loading + " " + this.options.media_name);
+
+            // Create Dom element
+            this._el.content_item	= VCO.Dom.create("img", "vco-media-item vco-media-image vco-media-flickr vco-media-shadow", this._el.content);
+
+            // API URL
+            api_url = this.data.url; //"{{ path_for('api.projects.image',{'name': 'calques3d'}) }}";
+
+            // API Call
+            $.getJSON(api_url, function(d) {
+                if (d.data && d.data[0]) {
+                    self.createMedia(d.data);
+                } else {
+                    self.loadErrorDisplay("Photo not found or private.");
+                }
+            }).fail(function(d){
+                self.loadErrorDisplay("Photo not found or private.");
+            });
+
+        },
+
+        createMedia: function(d) {
+            // Set Image Source
+            this._el.content_item.src	= d[0].url;
+
+            // After Loaded
+            this.onLoaded();
+        }
+    });
+
+    ;(function () {
+        // Override MediaType to include own definition
+        // @todo A more elegant way will be to add the media type directly in the configuration,
+        //       see below
+        var original = VCO.MediaType;
+        VCO.MediaType = function(m) {
+            if (m.type.match(/json/i))
+            {
+                var media = 	{
+                    type: "nvl-json",
+                    name: "Gallery",
+                    match_str: "/json/i",
+                    cls: VCO.Media.NVLJSON
+                };
+                media.url 	= m.url;
+                return media;
+            }
+            return original(m);
+        }
+    })();
+
+    $.getJSON("{{ path_for('api.projects') }}").done(function(src){
+        console.log(src);
+        // storymap_data can be an URL or a Javascript object
+        //var storymap_data = '/plugins/demo.json';
+        var mapdata= {
+            storymap: {
+                slides: [
+                    {
+                        "type": "overview",
+                        "date": "1995-2014",
+                        "text": {
+                            // @todo Find a smoother way of getting this information
+                            "headline": "Research Projects " +
+                                        "<small>Technology-Enhanced Learning</small>",
+                            "text": "<p>My research interests lies in the design and the evaluation of Technology-Enhanced Learning (TEL) environments. Over the last couple of years, I have conducted several research projects in various areas: Participatory Design, 3D Dynamic Geometry, (Open) Learner Modelling, Multi-Representations Learning Environments, Life-long Learning, and Auditory Perceptual Learning. I have been working in inter-disciplinary contexts, tackling some of the key questions and problems of learning technologies from a predominantly computer science perspective. Two threads characterise my research agenda: 1) the role, usage and impact of external representations in learning and, 2) transforming learning experiences into transferable knowledge. Until recently, I was a Research Associate at the Institute of Educational Technology (IET) at the Open University, working on the SafeSea project. I have a PhD in Computer Science from the University of Nancy (France, 1999).</p> " +
+                                    "<span class='vco-note'>This is an overview or title slide to show all the points in your story routed on your map.</span>"
+                        }
+                    }]
+            }
+        };
+        $.each(src.data.reverse(), function(i, item) {
+            mapdata.storymap.slides.push({
+                date: item.start,
+                text: {
+                    headline: item.start + ": " + "<a href='" +  item.url + "'>" + item.title + "</a>",
+                    text: item.description
+                },
+                "location": {
+                    "name": item.location,
+                    "lat": item.lat,
+                    "lon": item.lon,
+                    "zoom": 8,
+                    "line": true
+                },
+                media:
+                {   credit: item.name,
+                    caption: item.institution + " (" + item.location + ")",
+                    type: "json",
+                    mediatype: {
+                        type: 		"nvljson",
+                        name: 		"NVL Gallery",
+                        match_str: 	"/api/project/",
+                        cls: 		VCO.Media.NVLJSON
+                    },
+                    url: item.images
+                }
+            })
+        });
+
+        // certain settings must be passed within a separate options parameter
+        var storymap_options = {
+            /*map_type: "stamen:watercolor",*/
+            calculate_zoom: false,
+            start_at_slide: 0,
+            show_lines: true,
+            map_mini: true
+        };
+
+        // create the Story Map
+        var storymap = new VCO.StoryMap('mapdiv', mapdata,storymap_options);
+
+        // relocate the map's controls
+        $(".vco-menubar").appendTo($(".breadcrumb-wrapper"));
+
+        // Update display on resize
+        window.onresize = function(event) {
+            storymap.updateDisplay(); // @todo still very buggy, find a more responsive way
+        }
+    });
+
+
+
+</script>
+{% endblock %}

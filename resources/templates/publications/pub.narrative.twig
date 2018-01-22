@@ -1,0 +1,393 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}Publication Narrative{% endblock %}
+{% block pagetile %}Publication Narrative{% endblock %}
+
+{% block pagedescription %}
+    <h2>Publication Narrative</h2>
+    <div class="subtitle">
+        Visualising research narratives with extractive summarisation and dynamic graph
+    </div>
+{% endblock %}
+
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Publications" href="{{ path_for('publications.all') }}">Publications</a></li>
+        <li class="active">Narrative</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    <section class="white-section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+
+                        <div class="" id="d3-container" style="padding: 5px; min-height: 350px; overflow-x: scroll;">
+                            <button id="btn-fullscreen"><i class="fa fa-window-maximize"></i></button>
+
+                        </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+{%  endblock %}
+
+{% block injectCSS %}
+    <style>
+        :root{
+            --base: #ccc;
+            --dark : #df2929;
+            --light : #3c6da8;
+        }
+
+        .white-section
+        {
+            padding: 0;
+        }
+
+        text {
+            font-family: "Lato", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+        }
+
+
+        .intro:hover {
+            cursor: pointer;
+        }
+
+        .intro:hover text {
+        }
+
+
+
+        .scene rect {
+            fill: rgba(255,255,255,0.7);
+            stroke: var(--base);
+            stroke-width: 1
+        }
+        .scene:hover rect {
+            fill: rgba(170,170,170,0.8);
+        }
+
+        .scene circle {
+            pointer-events: none;
+        }
+
+        .scene circle.dark {
+            fill: var(--dark);;
+        }
+
+        .scene circle.light {
+            fill: var(--light);;
+        }
+        path {
+            fill: none;
+            stroke-width: 2;
+            stroke: #333;
+        }
+
+        path.highlighted {
+            opacity: .2;
+        }
+
+        path.light {
+            stroke: var(--light);
+        }
+
+        path.dark {
+            stroke: var(--dark);
+        }
+
+        .intro.highlighted text {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+
+        .intro text:first-child {
+            fill: #fff;
+            stroke: #f9f9f9;
+            stroke-width: 3;
+        }
+
+        .intro text+text {
+            fill: #333;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: -moz-none;
+            -o-user-select: none;
+            user-select: none;
+
+        }
+
+        .intro rect.dark {
+            fill: var(--dark);;
+        }
+
+        .intro rect.light {
+            fill: var(--light);;
+        }
+
+        .intro text+text.dark {
+            fill: var(--dark);;
+        }
+
+        .intro text+text.light {
+            fill: var(--light);;
+        }
+
+        button#btn-fullscreen
+        {
+            position: relative;
+            left: 10px;
+            top: 30px;
+        }
+
+
+        :-webkit-full-screen { background-color: black }
+        :-moz-full-screen { background-color: black }
+        :-ms-fullscreen { background-color: black }
+        :fullscreen { background-color: black }
+
+        :-webkit-full-screen .intro text:first-child { stroke: unset }
+        :-moz-full-screen .intro text:first-child { stroke: unset }
+        :-ms-fullscreen .intro text:first-child { stroke: unset }
+        :fullscreen .intro text:first-child { stroke: unset }
+
+    </style>
+{% endblock %}
+{% block injectJS %}
+<script src="//cdn.jsdelivr.net/d3js/3.4.3/d3.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/abcnews/d3-layout-narrative@1.0.0/narrative.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/kayahr/jquery-fullscreen-plugin@1.1.4/jquery.fullscreen-min.js"></script>
+<script>
+    $(document).ready(function() {
+
+        $("#btn-fullscreen").click(function()
+        {
+            $("#d3-container").toggleFullScreen();
+        });
+
+        // Modified the wrangled to deal with scene's id
+        function wrangle(data) {
+
+            var charactersMap = {};
+            var newScenes = [];
+
+            for (var key in data.scenes)
+            {
+                var chars = data.scenes[key];
+                newScenes.push({
+                    id: key,
+                    characters: chars.map(function(id){
+                        return (characterById(id));
+                    }).filter(function(d) { return (d); })}
+                );
+            }
+            return newScenes;
+            /*return data.scenes.map(function(scene){
+                return {characters: scene.map(function(id){
+                        return (characterById(id));
+                    }).filter(function(d) { return (d); })};
+            });*/
+
+            // Helper to get characters by ID from the raw data
+            function characterById(id) {
+                charactersMap = charactersMap || {};
+                charactersMap[id] = charactersMap[id] || data.characters.find(function(character){
+                    // filter out characters that are present in only one scene
+                    return (character.id === id && character.enum > 1);
+                });
+                return charactersMap[id];
+            }
+
+        }
+
+        // body of the narrative widget
+        (function () {
+
+            // @todo[vanch3d] data added inline through twig. try ajax
+            response = {{ narrative | raw }};
+
+            var svg, scenes, charactersMap, width, height, sceneWidth;
+
+            // Get the data in the format we need to feed to d3.layout.narrative().scenes
+            // @todo[vanch3d] let's do this directly in the php handler
+            scenes = wrangle(response);
+
+            // Some defaults
+            sceneWidth = 14;
+            width = scenes.length * sceneWidth * 4;
+            height = 800;
+            labelSize = [150,20];
+
+            // The container element (this is the HTML fragment);
+            svg = d3.select("#d3-container").append('svg')
+                .attr('id', 'narrative-chart')
+                .attr('width', width)
+                .attr('height', height);
+
+
+            svg.on('click', function(s) {
+                console.log("clear selection")
+                d3.selectAll('.intro').classed("highlighted",false);
+                d3.selectAll('.link').classed("highlighted",false);
+                d3.selectAll('.intro').each(function(d) {
+                    d.isActive = false;});
+            });
+
+
+            // Calculate the actual width of every character label.
+            scenes.forEach(function(scene){
+                scene.characters.forEach(function(character) {
+                    character.width = svg.append('text')
+                        .attr('opacity',0)
+                        .attr('class', 'temp')
+                        .text(character.name)
+                        .node().getComputedTextLength()+10;
+                });
+            });
+
+            // Remove all the temporary labels.
+            svg.selectAll('text.temp').remove();
+
+            // Do the layout
+            narrative = d3.layout.narrative()
+                .scenes(scenes)
+                .size([width,height])
+                .pathSpace(15)
+                .groupMargin(10)
+                .labelSize([150,20])
+                .scenePadding([5,sceneWidth/2,5,sceneWidth/2])
+                .labelPosition('left')
+                .layout();
+
+            // Get the extent so we can re-size the SVG appropriately.
+            svg.attr('height', narrative.extent()[1]);
+
+            // Draw links
+            svg.append('g').attr('class', 'trajectories')
+                .selectAll('.link').data(narrative.links()).enter()
+                .append('path')
+                .attr('class', function(d) {
+                    return 'link ' + d.character.affiliation.toLowerCase();
+                })
+                .attr('d', narrative.link());
+
+            // Draw the scenes
+            svg.selectAll('.scene').data(narrative.scenes()).enter()
+                .append('g').attr('class', 'scene')
+                .attr('transform', function(d){
+                    var x,y;
+                    x = Math.round(d.x)+0.5;
+                    y = Math.round(d.y)+0.5;
+                    return 'translate('+[x,y]+')';
+                })
+                .append('rect')
+                .attr('width', sceneWidth)
+                .attr('height', function(d){
+                    return d.height;
+                })
+                .attr('y', 0)
+                .attr('x', 0)
+                .attr('rx', 3)
+                .attr('ry', 3);
+
+            // Draw appearances
+            svg.selectAll('.scene').selectAll('.appearance').data(function(d){
+                return d.appearances;
+            }).enter().append('circle')
+                .attr('cx', function(d){
+                    return d.x;
+                })
+                .attr('cy', function(d){
+                    return d.y;
+                })
+                .attr('r', function(){
+                    return 3;
+                })
+                .attr('class', function(d){
+                    return 'appearance ' + d.character.affiliation;
+                });
+
+            // Draw intro nodes
+            svg.selectAll('.intro').data(narrative.introductions())
+                .enter().call(function(s){
+                var g, text;
+
+                g = s.append('g').attr('class', 'intro');
+
+                g.append('rect')
+                    .attr('y', -4)
+                    .attr('x', -4)
+                    .attr('width', 4)
+                    .attr('height', 8);
+
+                text = g.append('g').attr('class','text');
+
+                // Apppend two actual 'text' nodes to fake an 'outside' outline.
+                text.append('text');
+                text.append('text').attr('class', 'color')
+                    .on('click', function(s) {
+                        var src = s.character.id;
+                        var intro = d3.select(this.parentNode.parentNode);
+
+                        if ('isActive' in s && s.isActive) {
+                            d3.selectAll('.link').classed("highlighted",false);
+                            intro.classed("highlighted",false);
+                            s.isActive = false;
+
+                        }
+                        else {
+                            d3.selectAll('.intro').each(function(d) {
+                                d3.select(this).classed("highlighted",false);
+                                d.isActive = false;
+                            });
+
+                            s.isActive = true;
+                            intro.classed("highlighted",true);
+                            d3.selectAll('.link').classed("highlighted",function(t){
+                                var trg = t.character.id;
+                                return (src !== trg);
+                            });
+                        }
+                        // to make sure the SVG onclick is not triggered
+                        d3.event.stopPropagation();
+                    });
+
+
+                g.attr('transform', function(d){
+                    var x,y;
+                    x = Math.round(d.x);
+                    y = Math.round(d.y);
+                    return 'translate(' + [x,y] + ')';
+                });
+
+                g.selectAll('text')
+                    .attr('text-anchor', 'end')
+                    .attr('y', '4px')
+                    .attr('x', '-8px')
+                    .text(function(d){ return d.character.name; });
+
+                g.select('.color')
+                    .attr('class', function(d){
+                        return 'color ' + d.character.affiliation;
+                    });
+
+                g.select('rect')
+                    .attr('class', function(d){
+                        return d.character.affiliation;
+                    });
+
+            });
+
+        }());
+    });
+</script>
+{%  endblock %}
+

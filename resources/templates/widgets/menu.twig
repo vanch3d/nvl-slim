@@ -1,0 +1,54 @@
+<nav id="mp-menu" class="mp-menu">
+    <div class="mp-level">
+        <div class="mp-level-panel icon icon-world"></div>
+        <ul>
+            <!-- Home -->
+            <li><a href="{{ path_for('home') }}" title="Home"><i class="fa fa-home fa-fw"></i> Home</a></li>
+
+            <!-- Project Portfolio -->
+            <li class="icon icon-arrow-left">
+                <a href="javascript:void(0)" title="Projects"><i class="fa fa-briefcase fa-fw"></i> Projects</a>
+                <div class="mp-level">
+                    <div class="mp-level-panel icon icon-display">Projects</div>
+                    <a class="mp-back" href="#">back</a>
+                    <ul>
+                        <li><a href="{{ path_for('project.named',{ 'name' : 'safesea'}) }}" title="Go to the project">SAFeSEA</a></li>
+                        <li><a href="{{ path_for('project.named',{ 'name' : 'auditorygames'}) }}" title="Go to the project">NBRUH</a></li>
+                        <li><a href="{{ path_for('project.named',{ 'name' : 'calques3d'}) }}" title="Go to the project">Calques 3D</a></li>
+                        <li><a href="{{ path_for('project.all') }}" title="All projects">See more ...</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Publications -->
+            <li><a href="{{ path_for('publications.all') }}" title="Publications"><i class="fa fa-book fa-fw"></i> Publications</a></li>
+
+            <!-- Experiments -->
+            <li class="icon icon-arrow-left">
+                <a class="" href="javascript:void(0)" title="Experimental Visualisations"><i class="fa fa-flask fa-fw"></i> Experiments</a>
+                <div class="mp-level">
+                    <div class="mp-level-panel icon icon-news">Experiments</div>
+                    <a class="mp-back" href="#">back</a>
+                    <ul>
+                        <li><a href="{{ path_for('publications.all.network') }}" title="Visualising a co-authorship graph">Co-Authorship</a></li>
+                        <li><a href="{{ path_for('publications.all.narrative') }}" title="Visualising a research narrative">Narrative</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- About Us -->
+            <li class="icon icon-arrow-left">
+                <a class="" href="javascript:void(0)" title="About..."><i class="fa fa-user fa-fw"></i> About...</a>
+                <div class="mp-level">
+                    <div class="mp-level-panel icon icon-news">About</div>
+                    <a class="mp-back" href="#">back</a>
+                    <ul>
+                        <li><a href="{{ path_for('about.me') }}" title="More information about me">About Me</a></li>
+                        <li><a href="{{ path_for('about.site') }}" title="More information about the site">About This</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+    </div>
+</nav>

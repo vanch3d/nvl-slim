@@ -1,0 +1,126 @@
+{# ... #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="//www.googletagmanager.com/gtag/js?id=UA-49330125-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-49330125-1');
+    </script>
+
+
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block injectMETA %}
+    {% endblock %}
+
+    <title>NVL | {% block urltile %}Nicolas Van Labeke Website{% endblock %}</title>
+
+    <link rel="shortcut icon" href="/images/favicon.png"/>
+    <link rel="unapi-server" type="application/xml" title="unAPI" href="{{ app_base~'/api/unapi' }}"/>
+
+    <link rel="stylesheet" href="/css/app.min.css">
+    {% block injectCSS %}
+    {% endblock %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//cdn.jsdelivr.net/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<a href="#main-content" class="skip-content sr-only sr-only-focusable">Skip to main content</a>
+<div class="mp-container">
+
+    <ul class="gn-menu-main" id="gn-menu">
+        <!-- trigger -->
+        <li class="gn-trigger">
+            <a href="#" id="trigger" aria-label="Open main menu" class="menu-trigger"> <i class="fa fa-bars fa-lg"></i></a>
+
+        </li>
+
+        <!-- logo -->
+        <li class="logo">
+            <h1><a title="Nicolas Van Labeke" href="/"> <span class="base-color">N</span>VL
+                </a></h1>
+
+            <!-- page-title -->
+        </li>
+        <li class="page-title">{% if block('pagetile') is defined %}
+                <h2>{{ block('pagetile') }}</h2>
+            {% endif %}</li>
+
+        <!-- #menu-social-icons -->
+
+            <!-- menu-social-icons -->
+        <li id="menu-social-icons">
+
+            {% include 'widgets/social.twig' %}
+        </li>
+
+
+    </ul>
+    <!-- Push Wrapper -->
+    <div class="mp-pusher" id="mp-pusher">
+
+        <!-- mp-menu -->
+        {% include 'widgets/menu.twig' %}
+
+
+        <div class="scroller"><!-- this is for emulating position fixed of the nav -->
+            <div class="scroller-inner">
+                <div class="breadcrumb-wrapper">
+                    <!-- container -->
+                    <div class="container">
+                        <!-- row -->
+                        <div class="row">
+
+                            <div class="page-description">
+                                {% block breadcrumb %}{% endblock %}
+                                {% block pagedescription %}{% endblock %}
+                            </div>
+
+                        </div>
+                        <!-- /row -->
+                    </div>
+                    <!-- /container -->
+                </div>
+
+                <main id="main-content" tabindex="-1">
+                {% block content %}{% endblock %}
+                </main>
+
+                <div class="debug-panel"></div>
+                <div class="push"></div>
+
+            </div>
+            <!-- /scroller-inner -->
+            {% include 'widgets/footer.twig' %}
+        </div>
+        <!-- /scroller -->
+
+    </div>
+    <!-- /pusher -->
+</div>
+<!-- /container -->
+
+<script src="/js/app.min.js"></script>
+<script>
+$(document).ready(function () {
+    jNVL.initSite();
+    jNVL.addPubReaderLinks();
+
+});
+</script>
+
+{% block injectJS %}
+{% endblock %}
+</body>
+</html>

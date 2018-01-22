@@ -1,0 +1,23 @@
+{
+	"id"	:	"{{ project.id }}",
+	"name" : 	"{{ project.name }}",
+	"title": 	"{{ block('project_title')|striptags|trim}}",
+	"institution": 	"{% block project_inst '' %}",
+	"location": 	"{% block project_loc '' %}",
+    "lat": 	"{% block project_lat '' %}",
+    "lon": 	"{% block project_lon '' %}",
+	"start":	"{% block project_start '' %}",
+	"end": 	"{% block project_end '' %}",
+	"description": 	"{{ block('project_overview')|striptags|trim|
+							split("     ")|join(" ")|
+							split("    ")|join(" ")|
+							split("   ")|join(" ")|
+							split("  ")|join(" ")|
+							split("\n")|join("")|
+							split("\t")|join(" ")|
+							slice(0,500)~" [...]" }}",
+	"people":	["{{ linkedIn | join('","') | raw }}"],
+	"github":	["{{ gitHub | join('","') | raw }}"],
+    "images":   "{{ path_for('api.projects.image',{'name': project.id}) }}",
+        "url":  "{{ path_for('project.named',{'name': project.id}) }}"
+}
