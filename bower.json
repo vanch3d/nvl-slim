@@ -3,8 +3,11 @@
   "dependencies": {
     "jquery": "^3.2",
     "bootstrap": "^3.3",
+    "d3-bower": "mbostock-bower/d3-bower#3.5.17",
     "d3": "^4.12",
     "d3-cloud": "^1.2",
+    "d3-narrative": "abcnews/d3-layout-narrative",
+    "d3-process-map": "vanch3d/d3-process-map#^1.2.0",
     "jquery-oembed-all": "*",
     "jquery-fullscreen": "^1.1",
     "handlebars": "^4.0",

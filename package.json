@@ -12,7 +12,8 @@
     "gulp-image": "^4.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^2.1.2"
+    "gulp-uglify": "^2.1.2",
+    "merge-stream": "^1.0.1"
   },
   "apidoc": {
     "title": "nvl-slim",
