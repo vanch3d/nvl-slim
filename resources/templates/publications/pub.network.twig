@@ -67,7 +67,7 @@
             left: 0;
             bottom: 0;
             /*background-color: white;*/
-            background: white url(/assets/images/shadow.png) no-repeat center top;
+            background: white url("/images/shadow.png") no-repeat center top;
             z-index: 9000;
         }
         #docs-close {
@@ -227,11 +227,7 @@
 {% endblock %}
 
 {% block injectJS %}
-    <script src="//cdn.jsdelivr.net/d3js/3.4.3/d3.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/colorbrewer.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.0.0/lib/geometry.js"></script>
-    <script src="//cdn.jsdelivr.net/gh/kayahr/jquery-fullscreen-plugin@1.1.4/jquery.fullscreen-min.js"></script>
-    <script src="//cdn.jsdelivr.net/handlebarsjs/1.3.0/handlebars.js"></script>
+    <script src="/js/d3.nvl-bundle.min.js"></script>
     {% include('handlebars/pub.network.docs.hbs') %}
 
     <script type="text/javascript">
@@ -272,36 +268,6 @@
             item.docs = _html.html();
         }
 
-        // @todo[vanch3d] Move this to the d3-process-map package
-        var defaults = {
-            "title" : "Default Title",
-            "graph" : {
-                "linkDistance" : 150,
-                "charge"       : -400,
-                "height"       : 700,
-                "numColors"    : 12,
-                "labelPadding" : {
-                    "left"   : 3,
-                    "right"  : 3,
-                    "top"    : 2,
-                    "bottom" : 2
-                },
-                "labelMargin" : {
-                    "left"   : 3,
-                    "right"  : 3,
-                    "top"    : 2,
-                    "bottom" : 2
-                },
-                "ticksWithoutCollisions" : 50,
-                "boundingBox": false
-            },
-            "docs" : {
-                "desiredDocsHeight" : 200,
-                "docsClosePadding" : 8
-            },
-            "types" : {},
-            "constraints" : []
-        };
         var config = {
             "title" : "Publications",
             "graph" : {
@@ -349,7 +315,6 @@
                 }
             ]
         };
-        config = $.extend(true,{},defaults, config );
         config.data={};
 
         authName = [],
@@ -358,7 +323,7 @@
         {
             $.each( src.data, function( key, value ) {
 
-                console.log(value.archive_location);
+                //console.log(value.archive_location);
                 var object = {
                     "name": value.archive_location,
                     "type": "publication",
@@ -396,9 +361,8 @@
             $.each( config.data, function( key, value ) {
                 formatDoc(value);
             });
-            $.getScript("//cdn.jsdelivr.net/gh/vanch3d/d3-process-map@1.1.0/script.js");
-            //$.getScript("/plugins/d3js/d3.pubnetwork.js");
-            desiredDocsHeight = 100;
+
+            d3.layout.processmap(config).start();
 
             $("#btn-fullscreen").click(function()
             {
