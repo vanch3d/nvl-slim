@@ -6,14 +6,18 @@
  * Time: 18:20
  */
 
+use RunTracy\Helpers\Profiler\Profiler;
 use Tracy\Debugger;
 
 defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 define('DIR', realpath(__DIR__ . '/../') . DS);
-Debugger::$maxDepth = 5; // default: 3
-Debugger::$showLocation = true; // Shows all additional location information
-Debugger::enable(Debugger::DEVELOPMENT, DIR . '.logs');
-
+if (getenv('APP_DEBUG') === 'true')
+{
+    Debugger::$maxDepth = 5; // default: 3
+    Debugger::$showLocation = true; // Shows all additional location information
+    Debugger::enable(Debugger::DEVELOPMENT, DIR . '.logs');
+    Profiler::enable();
+}
 return [
     'settings' => [
 
