@@ -10,6 +10,7 @@ namespace NVL\Controllers;
 use PHPUnit\Runner\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use RunTracy\Helpers\Profiler\Profiler;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Router;
@@ -71,6 +72,10 @@ class PublicationController extends Controller
      */
     public function pubNarrative(Request $request, Response $response, array $args)
     {
+        // set the cache for the request
+        //$response = $this->getCache()->withEtag($response,'nvl-slim.narrative');
+        //$response = $this->getCache()->withExpires($response,'+2 week');
+
         set_time_limit(100);
         // @var array $narrative
         $narrative = array(
@@ -79,7 +84,10 @@ class PublicationController extends Controller
             "errors" => []
         );
 
+        Profiler::start();
+        Profiler::start("getData");
         $pubs = $this->getPublicationManager()->getData("all", 100);
+        Profiler::finish("getData");
         while ($pub = array_pop($pubs['publications'])) {
 
             // Do not incorporate non-english publications
@@ -88,6 +96,7 @@ class PublicationController extends Controller
                 continue;
             }
 
+            Profiler::start("Publication " . count($pubs['publications']));
             // compute Freq Dist
             $tags = $this->getPublicationManager()->getPublicationAnalytics($pub['archive_location']);
 
@@ -122,11 +131,16 @@ class PublicationController extends Controller
                 $narrative['scenes'][$pub['archive_location']][] = $tag['key'];
             }
 
+            Profiler::finish("Publication " . count($pubs['publications']));
+
+
         }
 
         // remove the keys
         //$narrative['scenes'] = array_values($narrative['scenes']);
         $narrative['characters'] = array_values($narrative['characters']);
+
+        Profiler::finish();
 
         // @todo[vanch3d] Build the proper response
         return $this->getView()->render($response, 'publications/pub.narrative.twig',array(
