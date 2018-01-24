@@ -9,6 +9,7 @@
 namespace NVL\Data;
 
 use citeproc;
+use http\Exception\RuntimeException;
 use Interop\Container\ContainerInterface;
 use Monolog\Logger;
 use NlpTools\Analysis\FreqDist;
@@ -407,13 +408,14 @@ class ZoteroManager
         return $data;
     }
 
-    public function getPublicationAnalytics($name)
-    {
-        return $this->getFrequencyDistribution([$name]);
-    }
-
     public function getProjectAnalytics($name)
     {
+        // get cache
+        // @todo[vanch3d] Get an expire date on the cache (propagate Zotero's last-change?)
+        $cache = $this->readZoteroCache("nvl.analytics.$name");
+        if (isset($cache))
+            return (object)$cache;
+
         $pubs = $this->getZoteroRecord($name);
         $files = [];
         foreach ($pubs['publications'] as $pub) {
@@ -426,7 +428,22 @@ class ZoteroManager
             $files[] = $pub['archive_location'];
         }
 
-        return $this->getFrequencyDistribution($files);
+        $cache =  $this->getFrequencyDistribution($files);
+        $this->writeZoteroCache("nvl.analytics.$name",$cache);
+        return $cache;
+    }
+
+    public function getPublicationAnalytics($name)
+    {
+        // get cache
+        // @todo[vanch3d] Get an expire date on the cache (propagate Zotero's last-change?)
+        $cache = $this->readZoteroCache("nvl.analytics.$name");
+        if (isset($cache))
+            return (object)$cache;
+
+        $cache = $this->getFrequencyDistribution([$name]);
+        $this->writeZoteroCache("nvl.analytics.$name",$cache);
+        return $cache;
     }
 
 
