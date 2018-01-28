@@ -8,6 +8,8 @@
 
 namespace NVL\Tests;
 
+use Dotenv\Dotenv;
+use Dotenv\Exception\InvalidPathException;
 use NVL\App;
 use PHPUnit\Framework\TestCase;
 use Slim\Http\Environment;
@@ -31,9 +33,20 @@ abstract class SlimApp_TestCase extends TestCase
     {
         parent::setUpBeforeClass();
 
+
+        try {
+            (new Dotenv(__DIR__ . './../'))->load();
+        } catch (InvalidPathException $e) {
+            die($e);
+        }
+
+        // override debug option
+        putenv('APP_DEBUG=false');
+
         // create the nvl-slim app wih all containers and routes
         require_once __DIR__ . './../sources/helpers.php';
         $config = require_once __DIR__.'./../sources/config.php';
+
         $app = new App((array)$config);
 
         require_once __DIR__.'./../sources/dependencies.php';
