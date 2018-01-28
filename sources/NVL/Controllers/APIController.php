@@ -30,12 +30,15 @@ class APIController extends Controller
     const
         ERR_NOTIMPLEMENTED = "not yet implement",
         ERR_INTERNALERROR = "internal error",
+        ERR_BADREQUEST = "bad request",
         ERR_NOTFOUND = "not found";
 
-    private   $checkHeader = true;
-    private   $outputParam = 'format';
-    private   $defaultMediaType = APIController::API_JSON;
-    private   $knownMediaTypes = [
+    private $checkHeader = true;
+    private $outputParam = 'output';
+    private $xmlRootName = "nvl-slim-api";
+    private $unapiRootName = "formats";
+    private $defaultMediaType = APIController::API_JSON;
+    private $knownMediaTypes = [
         APIController::API_JSON,
         APIController::API_XML,
         'text/xml'
@@ -103,14 +106,18 @@ class APIController extends Controller
      * @param Request  $request
      * @param Response $response
      * @param array    $data
+     * @param int      $status
      * @param string   $forceFormat
      * @return Response
      * @throws \Exception
      */
     protected function render(Request $request, Response $response, array $data,int $status=200,string $forceFormat = null)
     {
+        $this->xmlRootName = [
+            'rootElementName' => "nvl-slim-api",
+            '_attributes' => [ 'version' => "1.0" ]
+        ];
         $mediaType = ($forceFormat) ?? $this->determineMediaType($request);
-        //$status = $data['meta']['status'] ?? 200;
 
         // add debug information from middleware
         $meta = $request->getAttribute('meta');
@@ -124,7 +131,7 @@ class APIController extends Controller
         switch ($mediaType) {
             case APIController::API_XML:
             case 'text/xml':
-                $xml = ArrayToXml::convert($data);
+                $xml = ArrayToXml::convert($data,$this->xmlRootName);
                 $body = new Body(fopen('php://temp', 'r+'));
                 $body->write($xml);
                 return $response->withBody($body)
@@ -167,30 +174,112 @@ class APIController extends Controller
     /**
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
      * @return Response
      * @throws \Exception
      */
-    public function apiHome(Request $request, Response $response, array $args)
+    public function apiHome(Request $request, Response $response)
     {
         return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
-            'Nothing to see here',400);
+            'Nothing to see here. Really.',400);
+    }
+
+    private function getUnAPIFormats()
+    {
+        $formatsList = [
+            array(
+                "_attributes" => array(
+                    'name' => 'rdf_bibliontology',
+                    'type' => 'application/xml',
+                    'docs' => 'http://bibliontology.com/'
+                ),
+                "_value" => ""
+            ),
+            array(
+                "_attributes" => array(
+                    'name' => 'bibtex',
+                    'type' => 'text/plain',
+                    'docs' => 'http://www.bibtex.org/'
+                ),
+                "_value" => ""
+            ),
+        ];
+
+        return [ "format"=> $formatsList ];
+    }
+
+    private function formatUnAPIResponse(Response $response, array $data, array $root = null) : Response
+    {
+        $xml = ArrayToXml::convert($data,$root ?? $this->unapiRootName);
+
+        $body = new Body(fopen('php://temp', 'r+'));
+        $body->write($xml);
+        return $response->withBody($body)
+            ->withHeader('Content-Type', APIController::API_XML.';charset=utf-8');
     }
 
     /**
      * @param Request  $request
      * @param Response $response
-     * @param array    $args
      * @return Response
      * @throws \Exception
+     * @se https://web.archive.org/web/20141218062835/http://unapi.info/
      */
-    public function unAPI(Request $request, Response $response, array $args)
+    public function unAPI(Request $request, Response $response)
     {
-        $r = $this->determineMediaType($request);
-        $this->getLogger()->notice("UNAPI : " . $r);
+        //$mediatype = $this->determineMediaType($request);
 
-        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
-            'Nothing to see here',400);
+        $id = $request->getParam("id");
+        $format = $request->getParam("format");
+
+        $formats = $this->getUnAPIFormats();
+
+        if (!isset($id) && !isset($format))
+        {
+            // return the list of supported metadata formats
+            $response = $this->formatUnAPIResponse($response,$formats)
+                ->withStatus(200);
+            return $response;
+        }
+        else if (!isset($format))
+        {
+            // return the list of supported metadata formats for the given uri
+            $response = $this->formatUnAPIResponse($response,$formats,[
+                'rootElementName' => $this->xmlRootName,
+                '_attributes' => [ 'id' => $id ]
+            ])
+                ->withStatus(300);
+            return $response;
+        }
+
+        if (!isset($id))
+        {
+            return $this->renderError($request,$response,APIController::ERR_BADREQUEST,
+                "the parameter 'id' is missing",404);
+        }
+
+        $pub = $this->getPublicationManager()->isDefined($id);
+        if (false === $pub)
+        {
+            return $this->renderError($request,$response,APIController::ERR_NOTFOUND,
+                'could not find a document with this id',404);
+        }
+
+        $accepted = array_filter($this->getUnAPIFormats()['format'], function ($var) use ($format) {
+            return ($format == $var['_attributes']['name']);
+        });
+        $accepted = reset($accepted);
+
+        if (empty($accepted))
+        {
+            return $this->renderError($request,$response,APIController::ERR_BADREQUEST,
+                'this format is not accepted',406);
+        }
+
+        $body = new Body(fopen('php://temp', 'r+'));
+        $body->write($pub['output'][$format]);
+        return $response->withBody($body)
+            ->withStatus(200)
+            ->withHeader('Content-Type', $accepted['_attributes']['type'].';charset=utf-8');
 
     }
 
