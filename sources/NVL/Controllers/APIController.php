@@ -244,7 +244,7 @@ class APIController extends Controller
         {
             // return the list of supported metadata formats for the given uri
             $response = $this->formatUnAPIResponse($response,$formats,[
-                'rootElementName' => $this->xmlRootName,
+                'rootElementName' => $this->unapiRootName,
                 '_attributes' => [ 'id' => $id ]
             ])
                 ->withStatus(300);
