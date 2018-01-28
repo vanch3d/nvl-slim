@@ -57,9 +57,14 @@ class ProjectController extends Controller
         }
 
         $publications = [];
+        $cite = [];
         try {
             $pubs = $this->getPublicationManager()->getData($args["name"]);
             $publications = $pubs['publications'];
+            foreach ($publications as $pub)
+            {
+                $cite[$pub['archive_location']] = $pub['output']['cite'];
+            }
 
         } catch (\Exception $e) {
         }
@@ -67,7 +72,8 @@ class ProjectController extends Controller
             array(
                 'tmpl_base' => 'template.html.twig',
                 'project' => $projIdx,
-                'publications' => $publications
+                'publications' => $publications,
+                'cites' => $cite
         ));
     }
 
