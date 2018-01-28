@@ -47,6 +47,11 @@
             "sources/Zotero/CiteProc.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "NVL\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
         "post-update-cmd": [
             "php -r \"file_exists('.env') || copy('.env.example', '.env');\""
