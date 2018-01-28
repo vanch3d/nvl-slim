@@ -210,7 +210,7 @@
                                 </div>
                                 <ul class="pub-tag" id="publist">
                                     {% for pub in publications %}
-                                        <li id="{{ pub.id }}" {{ pub.PubReader ? "data-reader="~pub.PubReader }} data-type="{{ pub.type }}">{{ pub.output.ref | raw }}
+                                        <li data-id="{{ pub.archive_location }}" {{ pub.PubReader ? "data-reader="~pub.PubReader }} data-type="{{ pub.type }}">{{ pub.output.ref | raw }}
                                             {% if (pub.PDF) %}
                                                 [<a href="{{ pub.PDF }}" title="Download the PDF version" download>PDF</a>]
                                             {% endif %}
@@ -395,6 +395,14 @@
 
         // Configure GitHub Plugin
         $("[data-repo]").github();
+
+        $("span.cite").each(function(){
+            var cites = {{  cites|json_encode |raw}};
+            ref = $(this).data("pubidx");
+            code = cites[ref];
+            $(this).html(code || "");
+
+        });
 
     });
 </script>

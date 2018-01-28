@@ -56,6 +56,8 @@ var jNVL = (function (self,$) {
                 text : elt.text(),
                 title : "Read the full text online"
             });
+            //@todo[vanch3d] Keep or remove the data once processed?
+            //$(obj).removeAttr("data-reader");
             elt.empty().append(newLink);
         });
 
