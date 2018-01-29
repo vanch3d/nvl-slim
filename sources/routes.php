@@ -51,6 +51,7 @@ $app->group('/',function() {
     $this->group('projects',function() {
         $this->get('', ProjectController::class . ':allProjects')->setname('project.all');
         $this->get('/storymap', ProjectController::class . ':storyMap')->setname('project.story');
+        $this->get('/timeline', ProjectController::class . ':projectTimeline')->setname('project.timeline');
         $this->get('/{name}', ProjectController::class . ':showProject')->setname('project.named');
         $this->get('/{name}/cloud', ProjectController::class . ':wordCloud')->setname('project.named.cloud');
     });

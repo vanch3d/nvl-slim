@@ -1,0 +1,41 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}Research Projects (Timeline){% endblock %}
+{% block pagetile %}Research Projects{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Home" href="{{ path_for('project.all') }}">Projects</a></li>
+        <li class="active">Timeline</li>
+    </ol>
+{% endblock %}
+
+{% block pagedescription %}
+    <h2>Research Projects - Timeline</h2>
+
+{% endblock %}
+
+
+{% block content %}
+    <section class="section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="timelinediv" style="width: 100%; height: 680px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}
+
+{% block injectCSS %}
+    <style>
+    </style>
+{% endblock %}
+
+{% block injectJS %}
+<script type="text/javascript" src="/js/storymap.min.js"></script>
+{% endblock %}

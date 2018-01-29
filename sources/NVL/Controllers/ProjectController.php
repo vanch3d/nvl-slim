@@ -82,4 +82,12 @@ class ProjectController extends Controller
         // @todo[vanch3d] Build the proper response
         return $this->getView()->render($response, 'site.twig');
     }
+
+
+    public function projectTimeline(Request $request, Response $response)
+    {
+        // @todo[vanch3d] Build the proper response
+        return $this->getView()->render($response, 'projects/timeline.twig');
+    }
+
 }
