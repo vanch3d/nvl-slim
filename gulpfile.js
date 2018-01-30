@@ -41,7 +41,8 @@ var jsList = [
 // list of JS plugins to uglify but keep separate
 var jsPluginList = [
     config.resDir + '/_plugins/nvl-galleria/nvl-galleria.js',
-    config.bowerDir + '/StoryMapJS/compiled/js/storymap.js'
+    config.bowerDir + '/StoryMapJS/compiled/js/storymap.js',
+    config.bowerDir + '/TimelineJS3/compiled/js/timeline.js'
 ];
 
 // list of D3-v3 plugins to combine
@@ -50,7 +51,8 @@ var jsD3v3List = [
     config.bowerDir + '/d3-narrative/narrative.js',
     config.bowerDir + '/d3-process-map/dist/colorbrewer.js',
     config.bowerDir + '/d3-process-map/dist/geometry.js',
-    config.bowerDir + '/d3-process-map/dist/d3-process-map.js'
+    config.bowerDir + '/d3-process-map/dist/d3-process-map.js',
+    config.bowerDir + '/d3-queue/d3-queue.js'
 ];
 
 
@@ -62,6 +64,7 @@ var cssList = [
     config.bowerDir + '/multi-pushmenu/css/component.css',
     config.bowerDir + '/multi-pushmenu/css/icons.css',
     config.bowerDir + '/StoryMapJS/compiled/css/storymap.css',
+    config.bowerDir + '/TimelineJS3/compiled/css/timeline.css',
     config.resDir   + '/styles/app.scss',
     config.resDir   + '/_plugins/nvl-galleria/css/nvl-galleria.css',
 ];
@@ -75,7 +78,8 @@ var iconList = [
 
 // Hack for icons & fonts in css/icons folder
 var iconCSSList = [
-    config.bowerDir + '/StoryMapJS/compiled/css/icons/**.*'
+    config.bowerDir + '/StoryMapJS/compiled/css/icons/**.*',
+    config.bowerDir + '/TimelineJS3/compiled/css/icons/**.*'
 ];
 
 // list of images to process and copy

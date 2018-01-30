@@ -25,6 +25,7 @@
     "StoryMapJS": "NUKnightLab/StoryMapJS#^0.6.7",
     "PubReader": "vanch3d/PubReader#v1.4",
     "MathJax": "^2.7.2",
-    "TimelineJS3": "NUKnightLab/TimelineJS3#^3.5.4"
+    "TimelineJS3": "NUKnightLab/TimelineJS3#^3.5.4",
+    "d3-queue": "^3.0.7"
   }
 }
