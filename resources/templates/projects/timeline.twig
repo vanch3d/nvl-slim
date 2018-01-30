@@ -22,7 +22,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div id="timelinediv" style="width: 100%; height: 680px;">
+                    <div id="tl-container" style="width: 100%; height: 680px;">
                     </div>
                 </div>
             </div>
@@ -41,6 +41,26 @@
 <script type="text/javascript" src="/js/d3.nvl-bundle.min.js"></script>
 <script type="text/javascript" src="/js/timeline.min.js"></script>
 <script type="text/javascript">
+
+    // overriding timeline's menu bar to add the fullscreen button
+    TL.MenuBar.prototype._initLayout = function()
+    {
+        // Create Layout
+        this._el.button_fulscreen 				    	= TL.Dom.create('span', 'tl-menubar-button', this._el.container);
+        this._el.button_zoomin 							= TL.Dom.create('span', 'tl-menubar-button', this._el.container);
+        this._el.button_zoomout 						= TL.Dom.create('span', 'tl-menubar-button', this._el.container);
+        this._el.button_backtostart 					= TL.Dom.create('span', 'tl-menubar-button', this._el.container);
+
+        if (TL.Browser.mobile) {
+            this._el.container.setAttribute("ontouchstart"," ");
+        }
+
+        this._el.button_fulscreen.innerHTML		    = "<span id='btn-fullscreen'><i class='fa fa-window-maximize'></i></span>";
+        this._el.button_backtostart.innerHTML		= "<span class='tl-icon-goback'></span>";
+        this._el.button_zoomin.innerHTML			= "<span class='tl-icon-zoom-in'></span>";
+        this._el.button_zoomout.innerHTML			= "<span class='tl-icon-zoom-out'></span>";
+    };
+
     $(document).ready(function (src) {
 
         // data stub for the timeline
@@ -176,7 +196,12 @@
                 //console.log(tl_json);
 
                 // create the timeline
-                var timeline = new TL.Timeline('timelinediv',tl_json);
+                var timeline = new TL.Timeline('tl-container',tl_json);
+                $("#btn-fullscreen").click(function()
+                {
+                    $("#tl-container").toggleFullScreen();
+                });
+
             })
         });
     });
