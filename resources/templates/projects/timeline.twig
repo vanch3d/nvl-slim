@@ -92,7 +92,7 @@
             // computing eras from projects
             var currentEra = {
                 start_date: { year: null },
-                end_date: { year: "1995" },
+                end_date: { year: "1994" },
                 text: { headline: null, text: null}
             };
 
@@ -100,10 +100,12 @@
             q = d3.queue();
             $.each( projects.reverse(), function( index, project){
 
+                var start = new Date(project.start);
+                var end = new Date(project.end);
                 // add the project
                 var event = {
-                    start_date: { year: project.start},
-                    end_date: { year: project.end, month: 12, day: 31},
+                    start_date: { year: start.getFullYear(), month: start.getMonth()},
+                    end_date: { year: end.getFullYear(), month: end.getMonth()},
                     text: { headline: project.title, text: project.description},
                     unique_id : project.id,
                     group: "projects",

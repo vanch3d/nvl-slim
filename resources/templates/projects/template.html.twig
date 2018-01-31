@@ -169,11 +169,13 @@
 
 {% block pagedescription %}
     <h2>{% block project_title %}{% endblock %}</h2>
+    {% set start = block('project_start')  %}
+    {% set end = block('project_end')  %}
     <div class="subtitle">
         <span id="prj-inst">{% block project_inst %}{% endblock %}</span> -
         <span id="prj-loc">{% block project_loc %}{% endblock %}</span> (
-        <time id="prj-start" datetime="{{ block('project_start') }}"><span>{% block project_start %}{% endblock %}</span></time> -
-        <time id="prj-end" datetime="{{ block('project_end') }}"><span>{% block project_end %}{% endblock %}</span></time>)
+        <time id="prj-start" datetime="{{ start }}"><span>{{ start|date("Y") }}</span></time> -
+        <time id="prj-end" datetime="{{ end }}"><span>{{ end|date("Y") }}</span></time>)
     </div>
 {% endblock %}
 

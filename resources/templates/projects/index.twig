@@ -30,9 +30,9 @@
 					<li id="{{ project.id }}" data-url="{{ path_for('api.projects.named',{'name':project.id }   ) }}">
 						<div class="tm-dt">
 						<!-- date --> 
-							<time class="prj-start"><span>{{ project.start }}</span></time>
-							
-							<time class="prj-end"><span>{{ project.end }}</span></time>
+							<time class="prj-start"><span>{{ project.start|date("Y") }}</span></time>
+
+							<time class="prj-end"><span>{{ project.end|date("Y") }}</span></time>
 						</div>
 						<!-- icon -->
 						<div class="tm-icon">

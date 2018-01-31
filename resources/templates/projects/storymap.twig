@@ -145,10 +145,11 @@
             }
         };
         $.each(src.data.reverse(), function(i, item) {
+            var start = new Date(item.start).getFullYear();
             mapdata.storymap.slides.push({
-                date: item.start,
+                date: start,
                 text: {
-                    headline: item.start + ": " + "<a href='" +  item.url + "'>" + item.title + "</a>",
+                    headline: start + ": " + "<a href='" +  item.url + "'>" + item.title + "</a>",
                     text: item.description
                 },
                 "location": {
