@@ -72,6 +72,8 @@
             eras: []
         };
 
+        var prj_list = [];
+
         // Wrangle the different sources of data (projects, publications, github, images)
         // @todo[vanch3d] tried d3.queue to get all requests in one pass, but not working. Try $.when ?
         var q = d3.queue();
@@ -103,6 +105,7 @@
                     start_date: { year: project.start},
                     end_date: { year: project.end, month: 12, day: 31},
                     text: { headline: project.title, text: project.description},
+                    unique_id : project.id,
                     group: "projects",
                     media:{
                         url: "/images/project.png",
@@ -115,6 +118,8 @@
                     }
                 };
                 tl_json.events.push(event);
+                prj_list.push(project.id);
+
 
                 // create an era based on project and previous era
                 var era = {
@@ -146,17 +151,19 @@
                             month: pub.issued["date-parts"][0][1] || null
                         },
                         text: { headline: pub.archive_location, text: pub.abstract || ""},
+                        unique_id : project.id + "-" + pub.archive_location,
                         group: "publications"
                     };
                     tl_json.events.push(event);
 
                 });
 
+
                 // Add the project's GitHub releases to the timeline
                 $.each( project.github, function( index, repos){
                     if (repos === "") return;
 
-                    ///var Etag = localStorage.getItem("nvl-slim.github.request." + repos);
+                    var Etag = localStorage.getItem("nvl-slim.github.request." + repos);
                     var headers = {
                     };
 
@@ -165,7 +172,10 @@
                             dataType: "json",
                             headers: headers,
                             url: "https://api.github.com/repos/" + repos + "/releases"
-                        }).done(function (src) { c(null,src);});
+                        }).done(function (src) {
+                            // insert project id in github data
+                            $.each( src, function(index){ src[index]['project'] = project.id; });
+                            c(null,src);});
                     });
                 });
             });
@@ -174,11 +184,11 @@
             // wait for all github requests to finish
             q.awaitAll(function(error,data){
                 if (error) throw error;
-                //console.log(data);
 
                 // flatten the list
                 var allRepos = [];
                 $.each( data, function( index, repo ){ $.merge(allRepos,repo); });
+                //console.log(allRepos);
 
                 $.each( allRepos, function( index, repo ){
                     var created = new Date(repo.created_at);
@@ -189,6 +199,7 @@
                             month: created.getMonth()
                         },
                         text: { headline: repo.tag_name, text: repo.body || ""},
+                        unique_id : repo.project + "-" + repo.tag_name + "-marker",
                         group: "Source Code"
                     };
                     tl_json.events.push(event);
@@ -200,6 +211,13 @@
                 $("#btn-fullscreen").click(function()
                 {
                     $("#tl-container").toggleFullScreen();
+                });
+
+                // no css for individual marker so tricking it with id patterns
+                var cb = colorbrewer.Set3[prj_list.length];
+                $.each(prj_list,function(idx,id){
+                    var sel= "div.tl-timemarker[id*='"+id+"'] .tl-timemarker-content-container";
+                    $(sel).css("background-color",cb[idx]);
                 });
 
             })
