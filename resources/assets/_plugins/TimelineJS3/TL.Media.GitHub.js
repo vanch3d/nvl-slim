@@ -1,6 +1,6 @@
 /*	TL.Media.GitHub
     Load a GitHub resources. Currently implemented:
-        - releases (https://api.github.com/repos/{user}/{repos}/releases/{release)
+        - release (https://api.github.com/repos/{user}/{repos}/releases/{release)
 ================================================== */
 
 TL.Media.GitHub = TL.Media.extend({
@@ -13,8 +13,6 @@ TL.Media.GitHub = TL.Media.extend({
         var api_url,
             self = this;
 
-        console.log(this.data);
-
         // Create Dom element
         this._el.content_item	= TL.Dom.create("div", "tl-media-item tl-media-github", this._el.content);
         this._el.content_container.className = "tl-media-content-container tl-media-content-container-text";
@@ -22,25 +20,24 @@ TL.Media.GitHub = TL.Media.extend({
         // Get Media ID
         this.media_id = this.data.url.split("repos/")[1].split("/releases/").join("@");
 
-        // API Call
-        TL.ajax({
-            type: 'GET',
-            url: this.data.url,
-            dataType: 'json', //json data type
+        if (this.data.github !== null)
+        {
+            console.log(this.data.github);
+            self.createMedia(this.data.github);
+        }
+        else
+        {
+            var error_text = "";
+            error_text += "Unable to load github" + "<br/>" + self.media_id + "<br/>" + type;
+            self.loadErrorDisplay(error_text);
 
-            success: function(d){
-                console.log(d);
-                self.createMedia(d);
-            },
-            error:function(xhr, type){
-                var error_text = "";
-                error_text += "Unable to load github" + "<br/>" + self.media_id + "<br/>" + type;
-                self.loadErrorDisplay(error_text);
-            }
-        });
-
+        }
     },
 
+    /**
+     *
+     * @param d
+     */
     createMedia: function(d) {
             var content = "";
 
@@ -56,10 +53,17 @@ TL.Media.GitHub = TL.Media.extend({
 
     },
 
+    /**
+     *
+     */
     updateMediaDisplay: function() {
 
     },
 
+    /**
+     *
+     * @private
+     */
     _updateMediaDisplay: function() {
 
     }
