@@ -42,7 +42,8 @@ var jsList = [
 var jsPluginList = [
     config.resDir + '/_plugins/nvl-galleria/nvl-galleria.js',
     config.bowerDir + '/StoryMapJS/compiled/js/storymap.js',
-    config.bowerDir + '/TimelineJS3/compiled/js/timeline.js'
+    config.bowerDir + '/TimelineJS3/compiled/js/timeline.js',
+    config.resDir + '/_plugins/TimelineJS3/TL.Media.GitHub.js'
 ];
 
 // list of D3-v3 plugins to combine
