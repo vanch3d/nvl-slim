@@ -1,5 +1,5 @@
 /*	TL.Media.GitHub
-    Load a GitHub resources. Currently implemented:
+    Load a GitHub resources. Currently supported:
         - release (https://api.github.com/repos/{user}/{repos}/releases/{release)
 ================================================== */
 
@@ -7,8 +7,6 @@ TL.Media.GitHub = TL.Media.extend({
 
     includes: [TL.Events],
 
-    /*	Load the media
-    ================================================== */
     _loadMedia: function() {
         var api_url,
             self = this;
