@@ -202,12 +202,11 @@ gulp.task('clean:cache', function () {
 gulp.task('watch-build', function () {
 	// /**/**/*.ext pour inclure les éventuels subdir
 	gulp.watch('resources/assets/styles/**/**/*.scss', ['styles']);
-	gulp.watch('resources/assets/scripts/**/**/*.js', ['scripts']);
+    gulp.watch('resources/assets/scripts/**/**/*.js', ['js-core']);
+    gulp.watch('resources/assets/_plugins/**/**/*.js', ['js-plugins']);
 	gulp.watch('app/Controllers/**/**/*.php', ['apidoc']);
 });
 
 gulp.task('build:pubReader', ['js-pubReader','css-pubReader']);
 
 gulp.task('default', ['styles', 'scripts']);
-
-gulp.task('watch', ['default', 'watch-build']);
