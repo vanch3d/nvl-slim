@@ -7,8 +7,6 @@
  */
 var jNVL = (function (self,$) {
 
-    var	self = {};
-
     /**
      * Initialise various elements of the main site: pushmenu, go top control, translator, ...
      * Called once on each page
@@ -61,7 +59,7 @@ var jNVL = (function (self,$) {
             elt.empty().append(newLink);
         });
 
-    }
+    };
 
     return self;
 
