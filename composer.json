@@ -49,7 +49,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "NVL\\Tests\\": "tests/"
+            "NVL\\": "tests/NVL/"
         }
     },
     "scripts": {
