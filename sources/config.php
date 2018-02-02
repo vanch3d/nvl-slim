@@ -108,6 +108,9 @@ return [
                 'userID'    =>  getenv('ZOTERO_USERID'),                         // Zotero personal userID
                 'api_key'   =>  getenv('ZOTERO_APIKEY'),     // Zotero API key for access to lib
                 'collectID' =>  getenv('ZOTERO_COLLECTID')                      // Unique ID of the Zotero collection to access
+            ],
+            'github' => [
+                'api_key'   => getenv('GITHUB_TOKEN')
             ]
         ]
 
