@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false">
+    <testsuite name="API Unit Tests">
+        <directory>tests/NVL/</directory>
+    </testsuite>
+    <!--<logging>-->
+    <!--<log type="coverage-html" target="public/tests/coverage"/>-->
+    <!--<log type="testdox-html" target="public/tests/index.html"/>-->
+    <!--</logging>-->
+    <php>
+        <env name="APP_ENV" value="testing"/>
+    </php>
+</phpunit>
