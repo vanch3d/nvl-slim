@@ -6,7 +6,7 @@
  * Time: 14:37
  */
 
-namespace NVL\Tests;
+namespace NVL;
 
 use DOMDocument;
 use Slim\Http\Response;

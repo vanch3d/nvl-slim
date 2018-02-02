@@ -6,11 +6,10 @@
  * Time: 15:05
  */
 
-namespace NVL\Tests;
+namespace NVL;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidPathException;
-use NVL\App;
 use PHPUnit\Framework\TestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -35,7 +34,7 @@ abstract class SlimApp_TestCase extends TestCase
 
 
         try {
-            (new Dotenv(__DIR__ . './../'))->load();
+            (new Dotenv(__DIR__ . './../../'))->load();
         } catch (InvalidPathException $e) {
             die($e);
         }
@@ -44,13 +43,13 @@ abstract class SlimApp_TestCase extends TestCase
         putenv('APP_DEBUG=false');
 
         // create the nvl-slim app wih all containers and routes
-        require_once __DIR__ . './../sources/helpers.php';
-        $config = require_once __DIR__.'./../sources/config.php';
+        require_once __DIR__ . './../../sources/helpers.php';
+        $config = require_once __DIR__.'./../../sources/config.php';
 
         $app = new App((array)$config);
 
-        require_once __DIR__.'./../sources/dependencies.php';
-        require_once __DIR__ . './../sources/routes.php';
+        require_once __DIR__.'./../../sources/dependencies.php';
+        require_once __DIR__ . './../../sources/routes.php';
 
         self::$appStatic = $app;
     }
