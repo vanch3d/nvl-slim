@@ -6,7 +6,6 @@ const sass = require('gulp-sass');
 const nano = require('gulp-cssnano');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
-const apidoc = require('gulp-apidoc');
 const image = require('gulp-image');
 
 //const autoprefixer = require('gulp-autoprefixer');
@@ -178,16 +177,7 @@ gulp.task('images', function () {
         .pipe(gulp.dest('./public/images'));
 });
 
-gulp.task('apidoc', function(done){
-    apidoc({
-        src: './',
-        dest: 'apidoc/',
-        // debug: true,
-        includeFilters: [ '.*\\.php$' ]
-    }, done);
-});
-
-gulp.task('clean:cache', function () {
+gulp.task('tool:clean-cache', function () {
     return del([
         '.cache/**/*'
     ]);
