@@ -72,13 +72,16 @@ $app->group('/',function() {
     // Others routes
     $this->get('docs/{file}.pdf', PublicationController::class . ':redirectLegacy')->setname('publications.named.legacy');
 
+    // swagger-ui routes
+    $this->get('api', APIController::class . ':apiHome')->setname('api.home');
+    $this->get('api/swagger.json', APIController::class . ':getSwagger')->setname('api.swagger');
+
 })->add($mwHTML);
 
 /**
  * Api Routes
  */
 $app->group('/api',function() {
-    $this->get('', APIController::class . ':apiHome')->setname('api.home');
     $this->get('/unapi', APIController::class . ':unAPI')->setname('api.unapi');
     $this->get('/projects', APIController::class . ':getAllProjects')->setname('api.projects');
     $this->get('/projects/{name}', APIController::class . ':getProject')->setname('api.projects.named');

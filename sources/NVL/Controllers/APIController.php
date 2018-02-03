@@ -171,16 +171,16 @@ class APIController extends Controller
         return $this->render($request,$response,$ret,$status);
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @return Response
-     * @throws \Exception
-     */
     public function apiHome(Request $request, Response $response)
     {
-        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
-            'Nothing to see here. Really.',400);
+        return $this->getView()->render($response, 'api/swagger.ui.twig');
+    }
+
+    public function getSwagger(Request $request, Response $response)
+    {
+        $json = json_decode(@file_get_contents(DIR . 'swagger.json'),true);
+        //Debugger::barDump($json); die();
+        return $this->render($request,$response,$json,200,self::API_JSON);
     }
 
     private function getUnAPIFormats()
