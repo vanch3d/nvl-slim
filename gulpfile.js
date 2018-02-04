@@ -206,7 +206,7 @@ gulp.task('tool:clean-cache', function () {
     ]);
 });
 
-gulp.task('tool:build-  swagger', function (cb) {
+gulp.task('tool:build-swagger', function (cb) {
     run('"./vendor/bin/swagger" -e vendor ./resources/', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
