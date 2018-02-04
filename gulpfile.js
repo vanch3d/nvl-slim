@@ -207,16 +207,11 @@ gulp.task('tool:clean-cache', function () {
 });
 
 gulp.task('tool:build-swagger', function (cb) {
-    run('"./vendor/bin/swagger" -e vendor ./resources/', function (err, stdout, stderr) {
+    run('"./vendor/bin/swagger" --bootstrap ./resources/api/config.php -e vendor ./resources/', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
-
-    /*gulp.src('./resources/api/')
-        .pipe(exec('"./vendor/bin/swagger" -e vendor -o ./apidoc/ <%= file.path %>'))
-        .pipe(exec.reporter());*/
-
 });
 
 
