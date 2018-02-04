@@ -70,10 +70,16 @@ class SwaggerAPI extends APIController
      *     @SWG\Response(
      *          response=200,
      *          description="successful operation",
+     *          ref="$/responses/JSON",
      *          @SWG\Schema(
-     *              type="array",
-     *              @SWG\Items(ref="#/definitions/Project")
-     *          )
+     *              @SWG\Property(
+     *                  property="data",
+     *                  type="array",
+     *                  @SWG\Items(
+     *                      ref="#/definitions/Project"
+     *                  )
+     *              ),
+     *          ),
      *     ),
      *     @SWG\Response(
      *         response=500,
@@ -94,8 +100,18 @@ class SwaggerAPI extends APIController
      *     description="",
      *     operationId="getAllPublications",
      *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
+     *          response=200,
+     *          description="successful operation",
+     *          ref="$/responses/JSON",
+     *          @SWG\Schema(
+     *              @SWG\Property(
+     *                  property="data",
+     *                  type="array",
+     *                  @SWG\Items(
+     *                      ref="#/definitions/Publication"
+     *                  )
+     *              ),
+     *          ),
      *     ),
      *     @SWG\Response(
      *         response=500,
