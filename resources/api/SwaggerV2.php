@@ -93,12 +93,17 @@ use Swagger\Annotations as SWG;
 
 /**
  * @SWG\Tag(
- *     name="Project",
- *     description="Everything about the research projects"
- * )
- * @SWG\Tag(
  *     name="unAPI",
  *     description="A simple micro-service for resolving publication references"
  * )
  *
+ * @SWG\Tag(
+ *     name="Project",
+ *     description="Everything about the research projects"
+ * )
+ *
+ * @SWG\Tag(
+ *     name="Publication",
+ *     description="Everything about the research publications"
+ * )
  */
