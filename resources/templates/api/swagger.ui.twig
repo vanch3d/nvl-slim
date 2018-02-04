@@ -74,7 +74,7 @@
 
         // Build a system
         const ui = SwaggerUIBundle({
-            url: "{{ path_for('api.swagger') }}",
+            url: "{{ path_for('api.swagger') }}?{{ 'now'|date('U') }}",
             dom_id: '#swagger-ui',
             deepLinking: true,
             presets: [
