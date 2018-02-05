@@ -27,7 +27,7 @@ use Swagger\Annotations as OAS;
 
 /**
  * @OAS\OpenApi(
- *     openapi="3.0",
+ *     openapi="3.0.1",
  *     @OAS\Info(
  *          version="0.3",
  *          description="A Swagger/OAS (v3) description of the nvl-slim API.",
@@ -46,11 +46,11 @@ use Swagger\Annotations as OAS;
  *
  * @OAS\Server(
  *     description="nvl-slim DEV server",
- *     url="http://local.nvl.calques3d.org"
+ *     url="http://local.nvl.calques3d.org/api"
  * )
  * @OAS\Server(
  *     description="nvl-slim PRODUCTION server",
- *     url="http://nvl.calques3d.org"
+ *     url="http://nvl.calques3d.org/api"
  * )
  *
  */
@@ -60,30 +60,30 @@ use Swagger\Annotations as OAS;
 // ------------------------------------------------------------------------------------------
 
 /**
- * @SWG\Parameter(
- *     parameter="unapi_id",
- *     name="id",
- *     in="query",
- *     type="string",
- *     description="the unique id of the publication to be retrieved",
+ * @OAS\Parameter(
+ *      parameter="Project_id",
+ *      name="name",
+ *      in="path",
+ *      description="the unique id of a research project",
+ *      required=true,
+ *      @OAS\Schema(
+ *          type="string"
+ *      ),
  * )
  *
- * @SWG\Parameter(
- *     parameter="unapi_format",
- *     name="format",
- *     in="query",
- *     type="string",
- *     description="the format of the publication record to be retrieved"
- * )
  *
- * @SWG\Parameter(
- *     parameter="project_id",
- *     name="name",
- *     type="string",
- *     required=true,
- *     in="path",
- *     description="the unique id of a research project",
+ *  * @OAS\Parameter(
+ *      parameter="API_output",
+ *      name="output",
+ *      in="query",
+ *      description="Force the format of the response of the API request",
+ *      required=false,
+ *      @OAS\Schema(
+ *          type="string",
+ *          enum={"json","xml"}
+ *      ),
  * )
+
  */
 
 // ------------------------------------------------------------------------------------------
@@ -91,17 +91,21 @@ use Swagger\Annotations as OAS;
 // ------------------------------------------------------------------------------------------
 
 /**
- * @SWG\Tag(
+ * @OAS\Tag(
  *     name="unAPI",
- *     description="A simple micro-service for resolving publication references"
+ *     description="A simple micro-service for resolving publication references",
+ *     @OAS\ExternalDocumentation(
+ *         description="Read more",
+ *         url="https://goo.gl/gQTsEf"
+ *     )
  * )
  *
- * @SWG\Tag(
+ * @OAS\Tag(
  *     name="Project",
  *     description="Everything about the research projects"
  * )
  *
- * @SWG\Tag(
+ * @OAS\Tag(
  *     name="Publication",
  *     description="Everything about the research publications"
  * )
