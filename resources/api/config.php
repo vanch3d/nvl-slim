@@ -8,6 +8,9 @@
 
 const APP_DEBUG = true;
 
+/**
+ * @deprecated not in use at the moment, both servers are in the specification
+ */
 define("SWAGGER_HOST", APP_DEBUG === true ?
-    "local.nvl.calques3d.org" :
-    "nvl.calques3d.org");
+    "http://local.nvl.calques3d.org" :
+    "http://nvl.calques3d.org");
