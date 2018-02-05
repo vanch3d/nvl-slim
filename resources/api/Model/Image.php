@@ -8,26 +8,24 @@
 
 namespace NVL;
 
-use Swagger\Annotations as SWG;
+use Swagger\Annotations as OAS;
 
 /**
- * @SWG\Definition(
+ * @OAS\Schema(
+ *     title="Image model",
  *     type="object",
- *     @SWG\Xml(
- *          name="Image"
- *     )
  * )
  */
 class Image
 {
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $id;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     enum={"image"},
      *     default="image"
      * )
@@ -36,19 +34,19 @@ class Image
     public $type;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $title;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $comment;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string
@@ -56,7 +54,7 @@ class Image
     public $url;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string

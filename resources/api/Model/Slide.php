@@ -8,21 +8,23 @@
 
 namespace NVL;
 
-use Swagger\Annotations as SWG;
+use Swagger\Annotations as OAS;
 
 /**
- * @SWG\Definition(
+ * @OAS\Schema(
  *     type="object",
- *     required={"ID","type"},
- *     @SWG\Xml(
- *          name="Slide"
+ *     title="Slide model",
+ *     description="From SlideShare API, a complete copy of the response body.",
+ *     @OAS\ExternalDocumentation(
+ *          description="SlideShare API",
+ *          url="https://www.slideshare.net/developers/documentation#get_slideshows_by_user"
  *     )
  * )
  */
 class Slide
 {
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     enum={"slide"},
      *     default="slide"
      * )
@@ -31,37 +33,37 @@ class Slide
     public $type;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $ID;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Title;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Description;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Status;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Username;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string
@@ -69,14 +71,14 @@ class Slide
 
     public $URL;
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string
      */
     public $ThumbnailURL;
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string
@@ -84,7 +86,7 @@ class Slide
     public $ThumbnailSmallURL;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string
@@ -92,7 +94,7 @@ class Slide
     public $ThumbnailXLargeURL;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     format="url"
      * )
      * @var string
@@ -100,148 +102,148 @@ class Slide
     public $ThumbnailXXLargeURL;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $ThumbnailSize;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Embed;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Created;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Updated;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Language;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Format;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Download;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $DownloadUrl;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $SecretKey;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $SlideshowEmbedUrl;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $SlideshowType;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $UserID;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $PPTLocation;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $StrippedTitle;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $Tags;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $NumDownloads;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $NumViews;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $NumComments;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $NumFavorites;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $NumSlides;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $RelatedSlideshows;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $PrivacyLevel;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $FlagVisible;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $ShowOnSS;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $SecretURL;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $AllowEmbed;
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $ShareWithContacts;

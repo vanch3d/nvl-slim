@@ -8,27 +8,24 @@
 
 namespace NVL;
 
-use Swagger\Annotations as SWG;
+use Swagger\Annotations as OAS;
 
 /**
- * @SWG\Definition(
+ * @OAS\Schema(
+ *     title="Project model",
  *     type="object",
- *     required={"id","name","type"},
- *     @SWG\Xml(
- *          name="Project"
- *     )
  * )
  */
 class Project
 {
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $id;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     default="project",
      *     enum={"project"}
      * )
@@ -38,43 +35,43 @@ class Project
 
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $name;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $title;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $institution;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $location;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $lat;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $long;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     type="string",
      *     format="date"
      * )
@@ -83,7 +80,7 @@ class Project
     public $start;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     type="string",
      *     format="date"
      * )
@@ -92,15 +89,15 @@ class Project
     public $end;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $description;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     type="array",
-     *     @SWG\Items(
+     *     @OAS\Items(
      *          type="string",
      *          format="url"
      *      )
@@ -110,10 +107,10 @@ class Project
     public $people;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     type="array",
      *     description="A list of github repositories, described by the string '{user}/{repo}'",
-     *     @SWG\Items(
+     *     @OAS\Items(
      *          type="string",
      *          format="user/repository"
      *      )
@@ -123,13 +120,13 @@ class Project
     public $github;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $images;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $url;

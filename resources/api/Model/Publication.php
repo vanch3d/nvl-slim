@@ -8,27 +8,24 @@
 
 namespace NVL;
 
-use Swagger\Annotations as SWG;
+use Swagger\Annotations as OAS;
 
 /**
- * @SWG\Definition(
+ * @OAS\Schema(
  *     type="object",
- *     required={"id","type","archive-location"},
- *     @SWG\Xml(
- *          name="Publication"
- *     )
+ *     title="Publication Model"
  * )
  */
 class Publication
 {
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $id;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     enum={"paper-conference","thesis"}
      * )
      * @var string
@@ -36,13 +33,13 @@ class Publication
     public $type;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $title;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="container-title"
      * )
      * @var string
@@ -50,7 +47,7 @@ class Publication
     public $container_title;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="publisher-place"
      * )
      * @var string
@@ -58,13 +55,13 @@ class Publication
     public $publisher_place;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $page;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="archive-location"
      * )
      * @var string
@@ -72,13 +69,13 @@ class Publication
     public $archive_location;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $event;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="event-place"
      * )
      * @var string
@@ -86,13 +83,13 @@ class Publication
     public $event_place;
 
     /**
-     * @SWG\Property()
+     * @OAS\Property()
      * @var string
      */
     public $abstract;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="URL"
      * )
      * @var string
@@ -100,7 +97,7 @@ class Publication
     public $URL;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="DOI"
      * )
      * @var string
@@ -108,7 +105,7 @@ class Publication
     public $DOI;
 
     /**
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="PDF",
      *     type="string",
      *     format="url"
@@ -119,9 +116,9 @@ class Publication
 
     /**
      * @@todo[vanch3d] Define authors format (e.g. People)
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="authors",
-     *     @SWG\Items(
+     *     @OAS\Items(
      *          type="string"
      *      )
      * )
@@ -131,9 +128,9 @@ class Publication
 
     /**
      * @todo[vanch3d] Define issued/date-parts structure
-     * @SWG\Property(
+     * @OAS\Property(
      *     property="issued",
-     *     @SWG\Items(
+     *     @OAS\Items(
      *          type="string"
      *      )
      * )
@@ -144,8 +141,8 @@ class Publication
     /**
      * @todo[vanch3d] Define structured list of available output
      *
-     * @SWG\Property(
-     *     @SWG\Items(
+     * @OAS\Property(
+     *     @OAS\Items(
      *          type="string"
      *      )
      * )
@@ -156,8 +153,8 @@ class Publication
     /**
      * @todo[vanch3d] Define project (id/url)
      *
-     * @SWG\Property(
-     *     @SWG\Items(
+     * @OAS\Property(
+     *     @OAS\Items(
      *          type="string"
      *      )
      * )
