@@ -11,40 +11,48 @@ namespace NVL;
 use NVL\Controllers\APIController;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Swagger\Annotations as SWG;
+use Swagger\Annotations as OAS;
 
 class SwaggerAPI extends APIController
 {
     /**
-     * @todo[vanch3d] unAPI cannot be fully described by v2; need to switch to OAS (v3)
-     *
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/unapi",
      *     summary="Base of the unAPI service",
      *     tags={"unAPI"},
      *     description="",
      *     operationId="unAPI",
-     *     produces={ "application/xml"},
-     *     @SWG\Parameter(
-     *          ref="$/parameters/unapi_id"
+     *     @OAS\Parameter(
+     *          name="id",
+     *          in="query",
+     *          description="the unique id of the publication to be retrieved",
+     *          required=true,
+     *          @OAS\Schema(
+     *              type="string"
+     *          ),
      *     ),
-     *     @SWG\Parameter(
-     *          ref="$/parameters/unapi_format",
-     *          required=true
+     *     @OAS\Parameter(
+     *          name="format",
+     *          in="query",
+     *          description="the format of the publication record to be retrieved",
+     *          required=true,
+     *          @OAS\Schema(
+     *              type="string"
+     *          )
      *     ),
-     *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
+     *     @OAS\Response(
+     *          response=200,
+     *          description="successful operation"
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=300,
      *         description="format is missing; return a list of supported formats for the given id",
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=404,
      *         description="id is missing or not defined",
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=406,
      *         description="this format is not recognised",
      *     ),
@@ -56,32 +64,34 @@ class SwaggerAPI extends APIController
     }
 
     /**
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/projects",
      *     summary="Get the list of all projects in the application",
      *     tags={"Project"},
      *     description="",
      *     operationId="getAllProjects",
-     *     produces={
-     *          "application/json",
-     *          "application/xml"
-     *     },
-
-     *     @SWG\Response(
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/API_output",
+     *     ),
+     *     @OAS\Response(
      *          response=200,
      *          description="successful operation",
-     *          ref="$/responses/JSON",
-     *          @SWG\Schema(
-     *              @SWG\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @SWG\Items(
-     *                      ref="#/definitions/Project"
-     *                  )
+     *          @OAS\MediaType(
+     *              mediaType="application/json",
+     *              @OAS\Schema(
+     *                  @OAS\Property(
+     *                      property="data",
+     *                      type="array",
+     *                      @OAS\Items(
+     *                          ref="#/components/schemas/Project"
+     *                      ),
+     *                  ),
+     *                  @OAS\Property(property="metadata",type="object"),
+     *                  @OAS\Property(property="errors",type="array"),
      *              ),
      *          ),
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=500,
      *         description="cannot generate the list",
      *     ),
@@ -93,39 +103,34 @@ class SwaggerAPI extends APIController
     }
 
     /**
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/publications",
      *     summary="Get the list of all publications",
      *     tags={"Publication"},
      *     description="",
      *     operationId="getAllPublications",
-     *     @SWG\Response(
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/API_output",
+     *     ),
+     *     @OAS\Response(
      *          response=200,
      *          description="successful operation",
-     *          ref="$/responses/JSON",
-     *          @SWG\Schema(
-     *              @SWG\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @SWG\Items(
-     *                      ref="#/definitions/Publication"
-     *                  )
-     *              ),
-     *              @SWG\Property(
-     *                  property="meta",
-     *                  @SWG\Property(
-     *                      property="last-modified-version",
-     *                      type="string"
+     *          @OAS\MediaType(
+     *              mediaType="application/json",
+     *              @OAS\Schema(
+     *                  @OAS\Property(
+     *                      property="data",
+     *                      type="array",
+     *                      @OAS\Items(
+     *                          ref="#/components/schemas/Publication"
+     *                      ),
      *                  ),
-     *                  @SWG\Property(
-     *                      property="count",
-     *                      type="integer",
-     *                      minimum=0
-     *                  )
+     *                  @OAS\Property(property="metadata",type="object"),
+     *                  @OAS\Property(property="errors",type="array"),
      *              ),
      *          ),
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=500,
      *         description="cannot generate the list",
      *     ),
@@ -137,27 +142,35 @@ class SwaggerAPI extends APIController
     }
 
     /**
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/projects/{name}",
      *     summary="Get the project specified by its id",
      *     tags={"Project"},
-     *     description="",
+     *     description="Return a single project",
      *     operationId="getProject",
-     *     @SWG\Parameter(
-     *          ref="$/parameters/project_id"
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/Project_id"
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/API_output"
+     *     ),
+     *     @OAS\Response(
      *          response=200,
      *          description="successful operation",
-     *          ref="$/responses/JSON",
-     *          @SWG\Schema(
-     *              @SWG\Property(
-     *                  property="data",
-     *                  ref="#/definitions/Project"
+     *          @OAS\MediaType(
+     *              mediaType="application/json",
+     *              @OAS\Schema(
+     *                  @OAS\Property(
+     *                      property="data",
+     *                      type="object",
+     *                      ref="#/components/schemas/Project"
+     *                  ),
+     *                  @OAS\Property(property="metadata",type="object"),
+     *                  @OAS\Property(property="errors",type="array"),
      *              ),
      *          ),
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=404,
      *         description="the project specified by 'id' does not exist",
      *     ),
@@ -169,41 +182,37 @@ class SwaggerAPI extends APIController
     }
 
     /**
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/projects/{name}/publications",
      *     summary="Get the publications associated with the project specified by its id",
      *     tags={"Project"},
      *     description="",
      *     operationId="getPublications",
-     *     @SWG\Parameter(
-     *          ref="$/parameters/project_id"
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/Project_id"
      *     ),
-     *     @SWG\Response(
-     *         response=200,
-     *          ref="$/responses/JSON",
-     *          @SWG\Schema(
-     *              @SWG\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @SWG\Items(
-     *                      ref="#/definitions/Publication"
-     *                  )
-     *              ),
-     *              @SWG\Property(
-     *                  property="meta",
-     *                  @SWG\Property(
-     *                      property="last-modified-version",
-     *                      type="string"
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/API_output"
+     *     ),
+     *     @OAS\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OAS\MediaType(
+     *              mediaType="application/json",
+     *              @OAS\Schema(
+     *                  @OAS\Property(
+     *                      property="data",
+     *                      type="array",
+     *                      @OAS\Items(
+     *                          ref="#/components/schemas/Publication"
+     *                      ),
      *                  ),
-     *                  @SWG\Property(
-     *                      property="count",
-     *                      type="integer",
-     *                      minimum=0
-     *                  )
+     *                  @OAS\Property(property="metadata",type="object"),
+     *                  @OAS\Property(property="errors",type="array"),
      *              ),
      *          ),
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=404,
      *         description="the project specified by 'id' does not exist",
      *     ),
@@ -215,41 +224,37 @@ class SwaggerAPI extends APIController
     }
 
     /**
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/projects/{name}/slides",
      *     summary="Get the slides associated with the project specified by its id",
      *     tags={"Project"},
      *     description="",
      *     operationId="getSlides",
-     *     @SWG\Parameter(
-     *          ref="$/parameters/project_id"
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/Project_id"
      *     ),
-     *     @SWG\Response(
-     *         response=200,
-     *          ref="$/responses/JSON",
-     *          @SWG\Schema(
-     *              @SWG\Property(
-     *                  property="data",
-     *                  type="array",
-     *                  @SWG\Items(
-     *                      ref="#/definitions/Slide"
-     *                  )
-     *              ),
-     *              @SWG\Property(
-     *                  property="meta",
-     *                  @SWG\Property(
-     *                      property="Name",
-     *                      type="string"
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/API_output"
+     *     ),
+     *     @OAS\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OAS\MediaType(
+     *              mediaType="application/json",
+     *              @OAS\Schema(
+     *                  @OAS\Property(
+     *                      property="data",
+     *                      type="array",
+     *                      @OAS\Items(
+     *                          ref="#/components/schemas/Slide"
+     *                      ),
      *                  ),
-     *                  @SWG\Property(
-     *                      property="Count",
-     *                      type="integer",
-     *                      minimum=0
-     *                  )
+     *                  @OAS\Property(property="metadata",type="object"),
+     *                  @OAS\Property(property="errors",type="array"),
      *              ),
      *          ),
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
      *         response=404,
      *         description="the project specified by 'id' does not exist",
      *     ),
@@ -262,20 +267,37 @@ class SwaggerAPI extends APIController
 
 
     /**
-     * @SWG\Get(
+     * @OAS\Get(
      *     path="/projects/{name}/images",
      *     summary="Get the images associated with the project specified by its id",
      *     tags={"Project"},
      *     description="",
      *     operationId="getImages",
-     *     @SWG\Parameter(
-     *          ref="$/parameters/project_id"
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/Project_id"
      *     ),
-     *     @SWG\Response(
-     *         response=200,
-     *         description="successful operation",
+     *     @OAS\Parameter(
+     *          ref="#/components/parameters/API_output"
      *     ),
-     *     @SWG\Response(
+     *     @OAS\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OAS\MediaType(
+     *              mediaType="application/json",
+     *              @OAS\Schema(
+     *                  @OAS\Property(
+     *                      property="data",
+     *                      type="array",
+     *                      @OAS\Items(
+     *                          ref="#/components/schemas/Image"
+     *                      ),
+     *                  ),
+     *                  @OAS\Property(property="metadata",type="object"),
+     *                  @OAS\Property(property="errors",type="array"),
+     *              ),
+     *          ),
+     *     ),
+     *     @OAS\Response(
      *         response=404,
      *         description="the project specified by 'id' does not exist",
      *     ),
