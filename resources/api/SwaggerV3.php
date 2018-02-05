@@ -6,7 +6,7 @@
  * Time: 18:23
  */
 
-use Swagger\Annotations as SWG;
+use Swagger\Annotations as OAS;
 
 /**
  * The Swagger description of the API is managed by Doctrine-type annotations.
@@ -26,34 +26,33 @@ use Swagger\Annotations as SWG;
 // ------------------------------------------------------------------------------------------
 
 /**
- * @SWG\Swagger(
- *     swagger="2.0",
- *     @SWG\Info(
- *          version="0.1",
- *          description="A Swagger (v2) description of the nvl-slim API.",
+ * @OAS\OpenApi(
+ *     openapi="3.0",
+ *     @OAS\Info(
+ *          version="0.3",
+ *          description="A Swagger/OAS (v3) description of the nvl-slim API.",
  *          title="Swagger nvl-slim",
- *          @SWG\License(
+ *          @OAS\License(
  *              name="MIT",
  *              url="https://github.com/vanch3d/nvl-slim/blob/master/LICENSE"
  *          ),
- *          @SWG\Contact(
+ *          @OAS\Contact(
  *              name="vanch3d",
  *              url="https://github.com/vanch3d",
  *              email="nicolas.github@calques3d.org"
  *          ),
- *     ),
- *     host=SWAGGER_HOST,
- *     basePath="/api",
- *     schemes={
- *          "http"
- *     },
- *     consumes={
- *          "application/json"
- *     },
- *     produces={
- *          "application/json"
- *     }
+ *     )
  * )
+ *
+ * @OAS\Server(
+ *     description="nvl-slim DEV server",
+ *     url="http://local.nvl.calques3d.org"
+ * )
+ * @OAS\Server(
+ *     description="nvl-slim PRODUCTION server",
+ *     url="http://nvl.calques3d.org"
+ * )
+ *
  */
 
 // ------------------------------------------------------------------------------------------
