@@ -165,10 +165,10 @@ class ZoteroManager
         if ($project_id!='all')
             $data['tag'] = 'nvl.'.$project_id;				// tags (project) to look for
 
-        $this->getLogger()->notice("Retrieving publications",array(
-            "target" => (isset($data['tag']) ? $data['tag'] : "ALL"),
-            "limit" => $limit
-        ));
+        //$this->getLogger()->notice("Retrieving publications",array(
+        //    "target" => (isset($data['tag']) ? $data['tag'] : "ALL"),
+        //    "limit" => $limit
+        //));
 
         // build the request for Zotero API
         $param = http_build_query($data);
@@ -184,23 +184,23 @@ class ZoteroManager
         $isCached = isset($cache) && isset($cache['last-modified-version']);
         if ($isCached)
         {
-            $this->getLogger()->notice("Cached version exists",array(
-                "version" => $cache['last-modified-version']
-            ));
+            //$this->getLogger()->notice("Cached version exists",array(
+            //    "version" => $cache['last-modified-version']
+            //));
             $headers['If-Modified-Since-Version'] = $cache['last-modified-version'];
         }
         else
         {
-            $this->getLogger()->notice("No cached version");
+            //$this->getLogger()->notice("No cached version");
         }
-        $this->getLogger()->notice("Generate request",$headers);
+        //$this->getLogger()->notice("Generate request",$headers);
 
 
         // Send the request to the server (bypassing Zotero_Library)
         $request = Requests::get($url,$headers);
-        $this->getLogger()->notice("Request sent & received",array(
-            "status" => $request->status_code
-        ));
+        //$this->getLogger()->notice("Request sent & received",array(
+        //    "status" => $request->status_code
+        //));
 
         $pubs['publications'] = [];
         if ($request->status_code == 200)
@@ -293,14 +293,14 @@ class ZoteroManager
         }
         else if ($request->status_code == 304)
         {
-            $this->getLogger()->notice("no change since last request, cache used",array(
-            ));
+            //$this->getLogger()->notice("no change since last request, cache used",array(
+            //));
             $pubs = $cache;
 
         }
         else
         {
-            $this->getLogger()->notice("ERROR",array(
+            $this->getLogger()->error("ERROR",array(
                 "status" => $request->status_code
             ));
 
