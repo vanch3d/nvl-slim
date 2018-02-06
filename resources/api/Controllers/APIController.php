@@ -42,11 +42,24 @@ class SwaggerAPI extends APIController
      *     ),
      *     @OAS\Response(
      *          response=200,
-     *          description="successful operation"
+     *          description="successful operation",
+     *          @OAS\MediaType(
+     *              mediaType="application/xml",
+     *              @OAS\Schema(
+     *                  ref="#/components/schemas/Formats"
+     *
+     *              ),
+     *          ),
      *     ),
      *     @OAS\Response(
-     *         response=300,
-     *         description="format is missing; return a list of supported formats for the given id",
+     *          response=300,
+     *          description="format is missing; return a list of supported formats for the given id",
+     *          @OAS\MediaType(
+     *              mediaType="application/xml",
+     *              @OAS\Schema(
+     *                  ref="#/components/schemas/Formats"
+     *
+     *              ),
      *     ),
      *     @OAS\Response(
      *         response=404,
