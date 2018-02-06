@@ -178,7 +178,7 @@ class APIController extends Controller
 
     public function getSwagger(Request $request, Response $response)
     {
-        $json = json_decode(@file_get_contents(DIR . 'swagger.json'),true);
+        $json = json_decode(@file_get_contents(DIR . 'openapi.json'),true);
         //Debugger::barDump($json); die();
         return $this->render($request,$response,$json,200,self::API_JSON);
     }
