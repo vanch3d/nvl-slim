@@ -74,7 +74,7 @@ $app->group('/',function() {
 
     // swagger-ui routes
     $this->get('api', APIController::class . ':apiHome')->setname('api.home');
-    $this->get('api/swagger.json', APIController::class . ':getSwagger')->setname('api.swagger');
+    $this->get('api/openapi.json', APIController::class . ':getSwagger')->setname('api.swagger');
 
 })->add($mwHTML);
 
