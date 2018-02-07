@@ -6,11 +6,30 @@
  * Time: 15:55
  */
 
-const APP_DEBUG = true;
+require_once __DIR__ . './../../vendor/autoload.php';
 
-/**
- * @deprecated not in use at the moment, both servers are in the specification
- */
-define("SWAGGER_HOST", APP_DEBUG === true ?
-    "http://local.nvl.calques3d.org" :
-    "http://nvl.calques3d.org");
+use Dotenv\Dotenv;
+use Dotenv\Exception\InvalidPathException;
+
+try {
+    (new Dotenv(__DIR__ . './../../'))->load();
+} catch (InvalidPathException $e) {
+    error_log('[ERROR] config : ' . $e->getMessage());
+    die();
+}
+
+try {
+    $config = require_once __DIR__ . './../../sources/config.php';
+    $config = $config['settings']['nvl-slim']['swagger'];
+    if ($config === null) throw new Exception('settings/nvl-slim/swagger does not exist');
+} catch (Exception $e) {
+    error_log('[ERROR] config : ' . $e->getMessage());
+    die();
+}
+
+
+define("SWAGGER_VERSION",$config['version']);
+define("API_NAME","Swagger " . $config['api']['name']);
+define("API_VERSION",$config['api']['version']);
+
+error_log("=> Parsing " . API_NAME . " / " . API_VERSION);

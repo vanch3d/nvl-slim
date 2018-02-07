@@ -27,11 +27,11 @@ use Swagger\Annotations as OAS;
 
 /**
  * @OAS\OpenApi(
- *     openapi="3.0.1",
+ *     openapi= SWAGGER_VERSION,
  *     @OAS\Info(
- *          version="0.3",
+ *          version= API_VERSION,
  *          description="A Swagger/OAS (v3) description of the nvl-slim API.",
- *          title="Swagger nvl-slim",
+ *          title=  API_NAME,
  *          @OAS\License(
  *              name="MIT",
  *              url="https://github.com/vanch3d/nvl-slim/blob/master/LICENSE"
