@@ -97,6 +97,14 @@ return [
         ],
 
         'nvl-slim' => [
+            'swagger' => [
+                'version' => "3.0.1",
+                'output' => 'openapi.json',
+                'api' => [
+                    'name' => getenv('APP_NAME'),
+                    'version' => "0.3"
+                ]
+            ],
             'slideshare' => [
                 'url'       =>  getenv('SLIDESHARE_URL'), // URL for the Slideshare API
                 'username'  =>  getenv('SLIDESHARE_USER'),  // username to retrieve slides from
