@@ -6,8 +6,10 @@ const sass = require('gulp-sass');
 const nano = require('gulp-cssnano');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
-const apidoc = require('gulp-apidoc');
 const image = require('gulp-image');
+const merge = require('merge-stream');
+const exec = require('gulp-exec');
+const run = require('child_process').exec;
 
 //const autoprefixer = require('gulp-autoprefixer');
 
@@ -20,7 +22,7 @@ var config = {
 // list of core JS files to combine
 var jsList = [
     config.bowerDir + '/jquery/dist/jquery.js',
-	config.bowerDir + '/bootstrap/dist/js/bootstrap.js',
+    config.bowerDir + '/bootstrap/dist/js/bootstrap.js',
     config.bowerDir + '/multi-pushmenu/js/classie.js',
     config.bowerDir + '/multi-pushmenu/js/modernizr.custom.js',
     config.bowerDir + '/multi-pushmenu/js/mlpushmenu.js',
@@ -63,7 +65,7 @@ var cssList = [
     config.bowerDir + '/multi-pushmenu/css/icons.css',
     config.bowerDir + '/StoryMapJS/compiled/css/storymap.css',
     config.resDir   + '/styles/app.scss',
-    config.resDir   + '/_plugins/nvl-galleria/css/nvl-galleria.css',
+    config.resDir   + '/_plugins/nvl-galleria/css/nvl-galleria.css'
 ];
 
 // list of font & font-icons to copy
@@ -82,7 +84,9 @@ var iconCSSList = [
 var imgList = [
     config.resDir + '/images/**/**/*.*',
     config.resDir + '/_plugins/nvl-galleria/images/**/**/*.*',
-    config.bowerDir + '/PubReader/img/**/**/*.*'
+    config.bowerDir + '/PubReader/img/**/**/*.*',
+    config.bowerDir + '/swagger-ui/dist/*.png'
+
 ];
 
 // list of images to process and copy
@@ -104,6 +108,24 @@ gulp.task('js-pubReader', function () {
         .pipe(debug({title: 'pubreader:'}))
         .pipe(gulp.dest('./public/js'));
 });
+
+gulp.task('js-swagger', function () {
+    // swagger-ui scripts
+    var jsSwagger = gulp.src([
+        config.bowerDir + '/swagger-ui/dist/swagger-ui-bundle.js',
+        config.bowerDir + '/swagger-ui/dist/swagger-ui-standalone-preset.js',
+        config.bowerDir + '/swagger-ui/dist/swagger-ui.js'])
+        .pipe(debug({title: 'swagger:'}))
+        .pipe(gulp.dest('./public/js'));
+    // swagger-ui css
+    var cssSwagger = gulp.src([
+        config.bowerDir + '/swagger-ui/dist/swagger-ui.css'])
+        .pipe(debug({title: 'swagger:'}))
+        .pipe(gulp.dest('./public/css'));
+
+    return merge(jsSwagger,cssSwagger);
+});
+
 
 gulp.task('js-plugins', function () {
     // individual plugins
@@ -137,7 +159,7 @@ gulp.task('js-core', function () {
         .pipe(gulp.dest('./public/js'));
 });
 
-gulp.task('scripts', ['js-pubReader','js-plugins','js-d3v3']);
+gulp.task('scripts', ['js-swagger','js-pubReader','js-plugins','js-d3v3','js-core']);
 
 gulp.task('css-pubReader', function () {
     // pubreader styles
@@ -178,27 +200,26 @@ gulp.task('images', function () {
         .pipe(gulp.dest('./public/images'));
 });
 
-gulp.task('apidoc', function(done){
-    apidoc({
-        src: './',
-        dest: 'apidoc/',
-        // debug: true,
-        includeFilters: [ '.*\\.php$' ]
-    }, done);
-});
-
-gulp.task('clean:cache', function () {
+gulp.task('tool:clean-cache', function () {
     return del([
         '.cache/**/*'
     ]);
 });
 
+gulp.task('tool:build-swagger', function (cb) {
+    run('"./vendor/bin/swagger" --bootstrap ./resources/api/config.php -e vendor ./resources/', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
 
 gulp.task('watch-build', function () {
-	// /**/**/*.ext pour inclure les éventuels subdir
-	gulp.watch('resources/assets/styles/**/**/*.scss', ['styles']);
-	gulp.watch('resources/assets/scripts/**/**/*.js', ['scripts']);
-	gulp.watch('app/Controllers/**/**/*.php', ['apidoc']);
+    // /**/**/*.ext pour inclure les éventuels subdir
+    gulp.watch('resources/assets/styles/**/**/*.scss', ['styles']);
+    gulp.watch('resources/assets/scripts/**/**/*.js', ['scripts']);
+    gulp.watch('app/Controllers/**/**/*.php', ['apidoc']);
 });
 
 gulp.task('build:pubReader', ['js-pubReader','css-pubReader']);

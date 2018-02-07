@@ -171,16 +171,16 @@ class APIController extends Controller
         return $this->render($request,$response,$ret,$status);
     }
 
-    /**
-     * @param Request  $request
-     * @param Response $response
-     * @return Response
-     * @throws \Exception
-     */
     public function apiHome(Request $request, Response $response)
     {
-        return $this->renderError($request,$response,APIController::ERR_NOTIMPLEMENTED,
-            'Nothing to see here. Really.',400);
+        return $this->getView()->render($response, 'api/swagger.ui.twig');
+    }
+
+    public function getSwagger(Request $request, Response $response)
+    {
+        $json = json_decode(@file_get_contents(DIR . 'openapi.json'),true);
+        //Debugger::barDump($json); die();
+        return $this->render($request,$response,$json,200,self::API_JSON);
     }
 
     private function getUnAPIFormats()
@@ -231,10 +231,18 @@ class APIController extends Controller
         $id = $request->getParam("id");
         $format = $request->getParam("format");
 
+        $this->getLogger()->notice("unAPI REQUEST",array(
+            'id' => $id,
+            'format' => $format
+        ));
+
         $formats = $this->getUnAPIFormats();
 
         if (!isset($id) && !isset($format))
         {
+            $this->getLogger()->notice("unAPI RESPONSE",array(
+                'status_code' => 200));
+
             // return the list of supported metadata formats
             $response = $this->formatUnAPIResponse($response,$formats)
                 ->withStatus(200);
@@ -242,6 +250,10 @@ class APIController extends Controller
         }
         else if (!isset($format))
         {
+            $this->getLogger()->notice("unAPI RESPONSE",array(
+                'status_code' => 300,
+                'id'=>$id));
+
             // return the list of supported metadata formats for the given uri
             $response = $this->formatUnAPIResponse($response,$formats,[
                 'rootElementName' => $this->unapiRootName,
@@ -253,6 +265,10 @@ class APIController extends Controller
 
         if (!isset($id))
         {
+            $this->getLogger()->notice("unAPI RESPONSE",array(
+                'status_code' => 404,
+                'format'=>$format));
+
             return $this->renderError($request,$response,APIController::ERR_BADREQUEST,
                 "the parameter 'id' is missing",404);
         }
@@ -260,6 +276,10 @@ class APIController extends Controller
         $pub = $this->getPublicationManager()->isDefined($id);
         if (false === $pub)
         {
+            $this->getLogger()->notice("unAPI RESPONSE",array(
+                'status_code' => 404,
+                'id'=>$id));
+
             return $this->renderError($request,$response,APIController::ERR_NOTFOUND,
                 'could not find a document with this id',404);
         }
@@ -271,14 +291,23 @@ class APIController extends Controller
 
         if (empty($accepted))
         {
+            $this->getLogger()->notice("unAPI RESPONSE",array(
+                'status_code' => 404,
+                'format'=>$id));
+
             return $this->renderError($request,$response,APIController::ERR_BADREQUEST,
                 'this format is not accepted',406);
         }
 
+        $this->getLogger()->notice("unAPI RESPONSE",array(
+            'status_code' => 302,
+            'id' => $id,
+            'format' => $format
+        ));
         $body = new Body(fopen('php://temp', 'r+'));
         $body->write($pub['output'][$format]);
         return $response->withBody($body)
-            ->withStatus(200)
+            ->withStatus(302)
             ->withHeader('Content-Type', $accepted['_attributes']['type'].';charset=utf-8');
 
     }
