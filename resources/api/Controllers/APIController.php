@@ -13,6 +13,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Swagger\Annotations as OAS;
 
+/**
+ * Class SwaggerAPI
+ * @see https://gist.github.com/vanch3d/fce679e6ab9f6877a27d7a21c5170aa9
+ */
 class SwaggerAPI extends APIController
 {
     /**
@@ -42,33 +46,90 @@ class SwaggerAPI extends APIController
      *     ),
      *     @OAS\Response(
      *          response=200,
-     *          description="successful operation",
+     *          description="no parameters in query; return the list of all supported formats",
      *          @OAS\MediaType(
      *              mediaType="application/xml",
      *              @OAS\Schema(
-     *                  ref="#/components/schemas/Formats"
-     *
+     *                  ref="#/components/schemas/AllFormats"
+     *              ),
+     *          ),
+     *     ),
+     *     @OAS\Response(
+     *          response=404,
+     *          description="bad request: the id is missing or not recognised",
+     *          @OAS\MediaType(
+     *              mediaType="application/xml",
+     *              @OAS\Schema(
+     *                  type="object",
+     *                  @OAS\Xml( name= "nvl-slim-api" ),
+     *                  @OAS\Property(
+     *                      property="version",
+     *                      type="string",
+     *                      @OAS\Xml( attribute=true ),
+     *                      example="0.3",
+     *                  ),
+     *                  @OAS\Property(
+     *                      property="error",
+     *                      type="array",
+     *                        ref="#/components/schemas/Error",
+     *                  )
      *              ),
      *          ),
      *     ),
      *     @OAS\Response(
      *          response=300,
-     *          description="format is missing; return a list of supported formats for the given id",
+     *          description="format is missing; return a list of supported formats",
      *          @OAS\MediaType(
      *              mediaType="application/xml",
      *              @OAS\Schema(
-     *                  ref="#/components/schemas/Formats"
-     *
+     *                  ref="#/components/schemas/PublicationFormats"
      *              ),
-     *     ),
-     *     @OAS\Response(
-     *         response=404,
-     *         description="id is missing or not defined",
+     *          ),
      *     ),
      *     @OAS\Response(
      *         response=406,
-     *         description="this format is not recognised",
+     *         description="bad request; the format is not recognised",
+     *          @OAS\MediaType(
+     *              mediaType="application/xml",
+     *              @OAS\Schema(
+     *                  type="object",
+     *                  @OAS\Xml( name= "nvl-slim-api" ),
+     *                  @OAS\Property(
+     *                      property="version",
+     *                      type="string",
+     *                      @OAS\Xml( attribute=true ),
+     *                      example="0.3",
+     *                  ),
+     *                  @OAS\Property(
+     *                      property="error",
+     *                      type="array",
+     *                        ref="#/components/schemas/Error",
+     *                  )
+     *              ),
+     *          ),
      *     ),
+     *     @OAS\Response(
+     *         response=302,
+     *         description="operation successful; redirect to the publication record in the given format",
+     *          @OAS\MediaType(
+     *              mediaType="application/xml",
+     *              @OAS\Schema(
+     *                  type="object",
+     *                  @OAS\Xml( name= "nvl-slim-api" ),
+     *                  @OAS\Property(
+     *                      property="version",
+     *                      type="string",
+     *                      @OAS\Xml( attribute=true ),
+     *                      example="0.3",
+     *                  ),
+     *                  @OAS\Property(
+     *                      property="error",
+     *                      type="array",
+     *                        ref="#/components/schemas/Error",
+     *                  )
+     *              ),
+     *          ),
+     *     )
      * )
      */
     public function unAPI(Request $request, Response $response)
