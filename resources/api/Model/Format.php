@@ -18,7 +18,7 @@ use Swagger\Annotations as OAS;
  *      )
  * )
  */
-class Formats
+class PublicationFormats
 {
     /**
      * @OAS\Property(
@@ -48,6 +48,36 @@ class Formats
      * @var array
      */
     public $formats;
+}
+
+/**
+ * @OAS\Schema(
+ *     type="object",
+ *     @OAS\Xml(
+ *          name="formats"
+ *      )
+ * )
+ */
+class AllFormats
+{
+    /**
+     * @OAS\Property(
+     *     type="array",
+     *     @OAS\Items(
+     *          ref="#/components/schemas/Format"
+     *     ),
+     *     example={
+     *          { "name":"rdf_bibliontology", "docs":"http://bibliontology.com/", "type":"application/xml"},
+     *          { "name":"bibtex", "docs":"http://www.bibtex.org/","type":"text/plain"}
+     *     },
+     *     @OAS\Xml(
+     *          name="format"
+     *     ),
+     * )
+     * @var array
+     */
+    public $formats;
+
 }
 
 
