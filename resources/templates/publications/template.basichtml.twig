@@ -1,0 +1,8 @@
+<header class="fm-sec">
+    <h1 class="content-title">{{ item.title }}</h1>
+    <p class="contribs"> {% for auth in item.author %}
+            {{ auth.given|slice(0,1)~'.' }} {{ auth.family }} {{ loop.last ? '' : ',' }}
+        {% endfor %}</p>
+</header>
+
+{% block article %}{% endblock %}
