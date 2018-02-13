@@ -29,7 +29,8 @@ class WidgetExtension extends \Twig_Extension
                 }),
             'pubreader_cite' =>
                 new \Twig_SimpleFunction('cite', function (string $ref,string $id) {
-                    return "<a class='bibr tag_bib' rid='$id' href='#$id' co-class='co-refbox' co-rid='$id'>$ref</a>";
+                    $txt = htmlspecialchars($ref);
+                    return "<a class='bibr tag_bib' rid='$id' href='#$id' co-class='co-refbox' co-rid='$id'>$txt</a>";
                 },array('is_safe' => array('html'))),
             'pubreader_note' =>
                 new \Twig_SimpleFunction('note', function (string $ref,string $id) {
