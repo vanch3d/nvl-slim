@@ -44,7 +44,8 @@
         "phpunit/phpunit": "6.5.5",
         "runcmf/runtracy": "0.2.10",
         "slim/http-cache": "0.4.0",
-        "zircote/swagger-php": "3.x"
+        "zircote/swagger-php": "3.x",
+        "league/html-to-markdown": "4.6.2"
     },
 
     "autoload": {
