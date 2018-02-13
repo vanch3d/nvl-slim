@@ -56,6 +56,7 @@ $app->group('/',function() {
     });
 
     // Publication-related routes
+    // @todo[vanch3d] Handle {name}.{EXT} with parameters and/or Content-Type
     $this->group('publications',function() {
         $this->get('', PublicationController::class . ':allPublications')->setname('publications.all');
         //$this->get('/graph', PublicationController::class . ':pubGraph')->setname('publications.all.graph');
@@ -63,6 +64,7 @@ $app->group('/',function() {
         $this->get('/narrative', PublicationController::class . ':pubNarrative')->setname('publications.all.narrative');
         $this->get('/{name}.pdf', PublicationController::class . ':pubExportPDF')->setname('publications.named.pdf');
         $this->get('/{name}.txt', PublicationController::class . ':pubExportTXT')->setname('publications.named.txt');
+        $this->get('/{name}.md', PublicationController::class . ':pubExportHTML')->setname('publications.named.txt');
         $this->get('/{name}', PublicationController::class . ':pubReader')->setname('publications.named.pubReader');
         $this->get('/{name}/show', PublicationController::class . ':pubShow')->setname('publications.named.show');
         $this->get('/{name}/cloud', PublicationController::class . ':pubDistribution')->setname('publications.named.cloud');

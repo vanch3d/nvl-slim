@@ -7,6 +7,8 @@
  */
 
 namespace NVL\Controllers;
+use DOMDocument;
+use League\HTMLToMarkdown\HtmlConverter;
 use PHPUnit\Runner\Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -329,5 +331,60 @@ class PublicationController extends Controller
             ->withRedirect($uri,301);
 
     }
+
+    public function pubExportHTML(Request $request, Response $response, array $args)
+    {
+        $file = $args["name"];
+        $publications = $this->getPublicationManager()->isDefined($file);
+        If (false === $publications)
+            return $this->notFound($request,$response,new \Exception("The publication does not exist"));
+
+        $item = json_decode(json_encode($publications));
+
+        // Get the TWIG template rendered in basic HTML
+        $renderedTemplate = $this->getView()->fetch("publications/papers/$file.twig", array(
+            'template_base' => 'publications/template.basichtml.twig',
+            'item'=> $item
+            ));
+
+
+
+        $dom = new DOMDocument;
+        $dom->loadHTML($renderedTemplate);
+
+        // clear all unnecessary spaces
+        $elts = $dom->getElementsByTagName('p');
+        foreach ($elts as $elt) {
+            $text = $elt->nodeValue;
+            $string = preg_replace('/\s+/', ' ', $text);
+            $elt->nodeValue = htmlentities($string);
+
+        }
+
+        // remove all figures and tables
+        // @todo[vanch3d] Find a good way of making them compatible with Markdown
+        $elts = $dom->getElementsByTagName('div');
+        for ($i = $elts->length; --$i >= 0; ) {
+            $elt = $elts->item($i);
+            $text = $elt->getAttribute("class");
+            if (stripos($text, "fig iconblock") !== false) {
+                //Debugger::barDump($text);
+                $elt->parentNode->removeChild($elt);
+            }
+        }
+        $html = $dom->saveHTML();
+
+        // convert to Markdown
+        $converter = new HtmlConverter();
+        $converter->getConfig()->setOption('strip_tags', true);
+        $converter->getConfig()->setOption('header_style', 'atx');
+
+        $markdown = $converter->convert($html);
+        return $response
+            ->withHeader('Content-Type', 'text/markdown')
+            ->write($markdown);
+
+    }
+
 
 }
