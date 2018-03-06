@@ -544,4 +544,108 @@ class APIController extends Controller
         }
     }
 
+    public function getRepositories(Request $request, Response $response, array $args)
+    {
+        // set the cache for the request
+        //$response = $this->getCache()->withEtag($response, 'nvl-slim.gallery.' . $args["name"]);
+        //$response = $this->getCache()->withExpires($response, '+1 week');
+
+        $project = $this->getProjectManager()->isDefined($args["name"]);
+        if (false === $project) {
+            return $this->renderError($request, $response, APIController::ERR_NOTFOUND,
+                'The project does not exist', 404);
+        }
+
+        $settings = $this->getSettings();
+        $cfg = $settings['nvl-slim']['github'];
+        if (!isset($cfg))
+            throw new \Exception("GitHub API authentication not configured", 500);
+
+        $data = array(
+            'access_token' => $cfg['api_key']
+        );
+        $param = http_build_query($data);
+        $baseUrl = $cfg['url'];
+
+        $json = [
+            "data" =>  [],
+            "errors" =>  []
+        ];
+
+        // get the list of repositories from the project
+        foreach ($project['github'] as $repo )
+        {
+            // build the URL for GitHub API
+            $url = "{$baseUrl}repos/{$repo}/stats/contributors?{$param}";
+            $reqStats = Requests::get($url);
+
+            $username = $cfg['username'];
+
+            if ($reqStats->status_code == 200)
+            {
+                $res = json_decode($reqStats->body, true);
+                foreach ($res as $contrib) {
+                    Debugger::barDump($contrib['author']['login']);
+
+
+                    if ($contrib['author']['login'] === $username)
+                    {
+                        $json['meta']['author'] = $contrib['author'];
+                        $json['meta']['contributions'][] = [
+                            'repo' => $repo,
+                            'total' => $contrib['total']
+                        ];
+
+                        $weeks = [];
+                        foreach ($contrib['weeks'] as $k => $v)
+                        {
+                            if ($v['a']!=0 || $v['c']!=0 || $v['d']!=0)
+                                $weeks[] = ['id' => $k] + $v;
+                        }
+                        $json['data'][]= [
+                            'repo'  => $repo,
+                            'url'   => "{$baseUrl}repos/{$repo}",
+                            'weeks' => $weeks
+                        ];
+                    }
+                    else
+                    {
+                        $author = $contrib['author']['login'];
+                        $json['errors'][]= [
+                            'status' => "200",
+                            'title' => "Other contributions",
+                            'details' => "The repository '$repo' also contains contributions from '$author'"
+                        ];
+                    }
+                }
+
+            }
+            else if ($reqStats->status_code == 202)
+            {
+                $json['errors'][]= [
+                    'status' => $reqStats->status_code,
+                    'title' => "Accepted",
+                    'details' => "The request for '$repo' has been accepted for processing, but the processing has not been completed. Try again."
+                ];
+
+
+            }
+            else
+            {
+                $err = json_decode($reqStats->body, true);
+                $json['errors'][]= [
+                    'status' => $reqStats->status_code,
+                    'title' => $err['message'],
+                    'details' => "Cannot collect data from GitHub for the '$repo' repository."
+                ];
+            }
+
+
+
+        }
+        Debugger::barDump($json);
+
+        return $this->render($request,$response,$json);
+    }
+
 }
