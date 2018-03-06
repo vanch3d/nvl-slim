@@ -38,8 +38,7 @@ use Swagger\Annotations as OAS;
  *          ),
  *          @OAS\Contact(
  *              name="vanch3d",
- *              url="https://github.com/vanch3d",
- *              email="nicolas.github@calques3d.org"
+ *              url="https://github.com/vanch3d"
  *          ),
  *     )
  * )
