@@ -60,7 +60,7 @@
             d3.json(url, function(error, json) {
                 if (error) throw error;
 
-                // @todo[vanch3d] Merge all repositories if required
+                // @todo[vanch3d] Merge all repositories when required
                 csv = json.data[0].weeks;
 
                 var ft = d3.time.format("%Y-%m-%d");
