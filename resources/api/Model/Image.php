@@ -12,7 +12,7 @@ use Swagger\Annotations as OAS;
 
 /**
  * @OAS\Schema(
- *     title="Image model",
+ *     description="Image model",
  *     type="object",
  * )
  */

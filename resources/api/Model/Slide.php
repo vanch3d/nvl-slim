@@ -13,7 +13,6 @@ use Swagger\Annotations as OAS;
 /**
  * @OAS\Schema(
  *     type="object",
- *     title="Slide model",
  *     description="From SlideShare API, a complete copy of the response body.",
  *     @OAS\ExternalDocumentation(
  *          description="SlideShare API",

@@ -33,6 +33,7 @@ class NVLSlimAPI
 
     /**
      * @OAS\Property(
+     *     description="An array of errors",
      *     @OAS\Items(
      *          ref="#/components/schemas/Error"
      *     )

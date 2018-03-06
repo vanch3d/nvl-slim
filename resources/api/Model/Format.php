@@ -83,7 +83,7 @@ class AllFormats
 
 /**
  * @OAS\Schema(
- *     title="UNAPI Format model",
+ *     description="UNAPI Format model",
  *     type="object",
  * )
  */

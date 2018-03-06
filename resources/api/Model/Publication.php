@@ -13,7 +13,7 @@ use Swagger\Annotations as OAS;
 /**
  * @OAS\Schema(
  *     type="object",
- *     title="Publication Model"
+ *     description="Publication Model"
  * )
  */
 class Publication
