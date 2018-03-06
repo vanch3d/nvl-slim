@@ -13,7 +13,7 @@ require './../vendor/autoload.php';
 
 
 try {
-    (new Dotenv(__DIR__ . './../'))->load();
+    (new Dotenv(__DIR__ . '/../'))->load();
 } catch (InvalidPathException $e) {
     die($e);
 }
