@@ -1,0 +1,152 @@
+{% extends 'site.twig' %}
+
+{% block urltile %}GitHub Calendar{% endblock %}
+{% block pagetile %}GitHub Calendar{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a title="Home" href="{{ path_for('home') }}">Home</a></li>
+        <li><a title="Home" href="{{ path_for('project.all') }}">Projects</a></li>
+        <li class="active">GitHub</li>
+    </ol>
+{% endblock %}
+
+{% block pagedescription %}
+    <h2>Research Projects - GitHub</h2>
+
+{% endblock %}
+
+
+{% block content %}
+    <section class="section">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="mapdiv" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}
+
+{% block injectCSS %}
+    <style>
+    </style>
+{% endblock %}
+
+{% block injectJS %}
+    <script src="/js/d3.nvl-bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            var width = 960,
+                height = 136,
+                cellSize = 17;
+
+            function pathMonth(t0) {
+                var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+                    d0 = t0.getDay(), w0 = d3.time.weekOfYear(t0),
+                    d1 = t1.getDay(), w1 = d3.time.weekOfYear(t1);
+                return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
+                    + "H" + w0 * cellSize + "V" + 7 * cellSize
+                    + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
+                    + "H" + (w1 + 1) * cellSize + "V" + 0
+                    + "H" + (w0 + 1) * cellSize + "Z";
+            }
+
+            var url = "{{ path_for('api.projects.repos',{name: 'safesea'})}}";
+            d3.json(url, function(error, json) {
+                if (error) throw error;
+
+                // @todo[vanch3d] Merge all repositories if required
+                csv = json.data[0].weeks;
+
+                var ft = d3.time.format("%Y-%m-%d");
+                var data = d3.nest()
+                    .key(function(d) {
+                        return ft(new Date(d.w * 1000));
+                    })
+                    .rollup(function(d) { return d[0].c; })
+                    .map(csv);
+
+                console.log(data);
+                var max = d3.max(d3.values(data));
+                if (max === 0) max =1;
+
+                var yExtent = d3.extent(d3.keys(data), function(d) { return ft.parse(d).getFullYear(); });
+                console.log(yExtent);
+
+                var color = d3.scale.quantize()
+                    .domain([1, 100])
+                    .range(["#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#006837"]);
+
+                var svg = d3.select("#mapdiv")
+                    .selectAll("svg")
+                    .data(d3.range(yExtent[0], yExtent[1]+1))
+                    .enter().append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+
+                svg.append("text")
+                    .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+                    .attr("font-family", "sans-serif")
+                    .attr("font-size", 10)
+                    .attr("text-anchor", "middle")
+                    .text(function(d) { return d; });
+
+                var rect = svg.append("g")
+                    .attr("fill", "none")
+                    .attr("stroke", "#ccc")
+                    .selectAll("rect")
+                    .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+                    .enter().append("rect")
+                    .attr("width", cellSize)
+                    .attr("height", cellSize)
+                    .attr("x", function(d) { return d3.time.weekOfYear(d) * cellSize; })
+                    .attr("y", function(d) { return d.getDay() * cellSize; })
+                    .datum(d3.time.format("%Y-%m-%d"));
+
+                svg.append("g")
+                    .attr("fill", "none")
+                    .attr("stroke", "#000")
+                    .selectAll("path")
+                    .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+                    .enter().append("path")
+                    .attr("d", pathMonth);
+
+
+
+
+                //rect.filter(function(d) { return d in data; })
+                rect.filter(function(d) {
+                    var g = ft.parse(d);
+                    var a = d3.time.week(g);
+                    var b = ft(a);
+                    return (b in data && data[b]!=0);
+                })
+                    .attr("fill", function(d) {
+                        var g = ft.parse(d);
+                        var a = d3.time.week(g);
+                        var b = ft(a);
+                        console.log(d, 100.0 * data[b] / max);
+                        return color(100.0 * data[b] / max);
+                        //return (data[b] == 0 ) ? NaN : color(100.0 * data[b] / max);
+                    })
+                    .append("title")
+                    .text(function(d) {
+                        var g = ft.parse(d);
+                        var a = d3.time.week(g);
+                        var c = d3.time.weekOfYear(g);
+                        var b = ft(a);
+                        return "Week " + c + " : " + data[b] + " commit(s)";
+                    });
+            });
+
+            //var formatPercent = d3.format(".1%");
+        });
+    </script>
+{% endblock %}
