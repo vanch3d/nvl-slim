@@ -26,6 +26,8 @@ $container['view'] = function (\Slim\Container  $c) {
     $view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new NVL\Support\Twig\WidgetExtension());
     $view->addExtension(new Twig_Extension_Profiler($c['twig_profile']));
+
+    $view->getEnvironment()->addGlobal("app_version", getenv('APP_VERSION'));
     return $view;
 };
 
