@@ -82,4 +82,10 @@ class ProjectController extends Controller
         // @todo[vanch3d] Build the proper response
         return $this->getView()->render($response, 'site.twig');
     }
+
+    public function showGitHub(Request $request, Response $response, array $args)
+    {
+        return $this->getView()->render($response, 'projects/github.twig',array());
+    }
+
 }
