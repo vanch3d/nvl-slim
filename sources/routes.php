@@ -50,6 +50,7 @@ $app->group('/',function() {
     // Project-related routes
     $this->group('projects',function() {
         $this->get('', ProjectController::class . ':allProjects')->setname('project.all');
+        $this->get('/github', ProjectController::class . ':showGitHub')->setname('project.github');
         $this->get('/storymap', ProjectController::class . ':storyMap')->setname('project.story');
         $this->get('/{name}', ProjectController::class . ':showProject')->setname('project.named');
         $this->get('/{name}/cloud', ProjectController::class . ':wordCloud')->setname('project.named.cloud');
@@ -90,6 +91,7 @@ $app->group('/api',function() {
     $this->get('/projects/{name}/publications', APIController::class . ':getPublications')->setname('api.projects.pub');
     $this->get('/projects/{name}/slides', APIController::class . ':getSlides')->setname('api.projects.slide');
     $this->get('/projects/{name}/images', APIController::class . ':getImages')->setname('api.projects.image');
+    $this->get('/projects/{name}/repos', APIController::class . ':getRepositories')->setname('api.projects.repos');
     $this->get('/publications', APIController::class . ':getAllPublications')->setname('api.publications');
 })->add($mwAPI);
 
