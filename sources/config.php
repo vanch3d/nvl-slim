@@ -106,16 +106,21 @@ return [
                 ]
             ],
             'slideshare' => [
-                'url'       =>  getenv('SLIDESHARE_URL'), // URL for the Slideshare API
-                'username'  =>  getenv('SLIDESHARE_USER'),  // username to retrieve slides from
-                'api_key'   =>  getenv('SLIDESHARE_APIKEY'),     // SlideShare Personal API key
-                'secret'    =>  getenv('SLIDESHARE_SECRET')      // SlideShare Shared Secret
+                'url'       =>  getenv('SLIDESHARE_URL'),       // URL for the Slideshare API
+                'username'  =>  getenv('SLIDESHARE_USER'),      // username to retrieve slides from
+                'api_key'   =>  getenv('SLIDESHARE_APIKEY'),    // SlideShare Personal API key
+                'secret'    =>  getenv('SLIDESHARE_SECRET')     // SlideShare Shared Secret
             ],
             'zotero' => [
-                'url'       =>  getenv('ZOTERO_URL'),    // URL of the Zotero user API
-                'userID'    =>  getenv('ZOTERO_USERID'),                         // Zotero personal userID
-                'api_key'   =>  getenv('ZOTERO_APIKEY'),     // Zotero API key for access to lib
-                'collectID' =>  getenv('ZOTERO_COLLECTID')                      // Unique ID of the Zotero collection to access
+                'url'       =>  getenv('ZOTERO_URL'),           // URL of the Zotero user API
+                'userID'    =>  getenv('ZOTERO_USERID'),        // Zotero personal userID
+                'api_key'   =>  getenv('ZOTERO_APIKEY'),        // Zotero API key for access to lib
+                'collectID' =>  getenv('ZOTERO_COLLECTID')      // Unique ID of the Zotero collection to access
+            ],
+            'github' => [
+                'url'       =>  getenv('GITHUB_URL'),
+                'username'  =>  getenv('GITHUB_USER'),          // username of the GitHub account
+                'api_key'   =>  getenv('GITHUB_TOKEN')
             ]
         ]
 
